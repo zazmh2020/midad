@@ -1,0 +1,5 @@
+/* الخطوط — نسخة مؤقتة حتى إضافة خط «قمرة» */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap');
+
+@import '../styles/tokens.css';
+@import '../styles/base.css';

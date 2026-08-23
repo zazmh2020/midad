@@ -1,0 +1,6 @@
+import Link from 'next/link';
+import { requirePlatformOwner } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
+
+const types: Record<string, string> = { ASSOCIATION: 'جمعية', MOSQUE: 'مسجد', SCHOOL: 'مركز تعليمي', PROJECT: 'مشروع' };
+export default async function OrganizationsPage() { await requirePlatformOwner(); const organizations = await prisma.organization.findMany({ include: { _count: { select: { users: true } } }, orderBy: { createdAt: 'desc' } }); return <section className="workspace"><header className="page-heading"><div><span className="eyebrow">إدارة المنصة</span><h1>المنظمات</h1><p>مساحات عمل مستقلة وآمنة لكل جهة.</p></div><Link className="btn btn-primary" href="/app/organizations/new">إضافة منظمة</Link></header><div className="workspace-panel table-wrap"><table><thead><tr><th>المنظمة</th><th>النوع</th><th>المستخدمون</th><th>الحالة</th><th /></tr></thead><tbody>{organizations.map(org => <tr key={org.id}><td><strong>{org.name}</strong><small>{org.slug}</small></td><td>{types[org.type]}</td><td>{org._count.users}</td><td><span className={org.isActive ? 'state state-on' : 'state'}>{org.isActive ? 'نشطة' : 'موقفة'}</span></td><td><Link href={`/app/organizations/${org.id}`}>عرض</Link></td></tr>)}{organizations.length === 0 && <tr><td colSpan={5} className="empty">لا توجد منظمات بعد.</td></tr>}</tbody></table></div></section>; }
