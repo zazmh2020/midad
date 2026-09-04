@@ -296,23 +296,49 @@
 /* ============================================================
    Systems interactive showcase
    ============================================================ */
-.mdl-sys { display: grid; grid-template-columns: 0.9fr 1.4fr; gap: 2rem; align-items: start; margin-top: 2.5rem; }
-.mdl-sys-list { display: flex; flex-direction: column; gap: 0.35rem; }
-.mdl-sys-item {
-  display: flex; align-items: center; gap: 0.85rem; width: 100%; text-align: start;
-  background: transparent; border: 1px solid transparent; border-radius: 12px; padding: 0.8rem 0.9rem;
-  cursor: pointer; font-family: inherit; transition: all 0.2s var(--ease); color: var(--text);
+.mdl-sys {
+  display: grid; grid-template-columns: 0.95fr 1.4fr; gap: 1.75rem; align-items: start; margin-top: 2.5rem;
+  background: linear-gradient(165deg, #ffffff 0%, #f4f1fa 100%);
+  border: 1px solid var(--border); border-radius: 26px; padding: 1.5rem;
+  box-shadow: 0 30px 70px -44px rgba(43, 26, 78, 0.5);
 }
-.mdl-sys-item:hover { background: #fff; border-color: var(--border); }
-.mdl-sys-item.is-active { background: #fff; border-color: var(--p); box-shadow: var(--shadow-sm); }
-.mdl-sys-num { font-size: 0.72rem; font-weight: 800; color: var(--muted); width: 22px; }
-.mdl-sys-item.is-active .mdl-sys-num { color: var(--gold); }
-.mdl-sys-ic { width: 34px; height: 34px; border-radius: 9px; background: var(--p-08); color: var(--p); display: grid; place-items: center; flex-shrink: 0; }
-.mdl-sys-item.is-active .mdl-sys-ic { background: var(--p); color: #fff; }
+.mdl-sys-list { display: flex; flex-direction: column; gap: 0.3rem; }
+.mdl-sys-item {
+  position: relative; display: flex; align-items: center; gap: 0.85rem; width: 100%; text-align: start;
+  background: transparent; border: 1px solid transparent; border-radius: 14px; padding: 0.75rem 0.9rem;
+  cursor: pointer; font-family: inherit; transition: all 0.22s var(--ease); color: var(--text); overflow: hidden;
+}
+.mdl-sys-item::before {
+  content: ''; position: absolute; inset-inline-start: 0; top: 18%; bottom: 18%; width: 3px; border-radius: 3px;
+  background: var(--p); opacity: 0; transform: scaleY(0.4); transition: all 0.22s var(--ease);
+}
+.mdl-sys-item:hover { background: rgba(255, 255, 255, 0.7); }
+.mdl-sys-item.is-active {
+  background: #fff; border-color: rgba(107, 87, 160, 0.25);
+  box-shadow: 0 10px 26px -14px rgba(107, 87, 160, 0.55); transform: translateX(-5px);
+}
+.mdl-sys-item.is-active::before { opacity: 1; transform: scaleY(1); }
+.mdl-sys-num { font-size: 0.72rem; font-weight: 800; color: var(--muted); width: 22px; transition: color 0.2s; }
+.mdl-sys-item.is-active .mdl-sys-num { color: var(--p); }
+.mdl-sys-ic {
+  width: 36px; height: 36px; border-radius: 10px; background: var(--p-08); color: var(--p);
+  display: grid; place-items: center; flex-shrink: 0; transition: all 0.22s var(--ease);
+}
+.mdl-sys-item.is-active .mdl-sys-ic { background: linear-gradient(135deg, var(--pl), var(--p)); color: #fff; box-shadow: 0 6px 14px -6px rgba(107, 87, 160, 0.8); }
 .mdl-sys-ic .app-icon { width: 18px; height: 18px; }
 .mdl-sys-label { font-weight: 700; font-size: 0.95rem; color: var(--dark); }
-.mdl-sys-stage { position: sticky; top: 90px; }
-.mdl-sys-desc { margin-top: 1rem; display: flex; align-items: center; gap: 0.7rem; color: var(--muted); font-size: 0.95rem; }
+.mdl-sys-item.is-active .mdl-sys-label { color: var(--p); }
+.mdl-sys-stage { position: sticky; top: 96px; }
+.mdl-sys-stage::before {
+  content: ''; position: absolute; inset: -8% -4% -12% -4%; z-index: 0; border-radius: 30px;
+  background: radial-gradient(60% 60% at 70% 20%, rgba(107, 87, 160, 0.2), transparent 70%);
+  filter: blur(10px); pointer-events: none;
+}
+.mdl-sys-stage > * { position: relative; z-index: 1; }
+.mdl-sys-desc {
+  margin-top: 1.1rem; display: flex; align-items: center; gap: 0.7rem; color: var(--muted); font-size: 0.95rem;
+  background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 0.7rem 0.9rem;
+}
 .mdl-sys-desc .app-icon { width: 18px; height: 18px; color: var(--p); flex-shrink: 0; }
 
 /* ============================================================

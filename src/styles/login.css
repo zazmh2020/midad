@@ -1,318 +1,116 @@
 /* ============================================================
-   مِداد | MIDAD — صفحة الدخول (تخطيط مقسّم بتبويبات)
-   بألوان الهوية البنفسجية وخط Qomra.
+   مِداد | MIDAD — صفحة الدخول (بطاقة مركزية على خلفية متدرّجة)
    ============================================================ */
 
-.login-page {
+.lg-page {
   min-height: 100vh;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
   direction: rtl;
-  background: #fff;
-}
-
-/* ---------- عمود النموذج ---------- */
-.login-main {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background: #fff;
-}
-
-.login-form-area {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 1.1rem;
-  width: 100%;
-  max-width: 430px;
-  margin-inline: auto;
-  padding: 2rem 2.2rem;
-}
-
-/* ---------- التبويبات ---------- */
-.login-tabs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.3rem;
-  padding: 0.32rem;
-  background: var(--gray-100);
-  border-radius: 12px;
-}
-.login-tabs button {
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  padding: 0.6rem 1rem;
-  border-radius: 9px;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 0.9rem;
-  color: var(--gray-500);
-  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-}
-.login-tabs button.is-active {
-  background: #fff;
-  color: var(--purple-700);
-  box-shadow: 0 1px 3px rgba(43, 26, 78, 0.12);
-}
-
-/* ---------- الترحيب ---------- */
-.login-greeting { text-align: center; margin-top: 0.4rem; }
-.login-greeting h1 {
-  font-family: var(--font-display);
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: var(--purple-900);
-  margin-bottom: 0.35rem;
-  line-height: 1.4;
-}
-.login-greeting p { font-size: 0.85rem; color: var(--gray-500); }
-
-/* ---------- الحقول ---------- */
-.field { margin-bottom: 0.2rem; }
-.field-label {
-  display: block;
-  text-align: start;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--gray-700);
-  margin-bottom: 0.4rem;
-}
-.field-input-wrap { position: relative; display: flex; align-items: center; }
-.field-input-wrap input {
-  width: 100%;
-  padding: 0.7rem 0.9rem;
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  color: var(--gray-900);
-  background: #fff;
-  border: 1.4px solid var(--gray-300);
-  border-radius: 10px;
-  text-align: start;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-.field-input-wrap input[dir='ltr'] { text-align: left; }
-.field-input-wrap input::placeholder { color: #b8b4c0; }
-.field-input-wrap input:focus {
-  outline: none;
-  border-color: var(--purple-500);
-  box-shadow: 0 0 0 3px rgba(107, 87, 160, 0.12);
-}
-.field-action {
-  position: absolute;
-  inset-inline-start: 0.7rem;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  cursor: pointer;
-  background: none;
-  border: none;
-  padding: 0;
-  color: var(--gray-500);
-  transition: color 0.2s;
-}
-.field-action:hover { color: var(--purple-500); }
-.field-action svg { width: 17px; height: 17px; }
-
-/* ---------- تذكرني / نسيت ---------- */
-.login-options {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 0.8rem;
-  margin: 0.2rem 0;
-}
-.remember-label {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  color: var(--gray-700);
-  cursor: pointer;
-}
-.remember-label input[type='checkbox'] {
-  width: 15px;
-  height: 15px;
-  accent-color: var(--purple-500);
-  cursor: pointer;
-}
-.forgot-link { color: var(--purple-500); font-weight: 600; }
-.forgot-link:hover { color: var(--purple-700); }
-
-/* ---------- زر الدخول ---------- */
-.login-submit {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  width: 100%;
-  padding: 0.85rem;
-  background: var(--purple-700);
-  color: #fff;
-  border: none;
-  border-radius: 11px;
-  font-family: var(--font-display);
-  font-size: 0.95rem;
-  font-weight: 700;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background 0.2s, transform 0.15s;
-}
-.login-submit:hover { background: var(--purple-900); }
-.login-submit:active { transform: scale(0.99); }
-.login-submit[disabled] { opacity: 0.6; cursor: not-allowed; }
-.login-submit span { font-size: 1.05rem; }
-
-/* ---------- سجّل الآن ---------- */
-.login-signup { text-align: center; font-size: 0.83rem; color: var(--gray-500); }
-.login-signup .link-btn,
-.link-btn {
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  color: var(--purple-500);
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 0.83rem;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-.link-btn:hover { color: var(--purple-700); }
-
-/* ---------- بطاقة إنشاء الحساب ---------- */
-.signup-note {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 1rem;
-  padding: 1.4rem;
-  background: var(--off-white);
-  border: 1px solid var(--line);
-  border-radius: 14px;
-}
-.signup-note-ic {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
   display: grid;
   place-items: center;
-  background: #fff;
-  border: 1px solid var(--line);
-  color: var(--purple-900);
-}
-.signup-note p { font-size: 0.86rem; color: var(--gray-700); line-height: 1.9; }
-.signup-note .login-submit { margin-top: 0.2rem; }
-
-/* ---------- سطر سفلي ---------- */
-.login-foot-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 0.4rem;
-  font-size: 0.75rem;
-}
-.topbar-home { color: var(--gray-500); transition: color 0.2s; }
-.topbar-home:hover { color: var(--purple-500); }
-.login-copy { color: #b8b4c0; }
-
-/* ============================================================
-   اللوحة الجانبية (الهوية)
-   ============================================================ */
-.login-panel {
+  padding: 1.5rem;
   position: relative;
   overflow: hidden;
-  display: flex;
-  color: #fff;
-  background:
-    repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.035) 0 2px, transparent 2px 24px),
-    linear-gradient(160deg, var(--purple-700) 0%, var(--purple-900) 100%);
+  background: #17122b;
+  font-family: var(--font-body);
 }
 
-.panel-inner {
+/* ---------- الخلفية المحيطة ---------- */
+.lg-ambient { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.lg-ambient::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(120% 120% at 82% -8%, #6B57A0 0%, #3D2879 42%, #17122b 100%);
+}
+.lg-blob { position: absolute; border-radius: 50%; filter: blur(70px); opacity: 0.55; }
+.lg-blob-1 { width: 420px; height: 420px; background: #6B57A0; top: -120px; inset-inline-end: -80px; animation: lgFloat 11s ease-in-out infinite; }
+.lg-blob-2 { width: 360px; height: 360px; background: #8873AF; bottom: -140px; inset-inline-start: -60px; animation: lgFloat 13s ease-in-out infinite reverse; }
+@keyframes lgFloat { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(18px,24px) scale(1.1); } }
+.lg-grid {
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0);
+  background-size: 30px 30px;
+  -webkit-mask-image: linear-gradient(180deg, #000, transparent 75%);
+  mask-image: linear-gradient(180deg, #000, transparent 75%);
+}
+
+/* ---------- البطاقة ---------- */
+.lg-card {
   position: relative;
   z-index: 1;
-  display: flex;
-  flex-direction: column;
   width: 100%;
-  padding: 2.75rem;
+  max-width: 410px;
+  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 22px;
+  box-shadow: 0 30px 80px -30px rgba(10, 6, 25, 0.7);
+  padding: 2.4rem 2.2rem 2rem;
+  backdrop-filter: blur(6px);
 }
 
-/* شعار أعلى اللوحة */
-.panel-brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  color: #fff;
-  align-self: flex-start;
+.lg-brand { display: inline-flex; align-items: center; gap: 0.55rem; margin-bottom: 1.6rem; }
+.lg-brand-mark {
+  width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center;
+  background: linear-gradient(140deg, var(--purple-500), var(--purple-900)); color: #fff;
+  box-shadow: 0 8px 20px -8px rgba(107, 87, 160, 0.8);
 }
-.panel-brand-name {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.25rem;
-  color: #fff;
+.lg-brand-name { font-family: var(--font-display); font-weight: 700; font-size: 1.35rem; color: var(--purple-900); }
+
+.lg-head { margin-bottom: 1.5rem; }
+.lg-head h1 { font-family: var(--font-display); font-size: 1.55rem; font-weight: 700; color: var(--purple-900); margin: 0 0 0.3rem; }
+.lg-head p { color: var(--gray-500); font-size: 0.9rem; margin: 0; }
+
+/* ---------- الحقول ---------- */
+.lg-field { display: block; margin-bottom: 1rem; }
+.lg-label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--gray-700); margin-bottom: 0.4rem; }
+.lg-field input,
+.lg-input-wrap input {
+  width: 100%; padding: 0.75rem 0.9rem; font-family: var(--font-body); font-size: 0.9rem;
+  color: var(--gray-900); background: #fff; border: 1.5px solid var(--gray-300); border-radius: 11px;
+  transition: border-color 0.18s, box-shadow 0.18s;
 }
-.panel-brand-mark {
-  width: 40px;
-  height: 40px;
-  display: grid;
-  place-items: center;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
+.lg-field input[dir='ltr'] { text-align: left; }
+.lg-field input::placeholder, .lg-input-wrap input::placeholder { color: #b8b4c0; }
+.lg-field input:focus, .lg-input-wrap input:focus {
+  outline: none; border-color: var(--purple-500); box-shadow: 0 0 0 3px rgba(107, 87, 160, 0.14);
+}
+.lg-input-wrap { position: relative; display: block; }
+.lg-eye {
+  position: absolute; inset-inline-start: 0.7rem; top: 50%; transform: translateY(-50%);
+  background: none; border: none; cursor: pointer; color: var(--gray-500); display: flex; padding: 0;
+}
+.lg-eye:hover { color: var(--purple-500); }
+
+.lg-remember { display: flex; align-items: center; gap: 0.45rem; font-size: 0.82rem; color: var(--gray-700); cursor: pointer; margin: 0.2rem 0 1.2rem; }
+.lg-remember input { width: 15px; height: 15px; accent-color: var(--purple-500); cursor: pointer; }
+
+.lg-submit {
+  display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%;
+  padding: 0.85rem; border: none; border-radius: 12px; cursor: pointer;
+  background: linear-gradient(135deg, var(--purple-500), var(--purple-700)); color: #fff;
+  font-family: var(--font-display); font-weight: 700; font-size: 0.95rem;
+  box-shadow: 0 12px 26px -12px rgba(107, 87, 160, 0.8); transition: transform 0.15s, box-shadow 0.2s;
+}
+.lg-submit:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 16px 32px -12px rgba(107, 87, 160, 0.9); }
+.lg-submit:active:not(:disabled) { transform: scale(0.99); }
+.lg-submit:disabled { opacity: 0.65; cursor: not-allowed; }
+.lg-submit span { font-size: 1.05rem; }
+
+.lg-error {
+  display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 0.8rem; margin-bottom: 1rem;
+  background: #fdecec; border: 1px solid #f5c6c6; border-radius: 10px; color: #c0392b; font-size: 0.82rem;
 }
 
-/* المحتوى */
-.panel-copy {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  max-width: 460px;
-}
-.panel-title {
-  font-family: var(--font-display);
-  font-size: clamp(1.7rem, 2.4vw, 2.3rem);
-  font-weight: 700;
-  line-height: 1.5;
-  color: #fff;
-  margin-bottom: 1.8rem;
-}
-.panel-checks {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 1.1rem;
-}
-.panel-checks li {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.7rem;
-  font-size: 0.95rem;
-  line-height: 1.8;
-  color: rgba(255, 255, 255, 0.9);
-}
-.panel-checks svg {
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-  margin-top: 3px;
-  color: var(--purple-100);
-}
+.lg-note { text-align: center; font-size: 0.8rem; color: var(--gray-500); margin: 1.3rem 0 0; line-height: 1.7; }
+.lg-note a { color: var(--purple-500); font-weight: 700; }
+.lg-note a:hover { color: var(--purple-700); }
 
-.panel-foot {
-  font-size: 0.78rem;
-  color: rgba(255, 255, 255, 0.55);
-  border-top: 1px solid rgba(255, 255, 255, 0.14);
-  padding-top: 1.3rem;
-}
+.lg-home { position: relative; z-index: 1; margin-top: 1.4rem; color: rgba(255, 255, 255, 0.7); font-size: 0.82rem; transition: color 0.2s; }
+.lg-home:hover { color: #fff; }
 
-/* ---------- استجابة ---------- */
-@media (max-width: 860px) {
-  .login-page { grid-template-columns: 1fr; }
-  .login-panel { display: none; }
-  .login-form-area { padding: 2rem 1.3rem; }
+@media (prefers-reduced-motion: reduce) {
+  .lg-blob { animation: none; }
+}
+@media (max-width: 440px) {
+  .lg-card { padding: 1.8rem 1.4rem; }
 }

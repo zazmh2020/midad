@@ -9,7 +9,6 @@ import HowItWorks from '@/components/landing/HowItWorks';
 import ProductShowcase from '@/components/landing/ProductShowcase';
 import Testimonials from '@/components/landing/Testimonials';
 import MidadAIChat from '@/components/landing/MidadAIChat';
-import OrgTypes from '@/components/landing/OrgTypes';
 import '@/styles/midad.css';
 
 const AUDIENCES = [
@@ -21,7 +20,6 @@ const AUDIENCES = [
   { icon: 'organization/organization-building', t: 'المؤسسات الوقفية' },
 ];
 
-const PROBLEMS = ['بيانات متفرقة بين ملفات وجداول', 'صعوبة متابعة المشاريع والفرق', 'تعدّد الأنظمة غير المترابطة', 'ضعف التقارير واتخاذ القرار', 'صعوبة التنسيق بين الإدارات'];
 
 const FEATURES = [
   { icon: 'organization/organization-structure', t: 'إدارة مركزية', d: 'كل أعمال المؤسسة في مكان واحد مترابط.' },
@@ -108,31 +106,6 @@ export default function HomePage() {
                 {AUDIENCES.map((a) => (
                   <span key={a.t} className="mdl-chip"><Icon name={a.icon} className="ic" size={17} />{a.t}</span>
                 ))}
-              </div>
-            </Reveal>
-          </div>
-        </section>
-
-        {/* ========== PROBLEM → SOLUTION ========== */}
-        <section className="mdl-section" style={{ background: 'var(--white)' }}>
-          <div className="mdl-wrap mdl-ps">
-            <Reveal>
-              <div>
-                <span className="mdl-eyebrow">التحدّي</span>
-                <h2 className="mdl-h2">عندما تتوزّع أعمال المؤسسة بين عدّة أنظمة</h2>
-                <div className="mdl-problems" style={{ marginTop: '1.5rem' }}>
-                  {PROBLEMS.map((p) => (
-                    <div key={p} className="mdl-prob"><span className="x">✕</span><span>{p}</span></div>
-                  ))}
-                </div>
-              </div>
-            </Reveal>
-            <Reveal delay={0.15} y={30}>
-              <div className="mdl-solution">
-                <span className="mdl-eyebrow" style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>الحل</span>
-                <h3>هنا تأتي مِداد</h3>
-                <p>منصة واحدة تجمع أعمال المؤسسة وتمنحك رؤية أوضح وتحكّمًا أكبر — من إدارة الفرق إلى التقارير الذكية.</p>
-                <a href="#systems" className="mdl-btn mdl-btn-light">اكتشف الأنظمة</a>
               </div>
             </Reveal>
           </div>
@@ -278,20 +251,6 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ========== ORG TYPES ========== */}
-        <section id="solutions" className="mdl-section">
-          <div className="mdl-wrap">
-            <Reveal>
-              <div className="mdl-center">
-                <span className="mdl-eyebrow">الحلول</span>
-                <h2 className="mdl-h2">مِداد تناسب مؤسستك</h2>
-                <p className="mdl-lead">اضغط على نوع مؤسستك لتكتشف كيف تخدمها مِداد.</p>
-              </div>
-            </Reveal>
-            <OrgTypes />
-          </div>
-        </section>
-
         {/* ========== FINAL CTA ========== */}
         <section className="mdl-cta">
           <div className="mdl-wrap mdl-cta-inner">
@@ -300,7 +259,7 @@ export default function HomePage() {
               <p>ابدأ رحلتك نحو إدارة رقمية أكثر تنظيمًا ومرونة مع مِداد.</p>
               <div className="mdl-cta-actions">
                 <Link href="/login" className="mdl-btn mdl-btn-light">تسجيل الدخول</Link>
-                <a href="#solutions" className="mdl-btn mdl-btn-outline-light">اطلب عرضًا توضيحيًا</a>
+                <a href="#about" className="mdl-btn mdl-btn-outline-light">تواصل معنا</a>
               </div>
             </Reveal>
           </div>
@@ -321,7 +280,7 @@ export default function HomePage() {
             </div>
             <div>
               <h5>الحلول</h5>
-              <ul><li><a href="#solutions">أنواع المؤسسات</a></li><li><a href="#systems">الأنظمة</a></li><li><a href="#about">عن مِداد</a></li></ul>
+              <ul><li><a href="#platform">الجهات</a></li><li><a href="#systems">الأنظمة</a></li><li><a href="#about">عن مِداد</a></li></ul>
             </div>
             <div>
               <h5>الدعم</h5>

@@ -64,8 +64,8 @@ export default function MidadHeader() {
             <Mega items={SYSTEMS_MEGA} href="#systems" wide />
           </div>
           <div className="mdl-has-menu">
-            <a href="#solutions" className="mdl-nav-link">الجهات {chev}</a>
-            <Mega items={JIHAT_MEGA} href="#solutions" />
+            <a href="#platform" className="mdl-nav-link">الجهات {chev}</a>
+            <Mega items={JIHAT_MEGA} href="#platform" />
           </div>
           <a href="#platform" className="mdl-nav-link">المنصة</a>
           <a href="#ai" className="mdl-nav-link">مِداد AI</a>
@@ -89,8 +89,8 @@ export default function MidadHeader() {
               <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M4 4l14 14M18 4L4 18" /></svg>
             </button>
           </div>
-          {[['#home', 'الرئيسية'], ['#systems', 'الأنظمة'], ['#solutions', 'الجهات'], ['#platform', 'المنصة'], ['#ai', 'مِداد AI'], ['#about', 'عن مِداد']].map(([h, l]) => (
-            <a key={h} href={h} onClick={() => setOpen(false)}>{l}</a>
+          {[['#home', 'الرئيسية'], ['#systems', 'الأنظمة'], ['#platform', 'المنصة'], ['#ai', 'مِداد AI'], ['#about', 'عن مِداد']].map(([h, l]) => (
+            <a key={l} href={h} onClick={() => setOpen(false)}>{l}</a>
           ))}
           <Link href="/login" className="mdl-btn mdl-btn-primary" onClick={() => setOpen(false)}>تسجيل الدخول</Link>
         </div>
