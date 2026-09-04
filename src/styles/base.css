@@ -250,3 +250,48 @@ svg {
 .tbt-notif:hover { background: var(--gray-100); }
 .tbt-notif-ic { width: 30px; height: 30px; border-radius: 9px; background: var(--gray-100); display: grid; place-items: center; font-size: 0.9rem; flex-shrink: 0; }
 .tbt-notif-tx { display: flex; flex-direction: column; gap: 0.15rem; font-size: 0.83rem; color: var(--gray-900); }
+
+/* ============================================================
+   تبديل اللغة + نافذة اختيار اللغة (i18n)
+   ============================================================ */
+.lang-toggle {
+  min-width: 34px; height: 34px; padding: 0 0.55rem; border-radius: 100px;
+  display: inline-grid; place-items: center; flex-shrink: 0;
+  border: 1px solid var(--line, #e6e3ee); background: transparent; color: var(--gray-700, #4b4660);
+  font-family: var(--font-display); font-weight: 800; font-size: 0.78rem; letter-spacing: 0.02em;
+  cursor: pointer; transition: color 0.18s, border-color 0.18s, background 0.18s;
+}
+.lang-toggle:hover { color: var(--purple-500, #6b57a0); border-color: var(--purple-300, #8873af); }
+
+.lang-gate-scrim {
+  position: fixed; inset: 0; z-index: 300; display: grid; place-items: center; padding: 1.5rem;
+  background: rgba(20, 12, 40, 0.55); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  animation: langGateFade 0.25s ease both;
+}
+@keyframes langGateFade { from { opacity: 0; } to { opacity: 1; } }
+.lang-gate {
+  width: min(420px, 100%); background: #fff; border-radius: 22px; padding: 2.2rem 2rem;
+  text-align: center; box-shadow: 0 40px 90px -30px rgba(20, 12, 40, 0.6);
+  animation: langGateIn 0.3s cubic-bezier(0.22,0.61,0.36,1) both;
+}
+@keyframes langGateIn { from { opacity: 0; transform: translateY(16px) scale(0.97); } to { opacity: 1; transform: none; } }
+.lang-gate-logo { font-family: var(--font-display); font-weight: 800; color: var(--purple-500, #6b57a0); font-size: 1.1rem; margin-bottom: 1rem; }
+.lang-gate h2 { font-family: var(--font-display); font-size: 1.35rem; color: var(--purple-900, #2b1a4e); margin: 0; }
+.lang-gate-en { color: var(--gray-500, #7c7788); font-size: 0.95rem; margin: 0.3rem 0 1.6rem; }
+.lang-gate-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+.lang-gate-opt {
+  display: flex; flex-direction: column; align-items: center; gap: 0.6rem; padding: 1.2rem 1rem;
+  border: 1.5px solid var(--line, #e6e3ee); border-radius: 16px; background: #fff; cursor: pointer;
+  font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; color: var(--purple-900, #2b1a4e);
+  transition: border-color 0.18s, background 0.18s, transform 0.18s;
+}
+.lang-gate-opt:hover { border-color: var(--purple-500, #6b57a0); background: var(--purple-50, #f4f1fa); transform: translateY(-2px); }
+.lang-gate-flag {
+  width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center;
+  background: linear-gradient(135deg, var(--purple-300, #8873af), var(--purple-500, #6b57a0)); color: #fff; font-size: 1.05rem;
+}
+
+/* الوضع الداكن */
+:root[data-theme="dark"] .lang-gate { background: #221a35; }
+:root[data-theme="dark"] .lang-gate-opt { background: #221a35; border-color: rgba(255,255,255,0.12); color: #f2eefb; }
+:root[data-theme="dark"] .lang-gate-opt:hover { background: #2a2140; }

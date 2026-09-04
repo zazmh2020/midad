@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import Icon from '@/components/Icon';
 import { LogoMark } from '@/components/Logo';
 import ThemeToggle from '@/components/ThemeToggle';
+import LangToggle from '@/components/LangToggle';
+import { useT } from '@/lib/i18n/LocaleProvider';
 
 const SYSTEMS_MEGA = [
   { icon: 'people/people-users', t: 'إدارة الأفراد', d: 'موظفون ومتطوعون ومستفيدون بأدوارهم.' },
@@ -40,6 +42,7 @@ function Mega({ items, href, wide }: { items: typeof SYSTEMS_MEGA; href: string;
 }
 
 export default function MidadHeader() {
+  const t = useT();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -55,28 +58,29 @@ export default function MidadHeader() {
       <nav className="mdl-navbar" aria-label="التنقل الرئيسي">
         <a href="#home" className="mdl-brand" aria-label="مِداد">
           <LogoMark size={26} className="mark" />
-          <span className="name">مِداد</span>
+          <span className="name">{t('brand')}</span>
         </a>
 
         <div className="mdl-nav-links">
-          <a href="#home" className="mdl-nav-link">الرئيسية</a>
-          <a href="#platform" className="mdl-nav-link">المنصة</a>
+          <a href="#home" className="mdl-nav-link">{t('nav.home')}</a>
+          <a href="#platform" className="mdl-nav-link">{t('nav.platform')}</a>
           <div className="mdl-has-menu">
-            <a href="#platform" className="mdl-nav-link">الجهات {chev}</a>
+            <a href="#platform" className="mdl-nav-link">{t('nav.orgs')} {chev}</a>
             <Mega items={JIHAT_MEGA} href="#platform" />
           </div>
           <div className="mdl-has-menu">
-            <a href="#systems" className="mdl-nav-link">الأنظمة {chev}</a>
+            <a href="#systems" className="mdl-nav-link">{t('nav.systems')} {chev}</a>
             <Mega items={SYSTEMS_MEGA} href="#systems" wide />
           </div>
-          <a href="#ai" className="mdl-nav-link">مِداد AI</a>
-          <a href="#pricing" className="mdl-nav-link">الباقات</a>
-          <a href="#about" className="mdl-nav-link">عن مِداد</a>
+          <a href="#ai" className="mdl-nav-link">{t('nav.ai')}</a>
+          <a href="#pricing" className="mdl-nav-link">{t('nav.pricing')}</a>
+          <a href="#about" className="mdl-nav-link">{t('nav.about')}</a>
         </div>
 
         <div className="mdl-nav-actions">
+          <LangToggle />
           <ThemeToggle />
-          <Link href="/login" className="mdl-btn mdl-btn-white">تسجيل الدخول</Link>
+          <Link href="/login" className="mdl-btn mdl-btn-white">{t('nav.login')}</Link>
           <button className="mdl-menu-btn" aria-label="القائمة" onClick={() => setOpen(true)}>
             <svg width="24" height="18" viewBox="0 0 26 20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M1 1h24M1 10h24M1 19h24" /></svg>
           </button>
@@ -92,10 +96,10 @@ export default function MidadHeader() {
               <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M4 4l14 14M18 4L4 18" /></svg>
             </button>
           </div>
-          {[['#home', 'الرئيسية'], ['#platform', 'المنصة'], ['#systems', 'الأنظمة'], ['#ai', 'مِداد AI'], ['#pricing', 'الباقات'], ['#about', 'عن مِداد']].map(([h, l]) => (
-            <a key={l} href={h} onClick={() => setOpen(false)}>{l}</a>
+          {[['#home', 'nav.home'], ['#platform', 'nav.platform'], ['#systems', 'nav.systems'], ['#ai', 'nav.ai'], ['#pricing', 'nav.pricing'], ['#about', 'nav.about']].map(([h, key]) => (
+            <a key={key} href={h} onClick={() => setOpen(false)}>{t(key)}</a>
           ))}
-          <Link href="/login" className="mdl-btn mdl-btn-primary" onClick={() => setOpen(false)}>تسجيل الدخول</Link>
+          <Link href="/login" className="mdl-btn mdl-btn-primary" onClick={() => setOpen(false)}>{t('nav.login')}</Link>
         </div>
       </div>
     </header>

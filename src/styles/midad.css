@@ -30,7 +30,7 @@
   font-family: var(--font-display, 'Qomra', system-ui, sans-serif);
   color: var(--text);
   background: var(--bg);
-  direction: rtl;
+  direction: inherit;
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
 }

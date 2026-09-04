@@ -11,6 +11,7 @@ import Testimonials from '@/components/landing/Testimonials';
 import MidadAIChat from '@/components/landing/MidadAIChat';
 import MidadAssistant from '@/components/landing/MidadAssistant';
 import PricingPlans from '@/components/PricingPlans';
+import { getT } from '@/lib/i18n/server';
 import '@/styles/midad.css';
 import '@/styles/pricing.css';
 
@@ -46,7 +47,8 @@ const SECURITY = [
 
 const INTEGRATIONS = ['البريد الإلكتروني', 'بوابات الدفع', 'WhatsApp', 'Google Workspace', 'Microsoft', 'واجهات API'];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const { t } = await getT();
   return (
     <div className="mdl">
       <MidadHeader />
@@ -56,26 +58,23 @@ export default function HomePage() {
         <section id="home" className="mdl-hero">
           <div className="mdl-wrap mdl-hero-grid">
             <div>
-              <Reveal><h1>كل مؤسستك<br /><span className="hl">في مكان واحد</span></h1></Reveal>
+              <Reveal><h1>{t('hero.title1')}<br /><span className="hl">{t('hero.title2')}</span></h1></Reveal>
               <Reveal delay={0.1}>
-                <p className="mdl-hero-sub">
-                  منصة مِداد الرقمية تجمع إدارة المؤسسة والموارد والمشاريع والبرامج
-                  والتقارير في منظومة واحدة ذكية ومرنة.
-                </p>
+                <p className="mdl-hero-sub">{t('hero.sub')}</p>
               </Reveal>
               <Reveal delay={0.2}>
                 <div className="mdl-hero-actions">
-                  <Link href="/login" className="mdl-btn mdl-btn-light">تسجيل الدخول</Link>
-                  <a href="#systems" className="mdl-btn mdl-btn-outline-light">استكشف المنصة</a>
+                  <Link href="/login" className="mdl-btn mdl-btn-light">{t('hero.cta.login')}</Link>
+                  <a href="#systems" className="mdl-btn mdl-btn-outline-light">{t('hero.cta.explore')}</a>
                 </div>
               </Reveal>
               <Reveal delay={0.3}>
                 <div className="mdl-hero-trust">
-                  <span><strong>12</strong> نظامًا</span>
+                  <span><strong>12</strong> {t('hero.trust.systems')}</span>
                   <span className="sep" />
-                  <span><strong>100%</strong> عزل للبيانات</span>
+                  <span><strong>100%</strong> {t('hero.trust.isolation')}</span>
                   <span className="sep" />
-                  <span><strong>RTL</strong> عربية أصيلة</span>
+                  <span><strong>RTL</strong> {t('hero.trust.rtl')}</span>
                 </div>
               </Reveal>
             </div>
@@ -109,9 +108,9 @@ export default function HomePage() {
         <section id="platform" className="mdl-section">
           <div className="mdl-wrap mdl-center">
             <Reveal>
-              <span className="mdl-eyebrow">منظومة واحدة</span>
-              <h2 className="mdl-h2">منظومة واحدة. إمكانيات متعددة.</h2>
-              <p className="mdl-lead">صُمِّمت مِداد لتجمع أهمّ احتياجات المؤسسات في بيئة رقمية واحدة مترابطة.</p>
+              <span className="mdl-eyebrow">{t('sec.platform.eyebrow')}</span>
+              <h2 className="mdl-h2">{t('sec.platform.title')}</h2>
+              <p className="mdl-lead">{t('sec.platform.lead')}</p>
             </Reveal>
             <Reveal delay={0.1}>
               <div className="mdl-chips">
@@ -128,9 +127,9 @@ export default function HomePage() {
           <div className="mdl-wrap">
             <Reveal>
               <div className="mdl-center">
-                <span className="mdl-eyebrow">الأنظمة</span>
-                <h2 className="mdl-h2">كل ما تحتاجه مؤسستك</h2>
-                <p className="mdl-lead">فعّل الأنظمة التي تحتاجها وابدأ العمل من مكان واحد.</p>
+                <span className="mdl-eyebrow">{t('sec.systems.eyebrow')}</span>
+                <h2 className="mdl-h2">{t('sec.systems.title')}</h2>
+                <p className="mdl-lead">{t('sec.systems.lead')}</p>
               </div>
             </Reveal>
             <SystemsShowcase />
@@ -142,9 +141,9 @@ export default function HomePage() {
           <div className="mdl-wrap">
             <Reveal>
               <div className="mdl-center">
-                <span className="mdl-eyebrow">كيف تعمل</span>
-                <h2 className="mdl-h2">كيف تعمل مِداد؟</h2>
-                <p className="mdl-lead">من الإعداد إلى القرار الذكي — رحلة واضحة في خمس خطوات.</p>
+                <span className="mdl-eyebrow">{t('sec.how.eyebrow')}</span>
+                <h2 className="mdl-h2">{t('sec.how.title')}</h2>
+                <p className="mdl-lead">{t('sec.how.lead')}</p>
               </div>
             </Reveal>
             <HowItWorks />
@@ -156,9 +155,9 @@ export default function HomePage() {
           <div className="mdl-wrap">
             <Reveal>
               <div className="mdl-center">
-                <span className="mdl-eyebrow">المنصة</span>
-                <h2 className="mdl-h2">منصة واحدة لإدارة أعمال مؤسستك</h2>
-                <p className="mdl-lead">مرّر لأسفل لتكتشف واجهات مِداد واحدةً تلو الأخرى.</p>
+                <span className="mdl-eyebrow">{t('sec.product.eyebrow')}</span>
+                <h2 className="mdl-h2">{t('sec.product.title')}</h2>
+                <p className="mdl-lead">{t('sec.product.lead')}</p>
               </div>
             </Reveal>
             <ProductShowcase />
@@ -170,13 +169,13 @@ export default function HomePage() {
           <div className="mdl-wrap">
             <Reveal>
               <div className="mdl-center">
-                <span className="mdl-eyebrow">قصص الجهات</span>
-                <h2 className="mdl-h2">جهات حقيقية. أثرٌ ملموس.</h2>
-                <p className="mdl-lead">كيف نظّمت مِداد أعمال جمعيات ومراكز حقيقية — من التقارير إلى المستفيدين.</p>
+                <span className="mdl-eyebrow">{t('sec.stories.eyebrow')}</span>
+                <h2 className="mdl-h2">{t('sec.stories.title')}</h2>
+                <p className="mdl-lead">{t('sec.stories.lead')}</p>
                 <div className="mdl-rating">
                   <span className="mdl-rating-score">4.9</span>
                   <span className="mdl-rating-stars">{STAR}{STAR}{STAR}{STAR}{STAR}</span>
-                  <span className="mdl-rating-meta">من <strong>+40</strong> جهة تستخدم مِداد</span>
+                  <span className="mdl-rating-meta">{t('sec.stories.rating', { n: '+40' })}</span>
                 </div>
               </div>
             </Reveal>
@@ -189,11 +188,11 @@ export default function HomePage() {
           <div className="mdl-wrap mdl-ai-grid">
             <Reveal>
               <div>
-                <span className="mdl-eyebrow">مِداد AI</span>
-                <h2 className="mdl-h2">مساعدك الذكي لإدارة مؤسستك</h2>
-                <p className="mdl-lead">احصل على رؤى ذكية، حلّل البيانات، واكتشف ما يحتاج إلى اهتمامك عبر مساعد مِداد الذكي — ضمن حدود صلاحياتك.</p>
+                <span className="mdl-eyebrow">{t('sec.ai.eyebrow')}</span>
+                <h2 className="mdl-h2">{t('sec.ai.title')}</h2>
+                <p className="mdl-lead">{t('sec.ai.lead')}</p>
                 <div className="mdl-hero-actions">
-                  <Link href="/login" className="mdl-btn mdl-btn-primary">جرّب مِداد AI</Link>
+                  <Link href="/login" className="mdl-btn mdl-btn-primary">{t('sec.ai.cta')}</Link>
                 </div>
               </div>
             </Reveal>
@@ -206,8 +205,8 @@ export default function HomePage() {
           <div className="mdl-wrap">
             <Reveal>
               <div className="mdl-center">
-                <span className="mdl-eyebrow">المميزات</span>
-                <h2 className="mdl-h2">مصمّمة للمؤسسات الحديثة</h2>
+                <span className="mdl-eyebrow">{t('sec.features.eyebrow')}</span>
+                <h2 className="mdl-h2">{t('sec.features.title')}</h2>
               </div>
             </Reveal>
             <div className="mdl-feats">
@@ -229,9 +228,9 @@ export default function HomePage() {
           <div className="mdl-wrap mdl-sec-grid">
             <Reveal>
               <div>
-                <span className="mdl-eyebrow">الأمان</span>
-                <h2 className="mdl-h2">بيانات مؤسستك تحت السيطرة</h2>
-                <p className="mdl-lead" style={{ marginBottom: '1.5rem' }}>تحكّم دقيق بالصلاحيات والوصول، وعزل كامل لبيانات كل مؤسسة.</p>
+                <span className="mdl-eyebrow">{t('sec.security.eyebrow')}</span>
+                <h2 className="mdl-h2">{t('sec.security.title')}</h2>
+                <p className="mdl-lead" style={{ marginBottom: '1.5rem' }}>{t('sec.security.lead')}</p>
                 <div className="mdl-sec-list">
                   {SECURITY.map((s) => (
                     <div key={s.t} className="mdl-sec-item"><Icon name={s.icon} size={20} /><span>{s.t}</span></div>
@@ -254,9 +253,9 @@ export default function HomePage() {
         <section className="mdl-section" style={{ background: 'var(--white)' }}>
           <div className="mdl-wrap mdl-center">
             <Reveal>
-              <span className="mdl-eyebrow">التكاملات</span>
-              <h2 className="mdl-h2">تتكامل مع أدوات مؤسستك</h2>
-              <p className="mdl-lead">جاهزة للربط مع الخدمات التي تعتمد عليها مؤسستك.</p>
+              <span className="mdl-eyebrow">{t('sec.integrations.eyebrow')}</span>
+              <h2 className="mdl-h2">{t('sec.integrations.title')}</h2>
+              <p className="mdl-lead">{t('sec.integrations.lead')}</p>
             </Reveal>
           </div>
           <div className="mdl-marquee">
@@ -273,9 +272,9 @@ export default function HomePage() {
           <div className="mdl-wrap">
             <Reveal>
               <div className="mdl-center">
-                <span className="mdl-eyebrow">الباقات</span>
-                <h2 className="mdl-h2">باقة تناسب كل مؤسسة</h2>
-                <p className="mdl-lead">ابدأ مجانًا، وارتقِ حين تنمو مؤسستك — بلا التزامات مخفية.</p>
+                <span className="mdl-eyebrow">{t('sec.pricing.eyebrow')}</span>
+                <h2 className="mdl-h2">{t('sec.pricing.title')}</h2>
+                <p className="mdl-lead">{t('sec.pricing.lead')}</p>
               </div>
             </Reveal>
             <Reveal delay={0.1}>
@@ -290,11 +289,11 @@ export default function HomePage() {
         <section className="mdl-cta">
           <div className="mdl-wrap mdl-cta-inner">
             <Reveal>
-              <h2>مؤسستك تستحق إدارة أذكى</h2>
-              <p>ابدأ رحلتك نحو إدارة رقمية أكثر تنظيمًا ومرونة مع مِداد.</p>
+              <h2>{t('cta.title')}</h2>
+              <p>{t('cta.lead')}</p>
               <div className="mdl-cta-actions">
-                <Link href="/login" className="mdl-btn mdl-btn-light">تسجيل الدخول</Link>
-                <a href="#about" className="mdl-btn mdl-btn-outline-light">تواصل معنا</a>
+                <Link href="/login" className="mdl-btn mdl-btn-light">{t('cta.login')}</Link>
+                <a href="#about" className="mdl-btn mdl-btn-outline-light">{t('cta.contact')}</a>
               </div>
             </Reveal>
           </div>
@@ -306,23 +305,23 @@ export default function HomePage() {
         <div className="mdl-wrap">
           <div className="mdl-footer-grid">
             <div>
-              <div className="fb-name"><LogoMark size={26} className="mark" /> مِداد</div>
-              <p className="fb-desc">منصة رقمية متكاملة لإدارة المؤسسات والتحوّل الرقمي.</p>
+              <div className="fb-name"><LogoMark size={26} className="mark" /> {t('brand')}</div>
+              <p className="fb-desc">{t('footer.desc')}</p>
             </div>
             <div>
-              <h5>المنصة</h5>
-              <ul><li><a href="#platform">نظرة عامة</a></li><li><a href="#systems">الأنظمة</a></li><li><a href="#ai">مِداد AI</a></li></ul>
+              <h5>{t('footer.col.platform')}</h5>
+              <ul><li><a href="#platform">{t('footer.overview')}</a></li><li><a href="#systems">{t('nav.systems')}</a></li><li><a href="#ai">{t('nav.ai')}</a></li></ul>
             </div>
             <div>
-              <h5>الحلول</h5>
-              <ul><li><a href="#platform">الجهات</a></li><li><a href="#systems">الأنظمة</a></li><li><a href="#about">عن مِداد</a></li></ul>
+              <h5>{t('footer.col.solutions')}</h5>
+              <ul><li><a href="#platform">{t('nav.orgs')}</a></li><li><a href="#systems">{t('nav.systems')}</a></li><li><a href="#about">{t('nav.about')}</a></li></ul>
             </div>
             <div>
-              <h5>الدعم</h5>
-              <ul><li><Link href="/login">تسجيل الدخول</Link></li><li><a href="#about">تواصل معنا</a></li><li><a href="#about">سياسة الخصوصية</a></li></ul>
+              <h5>{t('footer.col.support')}</h5>
+              <ul><li><Link href="/login">{t('nav.login')}</Link></li><li><a href="#about">{t('footer.contact')}</a></li><li><a href="#about">{t('footer.privacy')}</a></li></ul>
             </div>
           </div>
-          <div className="mdl-footer-bottom">مِداد © 2026 — جميع الحقوق محفوظة</div>
+          <div className="mdl-footer-bottom">{t('footer.rights')}</div>
         </div>
       </footer>
 
