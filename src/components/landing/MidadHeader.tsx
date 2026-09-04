@@ -9,19 +9,19 @@ import LangToggle from '@/components/LangToggle';
 import { useT } from '@/lib/i18n/LocaleProvider';
 
 const SYSTEMS_MEGA = [
-  { icon: 'people/people-users', t: 'إدارة الأفراد', d: 'موظفون ومتطوعون ومستفيدون بأدوارهم.' },
-  { icon: 'operations/operations-projects', t: 'المشاريع والبرامج', d: 'مراحل ومهام ومتابعة إنجاز.' },
-  { icon: 'finance/finance-donations', t: 'المالية والتبرعات', d: 'متبرعون وحملات وتقارير مالية.', gold: true },
-  { icon: 'people/people-beneficiaries', t: 'المستفيدون', d: 'سجل الحالات والخدمات المقدَّمة.' },
-  { icon: 'analytics/analytics-analytics', t: 'التقارير والتحليلات', d: 'مؤشرات ورسوم من بياناتك.' },
-  { icon: 'ai/ai-ai-assistant', t: 'مِداد AI', d: 'بحث وتحليل ضمن الصلاحيات.', gold: true },
+  { icon: 'people/people-users', k: 'mega.sys.people' },
+  { icon: 'operations/operations-projects', k: 'mega.sys.projects' },
+  { icon: 'finance/finance-donations', k: 'mega.sys.finance', gold: true },
+  { icon: 'people/people-beneficiaries', k: 'mega.sys.beneficiaries' },
+  { icon: 'analytics/analytics-analytics', k: 'mega.sys.reports' },
+  { icon: 'ai/ai-ai-assistant', k: 'mega.sys.ai', gold: true },
 ];
 
 const JIHAT_MEGA = [
-  { icon: 'organization/organization-institution', t: 'الجمعيات الخيرية', d: 'مستفيدون ومشاريع وتبرعات.' },
-  { icon: 'education/education-quran', t: 'مراكز القرآن', d: 'حلقات وحفظ وتسميع وشهادات.', gold: true },
-  { icon: 'education/education-education', t: 'المراكز التعليمية', d: 'صفوف وتقييمات وحضور.' },
-  { icon: 'people/people-groups', t: 'المؤسسات الإنسانية', d: 'برامج ميدانية وفرق عمل.' },
+  { icon: 'organization/organization-institution', k: 'mega.jihat.charity' },
+  { icon: 'education/education-quran', k: 'mega.jihat.quran', gold: true },
+  { icon: 'education/education-education', k: 'mega.jihat.edu' },
+  { icon: 'people/people-groups', k: 'mega.jihat.humanitarian' },
 ];
 
 const chev = (
@@ -29,12 +29,13 @@ const chev = (
 );
 
 function Mega({ items, href, wide }: { items: typeof SYSTEMS_MEGA; href: string; wide?: boolean }) {
+  const t = useT();
   return (
     <div className={`mdl-mega ${wide ? '' : 'narrow'}`}>
       {items.map((it) => (
-        <a key={it.t} href={href} className="mdl-mega-item">
+        <a key={it.k} href={href} className="mdl-mega-item">
           <span className={`mdl-mega-ic ${it.gold ? 'gold' : ''}`}><Icon name={it.icon} size={19} /></span>
-          <span className="mdl-mega-tx"><span className="t">{it.t}</span><span className="d">{it.d}</span></span>
+          <span className="mdl-mega-tx"><span className="t">{t(`${it.k}.t`)}</span><span className="d">{t(`${it.k}.d`)}</span></span>
         </a>
       ))}
     </div>

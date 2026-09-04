@@ -20,32 +20,31 @@ const STAR = (
 );
 
 const AUDIENCES = [
-  { icon: 'organization/organization-institution', t: 'المؤسسات الخيرية' },
-  { icon: 'people/people-groups', t: 'المؤسسات الإنسانية' },
-  { icon: 'education/education-education', t: 'المؤسسات التعليمية' },
-  { icon: 'analytics/analytics-growth', t: 'المؤسسات التنموية' },
-  { icon: 'education/education-quran', t: 'مراكز القرآن' },
-  { icon: 'organization/organization-building', t: 'المؤسسات الوقفية' },
+  { icon: 'organization/organization-institution', k: 'aud.charity' },
+  { icon: 'people/people-groups', k: 'aud.humanitarian' },
+  { icon: 'education/education-education', k: 'aud.education' },
+  { icon: 'analytics/analytics-growth', k: 'aud.development' },
+  { icon: 'education/education-quran', k: 'aud.quran' },
+  { icon: 'organization/organization-building', k: 'aud.waqf' },
 ];
 
-
 const FEATURES = [
-  { icon: 'organization/organization-structure', t: 'إدارة مركزية', d: 'كل أعمال المؤسسة في مكان واحد مترابط.' },
-  { icon: 'operations/operations-activities', t: 'أنظمة مرنة', d: 'فعّل فقط الوحدات التي تحتاجها.' },
-  { icon: 'people/people-permissions', t: 'صلاحيات متقدمة', d: 'تحكّم كامل بأدوار المستخدمين ووصولهم.' },
-  { icon: 'analytics/analytics-analytics', t: 'تقارير ذكية', d: 'بيانات واضحة تدعم قرارك.' },
-  { icon: 'analytics/analytics-growth', t: 'قابلية التوسّع', d: 'تنمو المنصة مع نمو مؤسستك.' },
-  { icon: 'identity/identity-digital-identity', t: 'تجربة عربية', d: 'واجهة احترافية مصمّمة RTL أولاً.' },
+  { icon: 'organization/organization-structure', k: 'feat.central' },
+  { icon: 'operations/operations-activities', k: 'feat.flexible' },
+  { icon: 'people/people-permissions', k: 'feat.perms' },
+  { icon: 'analytics/analytics-analytics', k: 'feat.reports' },
+  { icon: 'analytics/analytics-growth', k: 'feat.scale' },
+  { icon: 'identity/identity-digital-identity', k: 'feat.arabic' },
 ];
 
 const SECURITY = [
-  { icon: 'people/people-permissions', t: 'إدارة الصلاحيات' },
-  { icon: 'actions/actions-lock', t: 'التحكم في الوصول' },
-  { icon: 'identity/identity-security', t: 'حماية البيانات' },
-  { icon: 'organization/organization-office', t: 'مساحات عمل مستقلة' },
+  { icon: 'people/people-permissions', k: 'sec2.perms' },
+  { icon: 'actions/actions-lock', k: 'sec2.access' },
+  { icon: 'identity/identity-security', k: 'sec2.data' },
+  { icon: 'organization/organization-office', k: 'sec2.workspaces' },
 ];
 
-const INTEGRATIONS = ['البريد الإلكتروني', 'بوابات الدفع', 'WhatsApp', 'Google Workspace', 'Microsoft', 'واجهات API'];
+const INTEGRATIONS = ['int.email', 'int.payment', 'int.whatsapp', 'int.google', 'int.microsoft', 'int.api'];
 
 export default async function HomePage() {
   const { t } = await getT();
@@ -115,7 +114,7 @@ export default async function HomePage() {
             <Reveal delay={0.1}>
               <div className="mdl-chips">
                 {AUDIENCES.map((a) => (
-                  <span key={a.t} className="mdl-chip"><Icon name={a.icon} className="ic" size={17} />{a.t}</span>
+                  <span key={a.k} className="mdl-chip"><Icon name={a.icon} className="ic" size={17} />{t(a.k)}</span>
                 ))}
               </div>
             </Reveal>
@@ -211,11 +210,11 @@ export default async function HomePage() {
             </Reveal>
             <div className="mdl-feats">
               {FEATURES.map((f, i) => (
-                <Reveal key={f.t} delay={(i % 3) * 0.06}>
+                <Reveal key={f.k} delay={(i % 3) * 0.06}>
                   <div className="mdl-feat">
                     <span className="fi"><Icon name={f.icon} size={22} /></span>
-                    <h4>{f.t}</h4>
-                    <p>{f.d}</p>
+                    <h4>{t(`${f.k}.t`)}</h4>
+                    <p>{t(`${f.k}.d`)}</p>
                   </div>
                 </Reveal>
               ))}
@@ -233,7 +232,7 @@ export default async function HomePage() {
                 <p className="mdl-lead" style={{ marginBottom: '1.5rem' }}>{t('sec.security.lead')}</p>
                 <div className="mdl-sec-list">
                   {SECURITY.map((s) => (
-                    <div key={s.t} className="mdl-sec-item"><Icon name={s.icon} size={20} /><span>{s.t}</span></div>
+                    <div key={s.k} className="mdl-sec-item"><Icon name={s.icon} size={20} /><span>{t(s.k)}</span></div>
                   ))}
                 </div>
               </div>
@@ -261,7 +260,7 @@ export default async function HomePage() {
           <div className="mdl-marquee">
             <div className="mdl-marquee-track">
               {[...INTEGRATIONS, ...INTEGRATIONS].map((n, i) => (
-                <span key={i} className="mdl-int"><Icon name="actions/actions-link" size={18} />{n}</span>
+                <span key={i} className="mdl-int"><Icon name="actions/actions-link" size={18} />{t(n)}</span>
               ))}
             </div>
           </div>

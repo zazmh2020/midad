@@ -79,6 +79,49 @@ const ar: Dict = {
   'lang.ar': 'العربية',
   'lang.en': 'English',
   'lang.continue': 'متابعة',
+
+  // الجهات (شرائح)
+  'aud.charity': 'المؤسسات الخيرية',
+  'aud.humanitarian': 'المؤسسات الإنسانية',
+  'aud.education': 'المؤسسات التعليمية',
+  'aud.development': 'المؤسسات التنموية',
+  'aud.quran': 'مراكز القرآن',
+  'aud.waqf': 'المؤسسات الوقفية',
+
+  // المميزات
+  'feat.central.t': 'إدارة مركزية', 'feat.central.d': 'كل أعمال المؤسسة في مكان واحد مترابط.',
+  'feat.flexible.t': 'أنظمة مرنة', 'feat.flexible.d': 'فعّل فقط الوحدات التي تحتاجها.',
+  'feat.perms.t': 'صلاحيات متقدمة', 'feat.perms.d': 'تحكّم كامل بأدوار المستخدمين ووصولهم.',
+  'feat.reports.t': 'تقارير ذكية', 'feat.reports.d': 'بيانات واضحة تدعم قرارك.',
+  'feat.scale.t': 'قابلية التوسّع', 'feat.scale.d': 'تنمو المنصة مع نمو مؤسستك.',
+  'feat.arabic.t': 'تجربة عربية', 'feat.arabic.d': 'واجهة احترافية مصمّمة RTL أولاً.',
+
+  // الأمان (عناصر)
+  'sec2.perms': 'إدارة الصلاحيات',
+  'sec2.access': 'التحكم في الوصول',
+  'sec2.data': 'حماية البيانات',
+  'sec2.workspaces': 'مساحات عمل مستقلة',
+
+  // التكاملات
+  'int.email': 'البريد الإلكتروني',
+  'int.payment': 'بوابات الدفع',
+  'int.whatsapp': 'WhatsApp',
+  'int.google': 'Google Workspace',
+  'int.microsoft': 'Microsoft',
+  'int.api': 'واجهات API',
+
+  // قوائم الهيدر (mega) — الأنظمة
+  'mega.sys.people.t': 'إدارة الأفراد', 'mega.sys.people.d': 'موظفون ومتطوعون ومستفيدون بأدوارهم.',
+  'mega.sys.projects.t': 'المشاريع والبرامج', 'mega.sys.projects.d': 'مراحل ومهام ومتابعة إنجاز.',
+  'mega.sys.finance.t': 'المالية والتبرعات', 'mega.sys.finance.d': 'متبرعون وحملات وتقارير مالية.',
+  'mega.sys.beneficiaries.t': 'المستفيدون', 'mega.sys.beneficiaries.d': 'سجل الحالات والخدمات المقدَّمة.',
+  'mega.sys.reports.t': 'التقارير والتحليلات', 'mega.sys.reports.d': 'مؤشرات ورسوم من بياناتك.',
+  'mega.sys.ai.t': 'مِداد AI', 'mega.sys.ai.d': 'بحث وتحليل ضمن الصلاحيات.',
+  // قوائم الهيدر (mega) — الجهات
+  'mega.jihat.charity.t': 'الجمعيات الخيرية', 'mega.jihat.charity.d': 'مستفيدون ومشاريع وتبرعات.',
+  'mega.jihat.quran.t': 'مراكز القرآن', 'mega.jihat.quran.d': 'حلقات وحفظ وتسميع وشهادات.',
+  'mega.jihat.edu.t': 'المراكز التعليمية', 'mega.jihat.edu.d': 'صفوف وتقييمات وحضور.',
+  'mega.jihat.humanitarian.t': 'المؤسسات الإنسانية', 'mega.jihat.humanitarian.d': 'برامج ميدانية وفرق عمل.',
 };
 
 const en: Dict = {
@@ -147,6 +190,43 @@ const en: Dict = {
   'lang.ar': 'العربية',
   'lang.en': 'English',
   'lang.continue': 'Continue',
+
+  'aud.charity': 'Charities',
+  'aud.humanitarian': 'Humanitarian organizations',
+  'aud.education': 'Educational institutions',
+  'aud.development': 'Development organizations',
+  'aud.quran': 'Quran centers',
+  'aud.waqf': 'Endowment (Waqf) organizations',
+
+  'feat.central.t': 'Centralized management', 'feat.central.d': 'All your organization’s work in one connected place.',
+  'feat.flexible.t': 'Flexible systems', 'feat.flexible.d': 'Enable only the modules you need.',
+  'feat.perms.t': 'Advanced permissions', 'feat.perms.d': 'Full control over user roles and access.',
+  'feat.reports.t': 'Smart reports', 'feat.reports.d': 'Clear data that supports your decisions.',
+  'feat.scale.t': 'Scalability', 'feat.scale.d': 'The platform grows as your organization grows.',
+  'feat.arabic.t': 'Arabic-first experience', 'feat.arabic.d': 'A professional interface, designed RTL-first.',
+
+  'sec2.perms': 'Permission management',
+  'sec2.access': 'Access control',
+  'sec2.data': 'Data protection',
+  'sec2.workspaces': 'Isolated workspaces',
+
+  'int.email': 'Email',
+  'int.payment': 'Payment gateways',
+  'int.whatsapp': 'WhatsApp',
+  'int.google': 'Google Workspace',
+  'int.microsoft': 'Microsoft',
+  'int.api': 'API',
+
+  'mega.sys.people.t': 'People management', 'mega.sys.people.d': 'Employees, volunteers and beneficiaries with roles.',
+  'mega.sys.projects.t': 'Projects & programs', 'mega.sys.projects.d': 'Stages, tasks and progress tracking.',
+  'mega.sys.finance.t': 'Finance & donations', 'mega.sys.finance.d': 'Donors, campaigns and financial reports.',
+  'mega.sys.beneficiaries.t': 'Beneficiaries', 'mega.sys.beneficiaries.d': 'Case records and services provided.',
+  'mega.sys.reports.t': 'Reports & analytics', 'mega.sys.reports.d': 'Metrics and charts from your data.',
+  'mega.sys.ai.t': 'Midad AI', 'mega.sys.ai.d': 'Search and analysis within permissions.',
+  'mega.jihat.charity.t': 'Charities', 'mega.jihat.charity.d': 'Beneficiaries, projects and donations.',
+  'mega.jihat.quran.t': 'Quran centers', 'mega.jihat.quran.d': 'Circles, memorization, recitation and certificates.',
+  'mega.jihat.edu.t': 'Educational centers', 'mega.jihat.edu.d': 'Classes, assessments and attendance.',
+  'mega.jihat.humanitarian.t': 'Humanitarian organizations', 'mega.jihat.humanitarian.d': 'Field programs and work teams.',
 };
 
 export const DICTIONARIES: Record<Locale, Dict> = { ar, en };
