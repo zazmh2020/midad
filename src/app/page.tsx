@@ -9,7 +9,12 @@ import HowItWorks from '@/components/landing/HowItWorks';
 import ProductShowcase from '@/components/landing/ProductShowcase';
 import Testimonials from '@/components/landing/Testimonials';
 import MidadAIChat from '@/components/landing/MidadAIChat';
+import MidadTour from '@/components/landing/MidadTour';
 import '@/styles/midad.css';
+
+const STAR = (
+  <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L10 15l-5.2 2.6 1-5.8L1.5 7.7l5.9-.9z" /></svg>
+);
 
 const AUDIENCES = [
   { icon: 'organization/organization-institution', t: 'المؤسسات الخيرية' },
@@ -75,7 +80,12 @@ export default function HomePage() {
 
             <Reveal delay={0.2} y={30}>
               <div className="mdl-hero-stage">
-                <Mockup kind="dashboard" />
+                {/* مكدّس بطاقات مائل: واجهات متراكبة بزوايا */}
+                <div className="mdl-fan">
+                  <div className="mdl-fan-card back-2"><Mockup kind="reports" /></div>
+                  <div className="mdl-fan-card back-1"><Mockup kind="projects" /></div>
+                  <div className="mdl-fan-card front"><Mockup kind="dashboard" /></div>
+                </div>
                 <div className="mdl-float mdl-float-1">
                   <span className="fic teal"><Icon name="analytics/analytics-growth" size={17} /></span>
                   <div><div className="ftitle">نسبة الإنجاز</div><div className="fval">86%</div></div>
@@ -161,6 +171,11 @@ export default function HomePage() {
                 <span className="mdl-eyebrow">قصص الجهات</span>
                 <h2 className="mdl-h2">جهات حقيقية. أثرٌ ملموس.</h2>
                 <p className="mdl-lead">كيف نظّمت مِداد أعمال جمعيات ومراكز حقيقية — من التقارير إلى المستفيدين.</p>
+                <div className="mdl-rating">
+                  <span className="mdl-rating-score">4.9</span>
+                  <span className="mdl-rating-stars">{STAR}{STAR}{STAR}{STAR}{STAR}</span>
+                  <span className="mdl-rating-meta">من <strong>+40</strong> جهة تستخدم مِداد</span>
+                </div>
               </div>
             </Reveal>
             <Testimonials />
@@ -290,6 +305,8 @@ export default function HomePage() {
           <div className="mdl-footer-bottom">مِداد © 2026 — جميع الحقوق محفوظة</div>
         </div>
       </footer>
+
+      <MidadTour />
     </div>
   );
 }

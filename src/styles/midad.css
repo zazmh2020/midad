@@ -199,6 +199,17 @@
 
 /* Floating mock cards around dashboard */
 .mdl-hero-stage { position: relative; }
+
+/* مكدّس بطاقات مائل (fanned stack) */
+.mdl-fan { position: relative; z-index: 2; }
+.mdl-fan-card { border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-lg); transition: transform 0.5s var(--ease); }
+.mdl-fan-card .mk { border-radius: 16px; }
+.mdl-fan-card.front { position: relative; z-index: 3; }
+.mdl-fan-card.back-1 { position: absolute; inset: 0; z-index: 2; transform-origin: bottom center; transform: rotate(5deg) translate(5%, 5%) scale(0.95); opacity: 0.92; }
+.mdl-fan-card.back-2 { position: absolute; inset: 0; z-index: 1; transform-origin: bottom center; transform: rotate(-6deg) translate(-6%, 3%) scale(0.9); opacity: 0.8; }
+.mdl-hero-stage:hover .mdl-fan-card.back-1 { transform: rotate(8deg) translate(9%, 7%) scale(0.95); }
+.mdl-hero-stage:hover .mdl-fan-card.back-2 { transform: rotate(-9deg) translate(-10%, 4%) scale(0.9); }
+
 .mdl-float {
   position: absolute; z-index: 3; background: #fff; color: var(--text);
   border-radius: 14px; box-shadow: var(--shadow-lg); padding: 0.85rem 1rem;
@@ -330,7 +341,7 @@
 }
 .mdl-sys-item.is-active .mdl-sys-ic { background: linear-gradient(135deg, var(--pl), var(--p)); color: #fff; box-shadow: 0 6px 14px -6px rgba(107, 87, 160, 0.8); }
 .mdl-sys-ic .app-icon { width: 18px; height: 18px; }
-.mdl-sys-label { font-weight: 700; font-size: 0.95rem; color: var(--dark); }
+.mdl-sys-label { display: flex; flex-direction: column; line-height: 1.3; font-weight: 700; font-size: 0.95rem; color: var(--dark); }
 .mdl-sys-item.is-active .mdl-sys-label { color: var(--p); }
 .mdl-sys-stage { position: sticky; top: 96px; }
 .mdl-sys-stage::before {
@@ -348,6 +359,22 @@
 /* ============================================================
    How it works — timeline
    ============================================================ */
+/* خطوات مرقّمة مضغوطة */
+.mdl-steps-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin-top: 2.5rem;
+}
+.mdl-stepc {
+  position: relative; background: var(--white); border: 1px solid var(--border); border-radius: 18px;
+  padding: 1.5rem 1.25rem; transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease), border-color 0.25s;
+}
+.mdl-stepc:hover { transform: translateY(-4px); box-shadow: 0 20px 44px -28px rgba(43, 26, 78, 0.5); border-color: rgba(107, 87, 160, 0.3); }
+.mdl-stepc-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+.mdl-stepc-num { font-size: 2rem; font-weight: 800; line-height: 1; color: var(--p); opacity: 0.35; }
+.mdl-stepc-ic { width: 40px; height: 40px; border-radius: 11px; background: var(--p-08); color: var(--p); display: grid; place-items: center; }
+.mdl-stepc-ic .app-icon { width: 20px; height: 20px; }
+.mdl-stepc h4 { font-size: 1.05rem; }
+.mdl-stepc p { color: var(--muted); font-size: 0.88rem; margin-top: 0.4rem; line-height: 1.55; }
+
 .mdl-tl { display: grid; grid-template-columns: 1fr 1.15fr; gap: 3rem; margin-top: 2.5rem; align-items: start; }
 .mdl-steps { position: relative; }
 .mdl-steps::before { content: ''; position: absolute; inset-inline-start: 21px; top: 12px; bottom: 12px; width: 2px; background: var(--border); }
@@ -525,12 +552,16 @@
   .mdl-feats, .mdl-orgs { grid-template-columns: 1fr 1fr; }
   .mdl-footer-grid { grid-template-columns: 1fr 1fr; }
   .mdl-sys-stage, .mdl-tl-stage { position: static; }
+  .mdl-sys-list { grid-template-columns: 1fr; grid-template-rows: auto; grid-auto-flow: row; }
+  .mdl-steps-grid { grid-template-columns: repeat(2, 1fr); }
   .mdl-hero { padding-top: 7rem; }
   .mdl-float-1, .mdl-float-3 { display: none; }
+  .mdl-tour { inset-inline: 1rem auto; max-width: none; width: auto; }
 }
 @media (max-width: 560px) {
-  .mdl-feats, .mdl-orgs, .mdl-sec-list, .mdl-footer-grid { grid-template-columns: 1fr; }
+  .mdl-feats, .mdl-orgs, .mdl-sec-list, .mdl-footer-grid, .mdl-steps-grid { grid-template-columns: 1fr; }
   .mdl-hero-trust { gap: 0.9rem; }
+  .mdl-tour { display: none; }
 }
 
 /* ============================================================
@@ -591,3 +622,49 @@ html { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 .mdl-hero, .mdl-section, #home, #platform, #systems, #ai { scroll-margin-top: 90px; }
 .mdl-footer { scroll-margin-top: 90px; }
+
+/* ============================================================
+   بطاقة الجولة العائمة (floating tour)
+   ============================================================ */
+.mdl-tour {
+  position: fixed; z-index: 90; bottom: 1.4rem; inset-inline-end: 1.4rem; width: 260px; max-width: calc(100vw - 2rem);
+  background: linear-gradient(160deg, var(--dark), var(--pd)); color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 18px; padding: 1.15rem 1.15rem 1.25rem;
+  box-shadow: 0 26px 60px -24px rgba(20, 12, 40, 0.7); animation: mdlTourIn 0.5s var(--ease) both;
+}
+@keyframes mdlTourIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+.mdl-tour-x {
+  position: absolute; top: 0.6rem; inset-inline-start: 0.6rem; width: 26px; height: 26px; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12); border: none; color: rgba(255, 255, 255, 0.85); cursor: pointer;
+  display: grid; place-items: center; transition: background 0.2s;
+}
+.mdl-tour-x:hover { background: rgba(255, 255, 255, 0.22); }
+.mdl-tour-badge { display: inline-block; font-size: 0.72rem; font-weight: 700; color: #d3c6f2; margin-bottom: 0.5rem; }
+.mdl-tour-title { font-size: 0.98rem; font-weight: 600; line-height: 1.55; color: #fff; }
+.mdl-tour .mdl-tour-cta {
+  margin-top: 1rem; display: inline-flex; align-items: center; gap: 0.55rem; background: #fff; color: var(--pd);
+  font-weight: 800; font-size: 0.88rem; border-radius: 100px; padding: 0.5rem 1rem 0.5rem 0.5rem; transition: transform 0.2s;
+}
+.mdl-tour-cta:hover { transform: translateY(-2px); }
+.mdl-tour-play { width: 26px; height: 26px; border-radius: 50%; background: var(--p); color: #fff; display: grid; place-items: center; }
+
+/* ============================================================
+   شريط التقييم المجمّع (aggregate rating)
+   ============================================================ */
+.mdl-rating {
+  display: inline-flex; align-items: center; gap: 1rem; margin: 1.4rem auto 0;
+  background: var(--white); border: 1px solid var(--border); border-radius: 100px; padding: 0.6rem 1.3rem;
+  box-shadow: var(--shadow-soft, 0 10px 26px -18px rgba(43, 26, 78, 0.4));
+}
+.mdl-rating-score { font-size: 1.5rem; font-weight: 800; color: var(--dark); line-height: 1; }
+.mdl-rating-stars { display: inline-flex; gap: 2px; color: #f2b705; }
+.mdl-rating-stars svg { width: 16px; height: 16px; }
+.mdl-rating-meta { font-size: 0.85rem; color: var(--muted); }
+.mdl-rating-meta strong { color: var(--dark); font-weight: 700; }
+
+/* شارات وتصنيفات على بطاقات الأنظمة */
+.mdl-sys-item .mdl-sys-flag {
+  margin-inline-start: auto; font-size: 0.62rem; font-weight: 800; color: var(--p);
+  background: var(--p-08); border-radius: 100px; padding: 0.12rem 0.5rem; letter-spacing: 0.02em;
+}
+.mdl-sys-cat { display: block; font-size: 0.72rem; color: var(--muted); margin-top: 0.15rem; }

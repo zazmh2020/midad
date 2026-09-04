@@ -10,19 +10,21 @@ interface Sys {
   label: string;
   desc: string;
   kind: MockKind;
+  cat: string;
+  flag?: string;
 }
 
 const SYSTEMS: Sys[] = [
-  { icon: 'organization/organization-institution', label: 'إدارة المؤسسة', desc: 'الهيكل الإداري والإدارات والأقسام والفروع في مكان واحد.', kind: 'org' },
-  { icon: 'people/people-employees', label: 'الموارد البشرية', desc: 'ملفات الموظفين والعقود والفرق والصلاحيات.', kind: 'hr' },
-  { icon: 'people/people-volunteers', label: 'الموظفون والمتطوعون', desc: 'إدارة المتطوعين والمهام والحضور بسهولة.', kind: 'people' },
-  { icon: 'operations/operations-projects', label: 'المشاريع والبرامج', desc: 'خطط ومهام ومراحل تنفيذ ومتابعة إنجاز لحظية.', kind: 'projects' },
-  { icon: 'people/people-beneficiaries', label: 'المستفيدون', desc: 'سجل الحالات والخدمات المقدَّمة بمستويات وصول آمنة.', kind: 'beneficiaries' },
-  { icon: 'education/education-education', label: 'التعليم والبرامج', desc: 'حلقات وطلاب وحضور وتقدّم حفظ وتقييم.', kind: 'education' },
-  { icon: 'finance/finance-donations', label: 'المالية والتبرعات', desc: 'حملات ومتبرعون وعمليات مالية جاهزة للربط.', kind: 'finance' },
-  { icon: 'analytics/analytics-analytics', label: 'التقارير والتحليلات', desc: 'مؤشرات ورسوم بيانية تُبنى من بياناتك مباشرة.', kind: 'reports' },
-  { icon: 'documents/documents-documents', label: 'إدارة الوثائق', desc: 'سياسات ونماذج وأرشيف قابل للبحث والاسترجاع.', kind: 'documents' },
-  { icon: 'ai/ai-ai-assistant', label: 'مِداد AI', desc: 'مساعد ذكي يجيب ويحلّل ضمن حدود صلاحياتك.', kind: 'ai' },
+  { icon: 'organization/organization-institution', label: 'إدارة المؤسسة', desc: 'الهيكل الإداري والإدارات والأقسام والفروع في مكان واحد.', kind: 'org', cat: 'الإدارة' },
+  { icon: 'people/people-employees', label: 'الموارد البشرية', desc: 'ملفات الموظفين والعقود والفرق والصلاحيات.', kind: 'hr', cat: 'الموارد' },
+  { icon: 'people/people-volunteers', label: 'الموظفون والمتطوعون', desc: 'إدارة المتطوعين والمهام والحضور بسهولة.', kind: 'people', cat: 'الموارد' },
+  { icon: 'operations/operations-projects', label: 'المشاريع والبرامج', desc: 'خطط ومهام ومراحل تنفيذ ومتابعة إنجاز لحظية.', kind: 'projects', cat: 'العمليات' },
+  { icon: 'people/people-beneficiaries', label: 'المستفيدون', desc: 'سجل الحالات والخدمات المقدَّمة بمستويات وصول آمنة.', kind: 'beneficiaries', cat: 'العمليات' },
+  { icon: 'education/education-education', label: 'التعليم والبرامج', desc: 'حلقات وطلاب وحضور وتقدّم حفظ وتقييم.', kind: 'education', cat: 'التعليم', flag: 'جديد' },
+  { icon: 'finance/finance-donations', label: 'المالية والتبرعات', desc: 'حملات ومتبرعون وعمليات مالية جاهزة للربط.', kind: 'finance', cat: 'المالية' },
+  { icon: 'analytics/analytics-analytics', label: 'التقارير والتحليلات', desc: 'مؤشرات ورسوم بيانية تُبنى من بياناتك مباشرة.', kind: 'reports', cat: 'التحليلات' },
+  { icon: 'documents/documents-documents', label: 'إدارة الوثائق', desc: 'سياسات ونماذج وأرشيف قابل للبحث والاسترجاع.', kind: 'documents', cat: 'الوثائق' },
+  { icon: 'ai/ai-ai-assistant', label: 'مِداد AI', desc: 'مساعد ذكي يجيب ويحلّل ضمن حدود صلاحياتك.', kind: 'ai', cat: 'الذكاء الاصطناعي', flag: 'جديد' },
 ];
 
 export default function SystemsShowcase() {
@@ -43,7 +45,11 @@ export default function SystemsShowcase() {
           >
             <span className="mdl-sys-num">{String(i + 1).padStart(2, '0')}</span>
             <span className="mdl-sys-ic"><Icon name={s.icon} size={18} /></span>
-            <span className="mdl-sys-label">{s.label}</span>
+            <span className="mdl-sys-label">
+              {s.label}
+              <span className="mdl-sys-cat">{s.cat}</span>
+            </span>
+            {s.flag && <span className="mdl-sys-flag">{s.flag}</span>}
           </button>
         ))}
       </div>
