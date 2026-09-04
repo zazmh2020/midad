@@ -2,9 +2,11 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useT } from '@/lib/i18n/LocaleProvider';
 
 /** عرض محادثة يحاكي مساعد مِداد الذكي: سؤال → تحليل → إجابة بمؤشرات. */
 export default function MidadAIChat() {
+  const t = useT();
   const [stage, setStage] = useState(0); // 0 user, 1 typing, 2 answer
   const ref = useRef<HTMLDivElement>(null);
   const started = useRef(false);
@@ -32,14 +34,14 @@ export default function MidadAIChat() {
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3l1.8 4.6L18.5 9l-4.7 1.4L12 15l-1.8-4.6L5.5 9l4.7-1.4z" /></svg>
         </span>
         <div>
-          <b>مِداد AI</b><br />
-          <span>مساعدك الذكي</span>
+          <b>{t('aichat.title')}</b><br />
+          <span>{t('aichat.subtitle')}</span>
         </div>
       </div>
 
       <div className="mdl-msgs">
         <motion.div className="mdl-msg user" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
-          كيف كان أداء المشاريع هذا الشهر؟
+          {t('aichat.q')}
         </motion.div>
 
         <AnimatePresence mode="wait">
@@ -50,12 +52,12 @@ export default function MidadAIChat() {
           )}
           {stage === 2 && (
             <motion.div key="answer" className="mdl-msg ai" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45 }}>
-              أنجزت مؤسستك <strong style={{ color: '#C4B3D9' }}>٨٦٪</strong> من مشاريع هذا الشهر. هذه أبرز المؤشرات:
+              {t('aichat.a', { p: '86%' })}
               <div className="ai-metrics">
-                <div className="ai-metric"><div className="m">نسبة الإنجاز</div><div className="n">86%</div></div>
-                <div className="ai-metric"><div className="m">مشاريع متأخرة</div><div className="n">2</div></div>
-                <div className="ai-metric"><div className="m">الأفضل أداءً</div><div className="n">التمكين</div></div>
-                <div className="ai-metric"><div className="m">توصية</div><div className="n">مراجعة الحملة</div></div>
+                <div className="ai-metric"><div className="m">{t('aichat.m1')}</div><div className="n">86%</div></div>
+                <div className="ai-metric"><div className="m">{t('aichat.m2')}</div><div className="n">2</div></div>
+                <div className="ai-metric"><div className="m">{t('aichat.m3')}</div><div className="n">{t('aichat.m3v')}</div></div>
+                <div className="ai-metric"><div className="m">{t('aichat.m4')}</div><div className="n">{t('aichat.m4v')}</div></div>
               </div>
             </motion.div>
           )}

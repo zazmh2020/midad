@@ -148,6 +148,38 @@ const ar: Dict = {
   'how.3.t': 'أدر أعمالك', 'how.3.d': 'أدر الموظفين والمشاريع والبرامج والمستفيدين.',
   'how.4.t': 'تابع الأداء', 'how.4.d': 'راقب مؤشرات الأداء والتقارير لحظةً بلحظة.',
   'how.5.t': 'اتخذ قرارات أذكى', 'how.5.d': 'استخدم التحليلات والذكاء الاصطناعي لدعم القرار.',
+
+  // قصص الجهات (Testimonials)
+  'story.1.stat': '85%', 'story.1.unit': 'تقليل زمن إعداد التقارير', 'story.1.quote': 'صار كل شيء في مكان واحد — التقارير تُبنى تلقائيًا بدل يومين عمل كل شهر.', 'story.1.name': 'أحمد الخالد', 'story.1.role': 'مدير المشاريع', 'story.1.org': 'جمعية البِر الخيرية',
+  'story.2.stat': '6 ساعات', 'story.2.unit': 'توفير أسبوعيًا لكل منسّق', 'story.2.quote': 'مِداد نظّمت فوضى الجداول والملفات في منظومة واحدة مترابطة يسهل تتبّعها.', 'story.2.name': 'سارة المطيري', 'story.2.role': 'منسّقة برامج', 'story.2.org': 'مركز نماء التنموي',
+  'story.3.stat': '1,200', 'story.3.unit': 'مستفيد بسجلّ موحّد', 'story.3.quote': 'رؤية كاملة على المستفيدين والخدمات، بصلاحيات دقيقة تحمي كل ملف.', 'story.3.name': 'يوسف العتيبي', 'story.3.role': 'مدير المستفيدين', 'story.3.org': 'مؤسسة عطاء الإنسانية',
+  'story.4.stat': '32', 'story.4.unit': 'حلقة تُدار بلا ورق', 'story.4.quote': 'الحضور والتسميع وتطوّر الحفظ — كلها لحظية أمام المشرفين والأولياء.', 'story.4.name': 'خالد الزهراني', 'story.4.role': 'المشرف العام', 'story.4.org': 'مركز أهل القرآن',
+
+  // مساعد مِداد (MidadAssistant) — الواجهة
+  'asst.title': 'مِداد AI', 'asst.subtitle': 'مساعدك الذكي',
+  'asst.welcome': 'مرحبًا! أنا مساعد مِداد الذكي 👋 كيف أساعدك في التعرّف على المنصّة؟',
+  'asst.placeholder': 'اكتب سؤالك…',
+  'asst.sug.1': 'ما هي أنظمة مِداد؟', 'asst.sug.2': 'كيف أبدأ؟', 'asst.sug.3': 'ما الفرق بين الباقات؟',
+  // محادثة الهيرو (MidadAIChat)
+  'aichat.title': 'مِداد AI', 'aichat.subtitle': 'مساعدك الذكي',
+  'aichat.q': 'كيف كان أداء المشاريع هذا الشهر؟',
+  'aichat.a': 'أنجزت مؤسستك {p} من مشاريع هذا الشهر. هذه أبرز المؤشرات:',
+  'aichat.m1': 'نسبة الإنجاز', 'aichat.m2': 'مشاريع متأخرة', 'aichat.m3': 'الأفضل أداءً', 'aichat.m4': 'توصية',
+  'aichat.m3v': 'التمكين', 'aichat.m4v': 'مراجعة الحملة',
+
+  // صفحة الدخول
+  'login.welcome': 'مرحباً بعودتك',
+  'login.sub': 'سجّل الدخول للوصول إلى مساحة عملك',
+  'login.email': 'البريد الإلكتروني',
+  'login.password': 'كلمة المرور',
+  'login.remember': 'تذكّرني على هذا الجهاز',
+  'login.submit': 'تسجيل الدخول',
+  'login.submitting': 'جارٍ التحقق…',
+  'login.home': 'العودة إلى الصفحة الرئيسية',
+  'login.demo.head': 'تجربة سريعة — حسابات وهمية',
+  'login.err.empty': 'أدخل البريد الإلكتروني وكلمة المرور.',
+  'login.err.failed': 'تعذّر تسجيل الدخول.',
+  'login.err.network': 'تعذّر الاتصال بالخادم. تحقّق من اتصالك وحاول مجدداً.',
 };
 
 const en: Dict = {
@@ -276,6 +308,34 @@ const en: Dict = {
   'how.3.t': 'Run your work', 'how.3.d': 'Manage employees, projects, programs and beneficiaries.',
   'how.4.t': 'Track performance', 'how.4.d': 'Monitor performance metrics and reports in real time.',
   'how.5.t': 'Make smarter decisions', 'how.5.d': 'Use analytics and AI to support your decisions.',
+
+  'story.1.stat': '85%', 'story.1.unit': 'less time preparing reports', 'story.1.quote': 'Everything is in one place now — reports build automatically instead of two working days each month.', 'story.1.name': 'Ahmad Al-Khalid', 'story.1.role': 'Projects Manager', 'story.1.org': 'Al-Birr Charity',
+  'story.2.stat': '6 hours', 'story.2.unit': 'saved weekly per coordinator', 'story.2.quote': 'Midad organized the chaos of schedules and files into one connected, easy-to-track system.', 'story.2.name': 'Sara Al-Mutairi', 'story.2.role': 'Programs Coordinator', 'story.2.org': 'Namaa Development Center',
+  'story.3.stat': '1,200', 'story.3.unit': 'beneficiaries in one record', 'story.3.quote': 'A complete view of beneficiaries and services, with precise permissions protecting every file.', 'story.3.name': 'Yousef Al-Otaibi', 'story.3.role': 'Beneficiaries Manager', 'story.3.org': 'Ataa Humanitarian Foundation',
+  'story.4.stat': '32', 'story.4.unit': 'circles run paper-free', 'story.4.quote': 'Attendance, recitation and memorization progress — all live for supervisors and parents.', 'story.4.name': 'Khalid Al-Zahrani', 'story.4.role': 'General Supervisor', 'story.4.org': 'Ahl Al-Quran Center',
+
+  'asst.title': 'Midad AI', 'asst.subtitle': 'Your smart assistant',
+  'asst.welcome': 'Hi! I’m Midad’s smart assistant 👋 How can I help you get to know the platform?',
+  'asst.placeholder': 'Type your question…',
+  'asst.sug.1': 'What are Midad’s systems?', 'asst.sug.2': 'How do I start?', 'asst.sug.3': 'What’s the difference between plans?',
+  'aichat.title': 'Midad AI', 'aichat.subtitle': 'Your smart assistant',
+  'aichat.q': 'How did the projects perform this month?',
+  'aichat.a': 'Your organization completed {p} of this month’s projects. Here are the key metrics:',
+  'aichat.m1': 'Completion', 'aichat.m2': 'Delayed projects', 'aichat.m3': 'Top performer', 'aichat.m4': 'Recommendation',
+  'aichat.m3v': 'Empower', 'aichat.m4v': 'Review the campaign',
+
+  'login.welcome': 'Welcome back',
+  'login.sub': 'Sign in to access your workspace',
+  'login.email': 'Email',
+  'login.password': 'Password',
+  'login.remember': 'Remember me on this device',
+  'login.submit': 'Sign in',
+  'login.submitting': 'Verifying…',
+  'login.home': 'Back to home',
+  'login.demo.head': 'Quick demo — dummy accounts',
+  'login.err.empty': 'Enter your email and password.',
+  'login.err.failed': 'Could not sign in.',
+  'login.err.network': 'Could not reach the server. Check your connection and try again.',
 };
 
 export const DICTIONARIES: Record<Locale, Dict> = { ar, en };

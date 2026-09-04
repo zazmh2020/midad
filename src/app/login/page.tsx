@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { LogoMark } from '@/components/Logo';
 import ThemeToggle from '@/components/ThemeToggle';
+import LangToggle from '@/components/LangToggle';
+import { useT } from '@/lib/i18n/LocaleProvider';
 import '@/styles/login.css';
 
 const DEMO_ACCOUNTS = [
@@ -15,6 +17,7 @@ const DEMO_ACCOUNTS = [
 ];
 
 export default function LoginPage() {
+  const t = useT();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPw, setShowPw] = useState(false);
@@ -26,7 +29,7 @@ export default function LoginPage() {
     event.preventDefault();
     setError('');
     if (!email.trim() || !password) {
-      setError('أدخل البريد الإلكتروني وكلمة المرور.');
+      setError(t('login.err.empty'));
       return;
     }
     setBusy(true);
@@ -38,13 +41,13 @@ export default function LoginPage() {
       });
       const data = await response.json();
       if (!response.ok) {
-        setError(data.error ?? 'تعذّر تسجيل الدخول.');
+        setError(data.error ?? t('login.err.failed'));
         setBusy(false);
         return;
       }
       window.location.href = data.redirectTo ?? window.location.origin;
     } catch {
-      setError('تعذّر الاتصال بالخادم. تحقّق من اتصالك وحاول مجدداً.');
+      setError(t('login.err.network'));
       setBusy(false);
     }
   }
@@ -57,8 +60,10 @@ export default function LoginPage() {
         <span className="lg-grid" />
       </div>
 
-      <ThemeToggle className="lg-theme" onDeep />
-
+      <div className="lg-toggles">
+        <LangToggle className="on-deep" />
+        <ThemeToggle onDeep />
+      </div>
 
       <motion.main
         className="lg-card"
@@ -68,12 +73,12 @@ export default function LoginPage() {
       >
         <Link href="/" className="lg-brand" aria-label="مِداد">
           <span className="lg-brand-mark"><LogoMark size={26} /></span>
-          <span className="lg-brand-name">مِداد</span>
+          <span className="lg-brand-name">{t('brand')}</span>
         </Link>
 
         <div className="lg-head">
-          <h1>مرحباً بعودتك</h1>
-          <p>سجّل الدخول للوصول إلى مساحة عملك</p>
+          <h1>{t('login.welcome')}</h1>
+          <p>{t('login.sub')}</p>
         </div>
 
         <form onSubmit={handleSubmit} noValidate>
@@ -85,7 +90,7 @@ export default function LoginPage() {
           )}
 
           <label className="lg-field">
-            <span className="lg-label">البريد الإلكتروني</span>
+            <span className="lg-label">{t('login.email')}</span>
             <input
               type="email" autoComplete="email" placeholder="name@example.com"
               value={email} onChange={(e) => setEmail(e.target.value)}
@@ -93,7 +98,7 @@ export default function LoginPage() {
           </label>
 
           <label className="lg-field">
-            <span className="lg-label">كلمة المرور</span>
+            <span className="lg-label">{t('login.password')}</span>
             <span className="lg-input-wrap">
               <input
                 type={showPw ? 'text' : 'password'} autoComplete="current-password" placeholder="••••••••"
@@ -110,17 +115,17 @@ export default function LoginPage() {
 
           <label className="lg-remember">
             <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} />
-            تذكّرني على هذا الجهاز
+            {t('login.remember')}
           </label>
 
           <button className="lg-submit" type="submit" disabled={busy}>
-            {busy ? 'جارٍ التحقق…' : 'تسجيل الدخول'}
+            {busy ? t('login.submitting') : t('login.submit')}
             {!busy && <span aria-hidden="true">←</span>}
           </button>
         </form>
 
         <div className="lg-demo">
-          <div className="lg-demo-head"><span>تجربة سريعة — حسابات وهمية</span></div>
+          <div className="lg-demo-head"><span>{t('login.demo.head')}</span></div>
           <div className="lg-demo-grid">
             {DEMO_ACCOUNTS.map((a) => (
               <a key={a.email} className="lg-demo-btn" href={`/api/auth/dev-login?email=${encodeURIComponent(a.email)}`}>
@@ -131,7 +136,7 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <Link href="/" className="lg-home">العودة إلى الصفحة الرئيسية</Link>
+        <Link href="/" className="lg-home">{t('login.home')}</Link>
       </motion.main>
     </div>
   );

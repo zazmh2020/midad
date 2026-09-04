@@ -2,29 +2,26 @@
 
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useT } from '@/lib/i18n/LocaleProvider';
 
-interface Story {
-  stat: string; unit: string; quote: string; name: string; role: string; org: string;
-}
-
-const STORIES: Story[] = [
-  { stat: '85%', unit: 'تقليل زمن إعداد التقارير', quote: 'صار كل شيء في مكان واحد — التقارير تُبنى تلقائيًا بدل يومين عمل كل شهر.', name: 'أحمد الخالد', role: 'مدير المشاريع', org: 'جمعية البِر الخيرية' },
-  { stat: '6 ساعات', unit: 'توفير أسبوعيًا لكل منسّق', quote: 'مِداد نظّمت فوضى الجداول والملفات في منظومة واحدة مترابطة يسهل تتبّعها.', name: 'سارة المطيري', role: 'منسّقة برامج', org: 'مركز نماء التنموي' },
-  { stat: '1,200', unit: 'مستفيد بسجلّ موحّد', quote: 'رؤية كاملة على المستفيدين والخدمات، بصلاحيات دقيقة تحمي كل ملف.', name: 'يوسف العتيبي', role: 'مدير المستفيدين', org: 'مؤسسة عطاء الإنسانية' },
-  { stat: '32', unit: 'حلقة تُدار بلا ورق', quote: 'الحضور والتسميع وتطوّر الحفظ — كلها لحظية أمام المشرفين والأولياء.', name: 'خالد الزهراني', role: 'المشرف العام', org: 'مركز أهل القرآن' },
-];
+const KEYS = ['story.1', 'story.2', 'story.3', 'story.4'];
 
 export default function Testimonials() {
+  const t = useT();
   const [i, setI] = useState(0);
   const [paused, setPaused] = useState(false);
 
   useEffect(() => {
     if (paused) return;
-    const t = setInterval(() => setI((v) => (v + 1) % STORIES.length), 5200);
-    return () => clearInterval(t);
+    const id = setInterval(() => setI((v) => (v + 1) % KEYS.length), 5200);
+    return () => clearInterval(id);
   }, [paused]);
 
-  const s = STORIES[i];
+  const k = KEYS[i];
+  const s = {
+    stat: t(`${k}.stat`), unit: t(`${k}.unit`), quote: t(`${k}.quote`),
+    name: t(`${k}.name`), role: t(`${k}.role`), org: t(`${k}.org`),
+  };
 
   return (
     <div className="mdl-stories" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
@@ -57,22 +54,22 @@ export default function Testimonials() {
 
       {/* شريط القصص القابل للاختيار */}
       <div className="mdl-stories-nav">
-        {STORIES.map((st, idx) => (
+        {KEYS.map((sk, idx) => (
           <button
-            key={st.org}
+            key={sk}
             className={`mdl-story-chip ${idx === i ? 'is-active' : ''}`}
             onClick={() => setI(idx)}
-            aria-label={st.org}
+            aria-label={t(`${sk}.org`)}
           >
-            <span className="mdl-story-chip-av">{st.name.charAt(0)}</span>
-            <span className="mdl-story-chip-org">{st.org}</span>
+            <span className="mdl-story-chip-av">{t(`${sk}.name`).charAt(0)}</span>
+            <span className="mdl-story-chip-org">{t(`${sk}.org`)}</span>
           </button>
         ))}
       </div>
 
       <div className="mdl-stories-dots">
-        {STORIES.map((_, idx) => (
-          <button key={idx} className={idx === i ? 'is-active' : ''} onClick={() => setI(idx)} aria-label={`القصة ${idx + 1}`} />
+        {KEYS.map((sk, idx) => (
+          <button key={sk} className={idx === i ? 'is-active' : ''} onClick={() => setI(idx)} aria-label={t(`${sk}.org`)} />
         ))}
       </div>
     </div>

@@ -295,3 +295,7 @@ svg {
 :root[data-theme="dark"] .lang-gate { background: #221a35; }
 :root[data-theme="dark"] .lang-gate-opt { background: #221a35; border-color: rgba(255,255,255,0.12); color: #f2eefb; }
 :root[data-theme="dark"] .lang-gate-opt:hover { background: #2a2140; }
+
+/* زر اللغة على خلفية داكنة */
+.lang-toggle.on-deep { border-color: rgba(255,255,255,0.28); color: rgba(255,255,255,0.9); background: transparent; }
+.lang-toggle.on-deep:hover { background: rgba(255,255,255,0.14); color: #fff; border-color: rgba(255,255,255,0.5); }
