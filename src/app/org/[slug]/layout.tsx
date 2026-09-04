@@ -7,6 +7,7 @@ import {
 } from '@/lib/permissions';
 import OrgShell, { type NavEntry } from '@/components/OrgShell';
 import { getOrgInbox } from '@/lib/inbox';
+import { getT } from '@/lib/i18n/server';
 import '@/styles/org.css';
 
 export const dynamic = 'force-dynamic';
@@ -25,6 +26,7 @@ export default async function OrgLayout({
   const r = user.role;
   const base = `/org/${org.slug}`;
   const inbox = await getOrgInbox(org.id);
+  const { t } = await getT();
 
   // الطبقة الأولى — العمل المؤسسي
   const orgSection = canViewStructure(r) || canViewUsers(r) || canManageSettings(r);
@@ -33,56 +35,56 @@ export default async function OrgLayout({
   const educationSection = canViewProjects(r); // موظفو المؤسسة يديرون التعليم
 
   const nav: NavEntry[] = [
-    { kind: 'link', href: base, label: 'لوحة التحكم', icon: 'home' },
+    { kind: 'link', href: base, label: t('onav.dashboard'), icon: 'home' },
     ...(orgSection
-      ? ([{ kind: 'link', href: `${base}/organization`, label: 'المؤسسة', icon: 'organization',
+      ? ([{ kind: 'link', href: `${base}/organization`, label: t('onav.organization'), icon: 'organization',
           match: [`${base}/organization`, `${base}/structure`, `${base}/users`] }] as NavEntry[])
       : []),
     ...(opsSection
-      ? ([{ kind: 'link', href: `${base}/operations`, label: 'العمليات', icon: 'operations',
+      ? ([{ kind: 'link', href: `${base}/operations`, label: t('onav.operations'), icon: 'operations',
           match: [`${base}/operations`, `${base}/projects`, `${base}/programs`, `${base}/campaigns`, `${base}/donations`] }] as NavEntry[])
       : []),
     ...(resourcesSection
-      ? ([{ kind: 'link', href: `${base}/resources`, label: 'الموارد', icon: 'resources',
+      ? ([{ kind: 'link', href: `${base}/resources`, label: t('onav.resources'), icon: 'resources',
           match: [`${base}/resources`, `${base}/beneficiaries`] }] as NavEntry[])
       : []),
     ...(educationSection
       ? ([
-          { kind: 'link', href: `${base}/education`, label: 'التعليم', icon: 'education', match: [`${base}/education`] },
-          { kind: 'link', href: `${base}/education/plans`, label: 'الخطط والمقرّرات', icon: 'plans' },
-          { kind: 'link', href: `${base}/education/competitions`, label: 'المسابقات', icon: 'competitions' },
-          { kind: 'link', href: `${base}/education/certificates`, label: 'الشهادات', icon: 'certificates' },
+          { kind: 'link', href: `${base}/education`, label: t('onav.education'), icon: 'education', match: [`${base}/education`] },
+          { kind: 'link', href: `${base}/education/plans`, label: t('onav.plans'), icon: 'plans' },
+          { kind: 'link', href: `${base}/education/competitions`, label: t('onav.competitions'), icon: 'competitions' },
+          { kind: 'link', href: `${base}/education/certificates`, label: t('onav.certificates'), icon: 'certificates' },
         ] as NavEntry[])
       : []),
 
     // الطبقة الثانية — المعرفة والذكاء
-    { kind: 'divider', label: 'المعرفة والذكاء' },
+    { kind: 'divider', label: t('onav.div.knowledge') },
     ...(canViewDocuments(r)
-      ? ([{ kind: 'link', href: `${base}/documents`, label: 'المستندات', icon: 'documents' }] as NavEntry[])
+      ? ([{ kind: 'link', href: `${base}/documents`, label: t('onav.documents'), icon: 'documents' }] as NavEntry[])
       : []),
     ...(canViewKnowledge(r)
-      ? ([{ kind: 'link', href: `${base}/knowledge`, label: 'قاعدة المعرفة', icon: 'knowledge' }] as NavEntry[])
+      ? ([{ kind: 'link', href: `${base}/knowledge`, label: t('onav.knowledge'), icon: 'knowledge' }] as NavEntry[])
       : []),
     ...(canViewReports(r)
-      ? ([{ kind: 'link', href: `${base}/reports`, label: 'التحليلات', icon: 'reports' }] as NavEntry[])
+      ? ([{ kind: 'link', href: `${base}/reports`, label: t('onav.reports'), icon: 'reports' }] as NavEntry[])
       : []),
     ...(educationSection
-      ? ([{ kind: 'link', href: `${base}/education/statistics`, label: 'الإحصاءات', icon: 'statistics' }] as NavEntry[])
+      ? ([{ kind: 'link', href: `${base}/education/statistics`, label: t('onav.statistics'), icon: 'statistics' }] as NavEntry[])
       : []),
-    { kind: 'link', href: `${base}/identity`, label: 'الهوية الرقمية', icon: 'identity' },
+    { kind: 'link', href: `${base}/identity`, label: t('onav.identity'), icon: 'identity' },
     ...(canUseAssistant(r)
-      ? ([{ kind: 'link', href: `${base}/assistant`, label: 'مِداد AI', icon: 'assistant' }] as NavEntry[])
+      ? ([{ kind: 'link', href: `${base}/assistant`, label: t('onav.assistant'), icon: 'assistant' }] as NavEntry[])
       : []),
 
     // الطبقة الثالثة — إدارة النظام
-    { kind: 'divider', label: 'النظام' },
+    { kind: 'divider', label: t('onav.div.system') },
     ...(canManageSettings(r)
-      ? ([{ kind: 'link', href: `${base}/content`, label: 'إدارة المحتوى', icon: 'content' }] as NavEntry[])
+      ? ([{ kind: 'link', href: `${base}/content`, label: t('onav.content'), icon: 'content' }] as NavEntry[])
       : []),
     ...(canManageUsers(r)
-      ? ([{ kind: 'link', href: `${base}/admin`, label: 'الإدارة', icon: 'admin' }] as NavEntry[])
+      ? ([{ kind: 'link', href: `${base}/admin`, label: t('onav.admin'), icon: 'admin' }] as NavEntry[])
       : []),
-    { kind: 'link', href: `${base}/settings`, label: 'الإعدادات', icon: 'settings' },
+    { kind: 'link', href: `${base}/settings`, label: t('onav.settings'), icon: 'settings' },
   ];
 
   return (

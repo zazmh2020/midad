@@ -4,6 +4,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { InboxMessage, InboxNotification } from '@/lib/inbox';
 import ThemeToggle from '@/components/ThemeToggle';
+import LangToggle from '@/components/LangToggle';
+import { useT } from '@/lib/i18n/LocaleProvider';
 
 export interface SearchItem {
   label: string;
@@ -34,6 +36,7 @@ type Panel = 'search' | 'messages' | 'notif' | null;
 
 export default function TopbarTools({ searchItems, messages, notifications, storageKey }: Props) {
   const router = useRouter();
+  const t = useT();
   const [panel, setPanel] = useState<Panel>(null);
   const [q, setQ] = useState('');
   const [seenMsg, setSeenMsg] = useState(0);
@@ -97,11 +100,11 @@ export default function TopbarTools({ searchItems, messages, notifications, stor
         <input
           type="search"
           value={q}
-          placeholder="ابحث في مؤسستك…"
+          placeholder={t('tb.search')}
           onChange={(e) => { setQ(e.target.value); setPanel('search'); }}
           onFocus={() => setPanel('search')}
           onKeyDown={(e) => { if (e.key === 'Enter' && results[0]) go(results[0].href); }}
-          aria-label="بحث"
+          aria-label={t('tb.search')}
         />
         {panel === 'search' && q.trim() && (
           <div className="tbt-drop tbt-results">
@@ -113,7 +116,7 @@ export default function TopbarTools({ searchItems, messages, notifications, stor
                 </button>
               ))
             ) : (
-              <div className="tbt-empty">لا نتائج لـ «{q.trim()}»</div>
+              <div className="tbt-empty">{t('tb.noResults')} «{q.trim()}»</div>
             )}
           </div>
         )}
@@ -121,42 +124,43 @@ export default function TopbarTools({ searchItems, messages, notifications, stor
 
       {/* الرسائل */}
       <div className="tbt-slot">
-        <button className="tbt-btn" onClick={openMessages} aria-label="الرسائل" aria-expanded={panel === 'messages'}>
+        <button className="tbt-btn" onClick={openMessages} aria-label={t('tb.messages')} aria-expanded={panel === 'messages'}>
           <svg width="19" height="19" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 5h16v11H7l-4 3z" /></svg>
           {unreadMsg > 0 && <span className="tbt-dot">{unreadMsg}</span>}
         </button>
         {panel === 'messages' && (
           <div className="tbt-drop tbt-inbox">
-            <div className="tbt-inbox-head">الرسائل والإعلانات</div>
+            <div className="tbt-inbox-head">{t('tb.messages')}</div>
             {messages.length ? messages.map((m) => (
               <div key={m.id} className="tbt-msg">
                 <div className="tbt-msg-top"><span className="tbt-msg-title">{m.pinned ? '📌 ' : ''}{m.title}</span><span className="tbt-time">{timeAgo(m.time)}</span></div>
                 <p className="tbt-msg-body">{m.body}</p>
               </div>
-            )) : <div className="tbt-empty">لا توجد رسائل بعد.</div>}
+            )) : <div className="tbt-empty">{t('tb.noMessages')}</div>}
           </div>
         )}
       </div>
 
       {/* الجرس */}
       <div className="tbt-slot">
-        <button className="tbt-btn" onClick={openNotif} aria-label="الإشعارات" aria-expanded={panel === 'notif'}>
+        <button className="tbt-btn" onClick={openNotif} aria-label={t('tb.notifications')} aria-expanded={panel === 'notif'}>
           <svg width="19" height="19" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M11 3a5 5 0 0 0-5 5v3l-2 3h14l-2-3V8a5 5 0 0 0-5-5z" /><path d="M9 18a2 2 0 0 0 4 0" /></svg>
           {unreadNotif > 0 && <span className="tbt-dot">{unreadNotif}</span>}
         </button>
         {panel === 'notif' && (
           <div className="tbt-drop tbt-inbox">
-            <div className="tbt-inbox-head">الإشعارات</div>
+            <div className="tbt-inbox-head">{t('tb.notifications')}</div>
             {notifications.length ? notifications.map((n) => (
               <div key={n.id} className="tbt-notif">
                 <span className={`tbt-notif-ic ${n.type}`}>{n.type === 'member' ? '👤' : '📣'}</span>
                 <div className="tbt-notif-tx"><span>{n.title}</span><span className="tbt-time">{timeAgo(n.time)}</span></div>
               </div>
-            )) : <div className="tbt-empty">لا إشعارات جديدة.</div>}
+            )) : <div className="tbt-empty">{t('tb.noNotifications')}</div>}
           </div>
         )}
       </div>
 
+      <LangToggle />
       <ThemeToggle />
     </div>
   );

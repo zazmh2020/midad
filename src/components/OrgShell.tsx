@@ -6,6 +6,7 @@ import { useState, type CSSProperties, type ReactNode } from 'react';
 import { roleLabel } from '@/lib/permissions';
 import { LogoMark } from '@/components/Logo';
 import TopbarTools, { type SearchItem } from '@/components/TopbarTools';
+import { useT } from '@/lib/i18n/LocaleProvider';
 import type { OrgInbox } from '@/lib/inbox';
 
 /* اشتقاق تدرّج بنفسجي مخصّص من لون هوية الجهة */
@@ -89,6 +90,7 @@ function Icon({ name }: { name: keyof typeof ICONS }) {
 }
 
 export default function OrgShell({ children, org, user, nav, inbox }: Props) {
+  const t = useT();
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -143,11 +145,11 @@ export default function OrgShell({ children, org, user, nav, inbox }: Props) {
             <div className="org-profile-menu">
               <Link href={`${base}/settings`} className="org-profile-link" onClick={() => { setProfileOpen(false); setOpen(false); }}>
                 <Icon name="settings" />
-                <span>الملف الشخصي والإعدادات</span>
+                <span>{t('shell.profile')}</span>
               </Link>
               <button className="org-profile-link org-profile-logout" onClick={() => { setProfileOpen(false); setConfirmLogout(true); }}>
                 <Icon name="logout" />
-                <span>تسجيل الخروج</span>
+                <span>{t('shell.logout')}</span>
               </button>
             </div>
           )}
@@ -176,12 +178,12 @@ export default function OrgShell({ children, org, user, nav, inbox }: Props) {
         <div className="org-modal-scrim" onClick={() => setConfirmLogout(false)}>
           <div className="org-modal" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
             <div className="org-modal-ic"><Icon name="logout" /></div>
-            <h3>تأكيد تسجيل الخروج</h3>
-            <p>هل تريد بالتأكيد تسجيل الخروج من حسابك؟</p>
+            <h3>{t('shell.logout.confirm.title')}</h3>
+            <p>{t('shell.logout.confirm.body')}</p>
             <div className="org-modal-actions">
-              <button className="org-btn org-btn-outline" onClick={() => setConfirmLogout(false)} disabled={busy}>إلغاء</button>
+              <button className="org-btn org-btn-outline" onClick={() => setConfirmLogout(false)} disabled={busy}>{t('shell.cancel')}</button>
               <button className="org-btn org-btn-danger" onClick={handleLogout} disabled={busy}>
-                {busy ? 'جارٍ الخروج…' : 'تسجيل الخروج'}
+                {busy ? t('shell.loggingOut') : t('shell.logout')}
               </button>
             </div>
           </div>
@@ -192,7 +194,7 @@ export default function OrgShell({ children, org, user, nav, inbox }: Props) {
 
       <div className="org-main">
         <header className="org-topbar">
-          <button className="org-menu-toggle" onClick={() => setOpen(true)} aria-label="القائمة">
+          <button className="org-menu-toggle" onClick={() => setOpen(true)} aria-label={t('shell.menu')}>
             <svg width="20" height="14" viewBox="0 0 20 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
               <path d="M1 1h18M1 7h18M1 13h18" />
             </svg>

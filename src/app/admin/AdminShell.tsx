@@ -6,6 +6,7 @@ import { useState, type ReactNode } from 'react';
 import type { SessionData } from '@/lib/session';
 import { LogoMark } from '@/components/Logo';
 import TopbarTools, { type SearchItem } from '@/components/TopbarTools';
+import { useT } from '@/lib/i18n/LocaleProvider';
 import type { OrgInbox } from '@/lib/inbox';
 
 interface Props {
@@ -24,9 +25,9 @@ const ICONS = {
 } as const;
 
 const navItems = [
-  { href: '/admin', label: 'نظرة عامة', icon: 'home' as const },
-  { href: '/admin/organizations', label: 'المؤسسات', icon: 'building' as const },
-  { href: '/admin/settings', label: 'الإعدادات', icon: 'settings' as const },
+  { href: '/admin', labelKey: 'anav.overview', icon: 'home' as const },
+  { href: '/admin/organizations', labelKey: 'anav.organizations', icon: 'building' as const },
+  { href: '/admin/settings', labelKey: 'anav.settings', icon: 'settings' as const },
 ];
 
 function Icon({ name }: { name: keyof typeof ICONS }) {
@@ -47,7 +48,8 @@ export default function AdminShell({ children, session, avatarUrl, inbox }: Prop
   const [confirmLogout, setConfirmLogout] = useState(false);
   const [busy, setBusy] = useState(false);
 
-  const searchItems: SearchItem[] = navItems.map((n) => ({ label: n.label, href: n.href }));
+  const t = useT();
+  const searchItems: SearchItem[] = navItems.map((n) => ({ label: t(n.labelKey), href: n.href }));
 
   async function handleLogout() {
     setBusy(true);
@@ -72,7 +74,7 @@ export default function AdminShell({ children, session, avatarUrl, inbox }: Prop
             </span>
             <span className="admin-user-info">
               <span className="admin-user-name">{session.name}</span>
-              <span className="admin-user-role">مالك المنصة</span>
+              <span className="admin-user-role">{t('anav.owner')}</span>
             </span>
             <svg className="admin-user-chev" width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8l4 4 4-4" /></svg>
           </button>
@@ -84,11 +86,11 @@ export default function AdminShell({ children, session, avatarUrl, inbox }: Prop
               </div>
               <Link href="/admin/settings" className="admin-profile-link" onClick={() => setProfileOpen(false)}>
                 <Icon name="settings" />
-                <span>الملف الشخصي والإعدادات</span>
+                <span>{t('shell.profile')}</span>
               </Link>
               <button className="admin-profile-link admin-profile-logout" onClick={() => { setProfileOpen(false); setConfirmLogout(true); }}>
                 <Icon name="logout" />
-                <span>تسجيل الخروج</span>
+                <span>{t('shell.logout')}</span>
               </button>
             </div>
           )}
@@ -108,7 +110,7 @@ export default function AdminShell({ children, session, avatarUrl, inbox }: Prop
                 onClick={() => setSidebarOpen(false)}
               >
                 <Icon name={item.icon} />
-                <span>{item.label}</span>
+                <span>{t(item.labelKey)}</span>
               </Link>
             );
           })}
@@ -119,12 +121,12 @@ export default function AdminShell({ children, session, avatarUrl, inbox }: Prop
         <div className="admin-modal-scrim" onClick={() => setConfirmLogout(false)}>
           <div className="admin-modal" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
             <div className="admin-modal-ic"><Icon name="logout" /></div>
-            <h3>تأكيد تسجيل الخروج</h3>
-            <p>هل تريد بالتأكيد تسجيل الخروج من حسابك؟</p>
+            <h3>{t('shell.logout.confirm.title')}</h3>
+            <p>{t('shell.logout.confirm.body')}</p>
             <div className="admin-modal-actions">
-              <button className="btn-admin-outline" onClick={() => setConfirmLogout(false)} disabled={busy}>إلغاء</button>
+              <button className="btn-admin-outline" onClick={() => setConfirmLogout(false)} disabled={busy}>{t('shell.cancel')}</button>
               <button className="btn-admin-danger" onClick={handleLogout} disabled={busy}>
-                {busy ? 'جارٍ الخروج…' : 'تسجيل الخروج'}
+                {busy ? t('shell.loggingOut') : t('shell.logout')}
               </button>
             </div>
           </div>
@@ -137,7 +139,7 @@ export default function AdminShell({ children, session, avatarUrl, inbox }: Prop
           <button
             className="admin-menu-toggle"
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            aria-label="القائمة"
+            aria-label={t('shell.menu')}
           >
             <svg width="20" height="14" viewBox="0 0 20 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
               <path d="M1 1h18M1 7h18M1 13h18" />
@@ -145,7 +147,7 @@ export default function AdminShell({ children, session, avatarUrl, inbox }: Prop
           </button>
           <Link href="/admin" className="admin-topbar-brand">
             <span className="admin-brand-icon"><LogoMark size={20} /></span>
-            <span className="admin-topbar-name">مِداد <b>لوحة الإدارة</b></span>
+            <span className="admin-topbar-name">{t('brand')} <b>{t('anav.brandRole')}</b></span>
           </Link>
           <TopbarTools
             searchItems={searchItems}
