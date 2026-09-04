@@ -13,10 +13,19 @@ interface LocaleContextValue {
 
 const LocaleContext = createContext<LocaleContextValue | null>(null);
 
+/** النطاق الأب (آخر جزأين) ليعمل الكوكي عبر النطاقات الفرعية مثل الجلسة. */
+function baseDomain(): string | undefined {
+  const parts = window.location.hostname.split('.');
+  if (parts.length < 2) return undefined; // localhost وحده
+  return parts.slice(-2).join('.');
+}
+
 /** يحفظ اللغة في الكوكي + التخزين المحلي ويعيد التحميل لتطبيقها على كل الصفحة. */
 export function persistLocale(next: Locale) {
   try {
-    document.cookie = `${LOCALE_COOKIE}=${next}; path=/; max-age=31536000; samesite=lax`;
+    const domain = baseDomain();
+    const domainPart = domain ? `; domain=${domain}` : '';
+    document.cookie = `${LOCALE_COOKIE}=${next}; path=/${domainPart}; max-age=31536000; samesite=lax`;
     localStorage.setItem(LOCALE_COOKIE, next);
   } catch {
     /* تجاهل */
