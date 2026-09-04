@@ -6,6 +6,7 @@ import {
   canViewDocuments, canUseAssistant, canManageUsers,
 } from '@/lib/permissions';
 import OrgShell, { type NavEntry } from '@/components/OrgShell';
+import { getOrgInbox } from '@/lib/inbox';
 import '@/styles/org.css';
 
 export const dynamic = 'force-dynamic';
@@ -23,6 +24,7 @@ export default async function OrgLayout({
   const { user, org } = await requireOrgAccess(slug);
   const r = user.role;
   const base = `/org/${org.slug}`;
+  const inbox = await getOrgInbox(org.id);
 
   // الطبقة الأولى — العمل المؤسسي
   const orgSection = canViewStructure(r) || canViewUsers(r) || canManageSettings(r);
@@ -88,6 +90,7 @@ export default async function OrgLayout({
       org={{ name: org.name, slug: org.slug, brandColor: org.brandColor, logoUrl: org.logoUrl }}
       user={{ name: user.name, role: user.role, email: user.email, avatarUrl: user.avatarUrl }}
       nav={nav}
+      inbox={inbox}
     >
       {children}
     </OrgShell>

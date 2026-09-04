@@ -141,3 +141,20 @@
 :root[data-theme="dark"] .org-kv,
 :root[data-theme="dark"] .admin-brand,
 :root[data-theme="dark"] .admin-sidebar-foot { border-color: rgba(255,255,255,0.08) !important; }
+
+/* ---------- Shell عائم (لوحات) + أدوات الشريط ---------- */
+:root[data-theme="dark"] .org-app { background: #14101f !important; }
+:root[data-theme="dark"] .org-content,
+:root[data-theme="dark"] .tbt-btn,
+:root[data-theme="dark"] .tbt-drop,
+:root[data-theme="dark"] .tbt-inbox,
+:root[data-theme="dark"] .tbt-results { background: #221a35 !important; border-color: rgba(255,255,255,0.1) !important; }
+:root[data-theme="dark"] .tbt-search { background: #1b1430 !important; }
+:root[data-theme="dark"] .tbt-search:focus-within { background: #14101f !important; border-color: var(--purple-500) !important; }
+:root[data-theme="dark"] .tbt-search input { color: var(--gray-900) !important; }
+:root[data-theme="dark"] .tbt-btn:hover,
+:root[data-theme="dark"] .tbt-result:hover,
+:root[data-theme="dark"] .tbt-msg:hover,
+:root[data-theme="dark"] .tbt-notif:hover { background: rgba(255,255,255,0.06) !important; }
+:root[data-theme="dark"] .tbt-notif-ic { background: rgba(255,255,255,0.08) !important; }
+:root[data-theme="dark"] .tbt-dot { border-color: #221a35 !important; }

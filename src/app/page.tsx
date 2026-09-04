@@ -9,7 +9,7 @@ import HowItWorks from '@/components/landing/HowItWorks';
 import ProductShowcase from '@/components/landing/ProductShowcase';
 import Testimonials from '@/components/landing/Testimonials';
 import MidadAIChat from '@/components/landing/MidadAIChat';
-import MidadTour from '@/components/landing/MidadTour';
+import MidadAssistant from '@/components/landing/MidadAssistant';
 import PricingPlans from '@/components/PricingPlans';
 import '@/styles/midad.css';
 import '@/styles/pricing.css';
@@ -326,7 +326,7 @@ export default function HomePage() {
         </div>
       </footer>
 
-      <MidadTour />
+      <MidadAssistant />
     </div>
   );
 }

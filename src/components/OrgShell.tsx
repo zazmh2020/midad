@@ -5,7 +5,8 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useState, type CSSProperties, type ReactNode } from 'react';
 import { roleLabel } from '@/lib/permissions';
 import { LogoMark } from '@/components/Logo';
-import ThemeToggle from '@/components/ThemeToggle';
+import TopbarTools, { type SearchItem } from '@/components/TopbarTools';
+import type { OrgInbox } from '@/lib/inbox';
 
 /* اشتقاق تدرّج بنفسجي مخصّص من لون هوية الجهة */
 function hexToRgb(h: string): [number, number, number] {
@@ -44,6 +45,7 @@ interface Props {
   org: { name: string; slug: string; brandColor?: string | null; logoUrl?: string | null };
   user: { name: string; role: string; email?: string; avatarUrl?: string | null };
   nav: NavEntry[];
+  inbox: OrgInbox;
 }
 
 // ربط مفاتيح التنقّل بنظام أيقونات مِداد (public/icons)
@@ -86,7 +88,7 @@ function Icon({ name }: { name: keyof typeof ICONS }) {
   );
 }
 
-export default function OrgShell({ children, org, user, nav }: Props) {
+export default function OrgShell({ children, org, user, nav, inbox }: Props) {
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -109,19 +111,47 @@ export default function OrgShell({ children, org, user, nav }: Props) {
     return pathname === href || pathname.startsWith(`${href}/`);
   }
 
+  // عناصر البحث مشتقّة من التنقّل (مع القسم من الفاصل السابق)
+  const searchItems: SearchItem[] = [];
+  let section: string | undefined;
+  for (const entry of nav) {
+    if (entry.kind === 'divider') section = entry.label;
+    else searchItems.push({ label: entry.label, href: entry.href, section });
+  }
+
   return (
     <div className="org-app" style={brandVars(org.brandColor)}>
       <aside className={`org-sidebar ${open ? 'is-open' : ''}`}>
-        <Link href={base} className="org-brand" onClick={() => setOpen(false)}>
-          {org.logoUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={org.logoUrl} alt="" className="org-brand-logo-img" />
-          ) : (
-            <LogoMark size={24} className="org-brand-logo" />
+        {/* ملف المستخدم أعلى الشريط */}
+        <div className="org-side-profile">
+          <button className="org-user" onClick={() => setProfileOpen((v) => !v)} aria-expanded={profileOpen}>
+            <span className="org-user-avatar">
+              {user.avatarUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={user.avatarUrl} alt="" />
+              ) : (
+                user.name.charAt(0)
+              )}
+            </span>
+            <span className="org-user-info">
+              <span className="org-user-name">{user.name}</span>
+              <span className="org-user-role">{roleLabel(user.role)}</span>
+            </span>
+            <svg className="org-user-chev" width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8l4 4 4-4" /></svg>
+          </button>
+          {profileOpen && (
+            <div className="org-profile-menu">
+              <Link href={`${base}/settings`} className="org-profile-link" onClick={() => { setProfileOpen(false); setOpen(false); }}>
+                <Icon name="settings" />
+                <span>الملف الشخصي والإعدادات</span>
+              </Link>
+              <button className="org-profile-link org-profile-logout" onClick={() => { setProfileOpen(false); setConfirmLogout(true); }}>
+                <Icon name="logout" />
+                <span>تسجيل الخروج</span>
+              </button>
+            </div>
           )}
-          <span className="org-brand-mark">{org.logoUrl ? org.name : 'مِداد'}</span>
-          {!org.logoUrl && <span className="org-brand-org">{org.name}</span>}
-        </Link>
+        </div>
 
         <nav className="org-nav">
           {nav.map((entry, i) =>
@@ -140,36 +170,6 @@ export default function OrgShell({ children, org, user, nav }: Props) {
             ),
           )}
         </nav>
-
-        <div className="org-sidebar-foot">
-          {profileOpen && (
-            <div className="org-profile-menu">
-              <Link href={`${base}/settings`} className="org-profile-link" onClick={() => { setProfileOpen(false); setOpen(false); }}>
-                <Icon name="settings" />
-                <span>الملف الشخصي والإعدادات</span>
-              </Link>
-              <button className="org-profile-link org-profile-logout" onClick={() => { setProfileOpen(false); setConfirmLogout(true); }}>
-                <Icon name="logout" />
-                <span>تسجيل الخروج</span>
-              </button>
-            </div>
-          )}
-          <button className="org-user" onClick={() => setProfileOpen((v) => !v)} aria-expanded={profileOpen}>
-            <span className="org-user-avatar">
-              {user.avatarUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={user.avatarUrl} alt="" />
-              ) : (
-                user.name.charAt(0)
-              )}
-            </span>
-            <span className="org-user-info">
-              <span className="org-user-name">{user.name}</span>
-              <span className="org-user-role">{roleLabel(user.role)}</span>
-            </span>
-            <svg className="org-user-chev" width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 12l4-4 4 4" /></svg>
-          </button>
-        </div>
       </aside>
 
       {confirmLogout && (
@@ -197,8 +197,21 @@ export default function OrgShell({ children, org, user, nav }: Props) {
               <path d="M1 1h18M1 7h18M1 13h18" />
             </svg>
           </button>
-          <div className="org-topbar-title">{org.name}</div>
-          <ThemeToggle className="org-topbar-theme" />
+          <Link href={base} className="org-topbar-brand" onClick={() => setOpen(false)}>
+            {org.logoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={org.logoUrl} alt="" className="org-brand-logo-img" />
+            ) : (
+              <LogoMark size={22} className="org-brand-logo" />
+            )}
+            <span className="org-topbar-name">{org.name}</span>
+          </Link>
+          <TopbarTools
+            searchItems={searchItems}
+            messages={inbox.messages}
+            notifications={inbox.notifications}
+            storageKey={`midad_org_${org.slug}`}
+          />
         </header>
         <main className="org-content">{children}</main>
       </div>
