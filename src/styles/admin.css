@@ -883,3 +883,5 @@
 }
 .btn-admin-danger:hover:not(:disabled) { background: #a93226; }
 .btn-admin-danger:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.admin-topbar-theme { margin-inline-start: auto; }

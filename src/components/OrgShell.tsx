@@ -5,6 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useState, type CSSProperties, type ReactNode } from 'react';
 import { roleLabel } from '@/lib/permissions';
 import { LogoMark } from '@/components/Logo';
+import ThemeToggle from '@/components/ThemeToggle';
 
 /* اشتقاق تدرّج بنفسجي مخصّص من لون هوية الجهة */
 function hexToRgb(h: string): [number, number, number] {
@@ -197,6 +198,7 @@ export default function OrgShell({ children, org, user, nav }: Props) {
             </svg>
           </button>
           <div className="org-topbar-title">{org.name}</div>
+          <ThemeToggle className="org-topbar-theme" />
         </header>
         <main className="org-content">{children}</main>
       </div>

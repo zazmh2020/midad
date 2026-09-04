@@ -1,0 +1,143 @@
+/* ============================================================
+   مِداد — الوضع الداكن (Dark) — يُفعَّل عبر [data-theme="dark"] على <html>
+   ============================================================ */
+
+:root { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
+
+/* ---------- تجاوز التوكنات ---------- */
+:root[data-theme="dark"] {
+  --white: #221a35;
+  --off-white: #1b1430;
+  --gray-100: #2a2140;
+  --gray-300: #3a2f57;
+  --gray-500: #a79fbe;
+  --gray-700: #d6d0e6;
+  --gray-900: #f2eefb;
+  --purple-100: #4a3f6b;
+  --purple-300: #8b78bf;
+  --purple-500: #a48fd9;
+  --purple-700: #c6b6ee;
+  --purple-900: #ece7f8;
+  --line: rgba(255, 255, 255, 0.1);
+  --line-strong: rgba(255, 255, 255, 0.2);
+  --surface: #221a35;
+  --bg: #14101f;
+  --text: #d6d0e6;
+  --text-strong: #f2eefb;
+  --text-muted: #a79fbe;
+  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.4), 0 10px 26px -18px rgba(0, 0, 0, 0.8);
+  --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.4), 0 22px 48px -28px rgba(0, 0, 0, 0.9);
+}
+
+:root[data-theme="dark"] body { background: #14101f; color: var(--text); }
+:root[data-theme="dark"] body::before {
+  background:
+    radial-gradient(ellipse 560px 480px at 12% 10%, rgba(120, 95, 180, 0.28) 0%, transparent 60%),
+    radial-gradient(ellipse 620px 560px at 82% 92%, rgba(90, 70, 150, 0.22) 0%, transparent 60%),
+    linear-gradient(135deg, #16111f 0%, #1a1430 55%, #140f1e 100%);
+}
+:root[data-theme="dark"] body::after { opacity: 0.5; }
+
+/* ---------- أسطح صلبة (تتجاوز #fff الصريح وتزجيج glass) ---------- */
+:root[data-theme="dark"] .org-topbar,
+:root[data-theme="dark"] .org-stat,
+:root[data-theme="dark"] .org-panel,
+:root[data-theme="dark"] .org-card,
+:root[data-theme="dark"] .org-table-wrap,
+:root[data-theme="dark"] .org-form,
+:root[data-theme="dark"] .org-empty,
+:root[data-theme="dark"] .org-toolbar,
+:root[data-theme="dark"] .org-modal,
+:root[data-theme="dark"] .org-profile-menu,
+:root[data-theme="dark"] .admin-topbar,
+:root[data-theme="dark"] .admin-sidebar,
+:root[data-theme="dark"] .admin-brand-icon,
+:root[data-theme="dark"] .admin-profile-menu,
+:root[data-theme="dark"] .stat-card,
+:root[data-theme="dark"] .admin-chart,
+:root[data-theme="dark"] .table-wrap,
+:root[data-theme="dark"] .admin-form,
+:root[data-theme="dark"] .stat-filters,
+:root[data-theme="dark"] .stat-kpi,
+:root[data-theme="dark"] .stat-chart-card,
+:root[data-theme="dark"] .dash-card,
+:root[data-theme="dark"] .dash-stat,
+:root[data-theme="dark"] .hub,
+:root[data-theme="dark"] .mod-detail,
+:root[data-theme="dark"] .ann-card,
+:root[data-theme="dark"] .cert-preview,
+:root[data-theme="dark"] .mk,
+:root[data-theme="dark"] .card,
+:root[data-theme="dark"] .plan-card,
+:root[data-theme="dark"] .about-block,
+:root[data-theme="dark"] .value-strip,
+:root[data-theme="dark"] .stats-band {
+  background: #221a35 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: var(--text);
+}
+:root[data-theme="dark"] .org-app,
+:root[data-theme="dark"] .admin-app { background: transparent !important; }
+
+/* عناصر داخلية أخفّ */
+:root[data-theme="dark"] .org-module,
+:root[data-theme="dark"] .dash-ann,
+:root[data-theme="dark"] .dash-module,
+:root[data-theme="dark"] .mod-stage,
+:root[data-theme="dark"] .mk-panel,
+:root[data-theme="dark"] .org-kv code { background: #2a2140 !important; border-color: rgba(255, 255, 255, 0.08) !important; }
+
+/* الحقول */
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] select,
+:root[data-theme="dark"] textarea,
+:root[data-theme="dark"] .field-input-wrap input,
+:root[data-theme="dark"] .lg-field input,
+:root[data-theme="dark"] .lg-input-wrap input {
+  background: #1b1430 !important; border-color: rgba(255, 255, 255, 0.14) !important; color: var(--text) !important;
+}
+:root[data-theme="dark"] ::placeholder { color: #6f6788 !important; }
+
+/* تمرير الجداول */
+:root[data-theme="dark"] .org-table tbody tr:hover td,
+:root[data-theme="dark"] .dash-table tbody tr:hover td,
+:root[data-theme="dark"] .admin-table tbody tr:hover td { background: rgba(255, 255, 255, 0.04) !important; }
+
+/* ---------- الواجهة الرئيسية (.mdl) ---------- */
+:root[data-theme="dark"] .mdl {
+  --bg: #14101f; --white: #221a35; --dark: #f2eefb; --text: #cfc8e0; --muted: #a79fbe;
+  --border: rgba(255, 255, 255, 0.1); --p: #a48fd9; --pd: #c6b6ee; --pl: #8b78bf;
+  --p-08: rgba(164, 143, 217, 0.12); --p-12: rgba(164, 143, 217, 0.16);
+}
+:root[data-theme="dark"] .mdl-navbar { background: rgba(34, 26, 53, 0.82) !important; border-color: rgba(255, 255, 255, 0.1) !important; }
+:root[data-theme="dark"] .mdl-mega { background: rgba(28, 22, 46, 0.96) !important; border-color: rgba(255, 255, 255, 0.12) !important; }
+:root[data-theme="dark"] .mdl-btn-light,
+:root[data-theme="dark"] .mdl-btn-white { background: #2a2140; color: #f2eefb; border-color: rgba(255, 255, 255, 0.12); }
+:root[data-theme="dark"] .mdl-story { background: #221a35; border-color: rgba(255, 255, 255, 0.1); }
+:root[data-theme="dark"] .mdl-sys { background: linear-gradient(165deg, #221a35, #1a1430); border-color: rgba(255, 255, 255, 0.1); }
+:root[data-theme="dark"] .mdl-chip,
+:root[data-theme="dark"] .mdl-story-chip { background: #221a35; border-color: rgba(255, 255, 255, 0.1); color: var(--text); }
+
+/* ---------- الدخول ---------- */
+:root[data-theme="dark"] .lg-card { background: rgba(34, 26, 53, 0.97) !important; border-color: rgba(255, 255, 255, 0.1) !important; }
+
+/* ---------- زر التبديل ---------- */
+.theme-toggle {
+  width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; flex-shrink: 0;
+  border: 1px solid var(--line); background: transparent; color: var(--gray-700);
+  cursor: pointer; transition: color 0.18s, border-color 0.18s, background 0.18s;
+}
+.theme-toggle:hover { color: var(--purple-500); border-color: var(--purple-300); }
+.theme-toggle.on-deep { border-color: rgba(255, 255, 255, 0.25); color: rgba(255, 255, 255, 0.85); }
+.theme-toggle.on-deep:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
+
+/* رؤوس الجداول والفواصل الفاتحة */
+:root[data-theme="dark"] .admin-table th,
+:root[data-theme="dark"] .org-table thead th { background: #2a2140 !important; color: var(--gray-500) !important; }
+:root[data-theme="dark"] .admin-table td,
+:root[data-theme="dark"] .admin-table th,
+:root[data-theme="dark"] .org-table td,
+:root[data-theme="dark"] .org-kv,
+:root[data-theme="dark"] .admin-brand,
+:root[data-theme="dark"] .admin-sidebar-foot { border-color: rgba(255,255,255,0.08) !important; }

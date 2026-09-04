@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useState, type ReactNode } from 'react';
 import type { SessionData } from '@/lib/session';
 import { LogoMark } from '@/components/Logo';
+import ThemeToggle from '@/components/ThemeToggle';
 
 interface Props {
   children: ReactNode;
@@ -150,6 +151,7 @@ export default function AdminShell({ children, session, avatarUrl }: Props) {
             </svg>
           </button>
           <div className="admin-topbar-title">لوحة تحكم مالك المنصة</div>
+          <ThemeToggle className="admin-topbar-theme" />
         </header>
 
         <main className="admin-content">{children}</main>

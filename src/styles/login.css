@@ -117,3 +117,5 @@
 @media (max-width: 440px) {
   .lg-card { padding: 1.8rem 1.4rem; }
 }
+
+.lg-theme { position: absolute; top: 1.4rem; inset-inline-start: 1.4rem; z-index: 2; }

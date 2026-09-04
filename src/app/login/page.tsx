@@ -4,6 +4,7 @@ import { useState, type FormEvent } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { LogoMark } from '@/components/Logo';
+import ThemeToggle from '@/components/ThemeToggle';
 import '@/styles/login.css';
 
 export default function LoginPage() {
@@ -48,6 +49,9 @@ export default function LoginPage() {
         <span className="lg-blob lg-blob-2" />
         <span className="lg-grid" />
       </div>
+
+      <ThemeToggle className="lg-theme" onDeep />
+
 
       <motion.main
         className="lg-card"
@@ -108,7 +112,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <Link href="/" className="lg-home">← العودة إلى الصفحة الرئيسية</Link>
+        <Link href="/" className="lg-home">العودة إلى الصفحة الرئيسية</Link>
       </motion.main>
     </div>
   );
