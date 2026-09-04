@@ -70,6 +70,7 @@ export default function MidadHeader() {
             <Mega items={SYSTEMS_MEGA} href="#systems" wide />
           </div>
           <a href="#ai" className="mdl-nav-link">مِداد AI</a>
+          <a href="#pricing" className="mdl-nav-link">الباقات</a>
           <a href="#about" className="mdl-nav-link">عن مِداد</a>
         </div>
 
@@ -91,7 +92,7 @@ export default function MidadHeader() {
               <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M4 4l14 14M18 4L4 18" /></svg>
             </button>
           </div>
-          {[['#home', 'الرئيسية'], ['#platform', 'المنصة'], ['#systems', 'الأنظمة'], ['#ai', 'مِداد AI'], ['#about', 'عن مِداد']].map(([h, l]) => (
+          {[['#home', 'الرئيسية'], ['#platform', 'المنصة'], ['#systems', 'الأنظمة'], ['#ai', 'مِداد AI'], ['#pricing', 'الباقات'], ['#about', 'عن مِداد']].map(([h, l]) => (
             <a key={l} href={h} onClick={() => setOpen(false)}>{l}</a>
           ))}
           <Link href="/login" className="mdl-btn mdl-btn-primary" onClick={() => setOpen(false)}>تسجيل الدخول</Link>

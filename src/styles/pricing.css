@@ -202,3 +202,10 @@
 @media (max-width: 520px) {
   .plan-card.is-featured { transform: none; }
 }
+
+/* ---------- ضبط داخل الواجهة الرئيسية (.mdl) ---------- */
+.mdl .mdl-pricing { margin-top: 2.5rem; }
+.mdl .plan-cta { color: var(--purple-700); border-color: var(--purple-500); }
+.mdl .plan-cta.is-primary { color: #fff; background: var(--purple-500); border-color: var(--purple-500); }
+.mdl .plan-cta.is-primary:hover { color: #fff; background: var(--purple-700); border-color: var(--purple-700); }
+.mdl .plan-name, .mdl .plan-amount { color: var(--purple-900); }

@@ -10,7 +10,9 @@ import ProductShowcase from '@/components/landing/ProductShowcase';
 import Testimonials from '@/components/landing/Testimonials';
 import MidadAIChat from '@/components/landing/MidadAIChat';
 import MidadTour from '@/components/landing/MidadTour';
+import PricingPlans from '@/components/PricingPlans';
 import '@/styles/midad.css';
+import '@/styles/pricing.css';
 
 const STAR = (
   <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 1.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L10 15l-5.2 2.6 1-5.8L1.5 7.7l5.9-.9z" /></svg>
@@ -263,6 +265,24 @@ export default function HomePage() {
                 <span key={i} className="mdl-int"><Icon name="actions/actions-link" size={18} />{n}</span>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* ========== PRICING ========== */}
+        <section id="pricing" className="mdl-section">
+          <div className="mdl-wrap">
+            <Reveal>
+              <div className="mdl-center">
+                <span className="mdl-eyebrow">الباقات</span>
+                <h2 className="mdl-h2">باقة تناسب كل مؤسسة</h2>
+                <p className="mdl-lead">ابدأ مجانًا، وارتقِ حين تنمو مؤسستك — بلا التزامات مخفية.</p>
+              </div>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <div className="mdl-pricing">
+                <PricingPlans />
+              </div>
+            </Reveal>
           </div>
         </section>
 
