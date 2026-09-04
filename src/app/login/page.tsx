@@ -76,7 +76,7 @@ export default function LoginPage() {
           <label className="lg-field">
             <span className="lg-label">البريد الإلكتروني</span>
             <input
-              type="email" autoComplete="email" dir="ltr" placeholder="name@example.com"
+              type="email" autoComplete="email" placeholder="name@example.com"
               value={email} onChange={(e) => setEmail(e.target.value)}
             />
           </label>
