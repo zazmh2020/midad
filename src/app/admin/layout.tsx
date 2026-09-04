@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { getSession } from '@/lib/session';
 import { prisma } from '@/lib/prisma';
 import AdminShell from './AdminShell';
+import { getAdminInbox } from '@/lib/inbox';
 import '@/styles/admin.css';
 
 export const dynamic = 'force-dynamic';
@@ -18,6 +19,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     where: { id: session.userId },
     select: { avatarUrl: true },
   });
+  const inbox = await getAdminInbox();
 
-  return <AdminShell session={session} avatarUrl={me?.avatarUrl ?? null}>{children}</AdminShell>;
+  return <AdminShell session={session} avatarUrl={me?.avatarUrl ?? null} inbox={inbox}>{children}</AdminShell>;
 }

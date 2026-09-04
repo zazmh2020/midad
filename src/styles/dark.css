@@ -51,7 +51,6 @@
 :root[data-theme="dark"] .org-modal,
 :root[data-theme="dark"] .org-profile-menu,
 :root[data-theme="dark"] .admin-topbar,
-:root[data-theme="dark"] .admin-sidebar,
 :root[data-theme="dark"] .admin-brand-icon,
 :root[data-theme="dark"] .admin-profile-menu,
 :root[data-theme="dark"] .stat-card,
@@ -143,8 +142,10 @@
 :root[data-theme="dark"] .admin-sidebar-foot { border-color: rgba(255,255,255,0.08) !important; }
 
 /* ---------- Shell عائم (لوحات) + أدوات الشريط ---------- */
-:root[data-theme="dark"] .org-app { background: #14101f !important; }
+:root[data-theme="dark"] .org-app,
+:root[data-theme="dark"] .admin-app { background: #14101f !important; }
 :root[data-theme="dark"] .org-content,
+:root[data-theme="dark"] .admin-content,
 :root[data-theme="dark"] .tbt-btn,
 :root[data-theme="dark"] .tbt-drop,
 :root[data-theme="dark"] .tbt-inbox,
