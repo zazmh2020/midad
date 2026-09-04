@@ -186,3 +186,67 @@ svg {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ============================================================
+   أدوات الشريط العلوي — بحث + رسائل + جرس (TopbarTools) — عام
+   ============================================================ */
+.tbt { display: flex; align-items: center; gap: 0.5rem; margin-inline-start: auto; }
+
+/* البحث */
+.tbt-search {
+  position: relative; display: flex; align-items: center; gap: 0.5rem;
+  background: var(--gray-100); border: 1px solid transparent; border-radius: 100px;
+  padding: 0.4rem 0.9rem; width: clamp(180px, 26vw, 340px); transition: border-color 0.18s, background 0.18s;
+}
+.tbt-search:focus-within { background: #fff; border-color: var(--purple-300); }
+.tbt-search-ic { color: var(--gray-500); flex-shrink: 0; }
+.tbt-search input {
+  border: none; background: transparent; outline: none; width: 100%;
+  font-family: inherit; font-size: 0.88rem; color: var(--gray-900);
+}
+.tbt-search input::placeholder { color: var(--gray-500); }
+
+/* القوائم المنسدلة */
+.tbt-drop {
+  position: absolute; top: calc(100% + 0.5rem); inset-inline-end: 0; z-index: 40;
+  background: #fff; border: 1px solid var(--line); border-radius: 14px;
+  box-shadow: 0 24px 60px -22px rgba(43, 26, 78, 0.4); padding: 0.4rem; overflow: hidden;
+}
+.tbt-results { inset-inline: 0; }
+.tbt-result {
+  display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
+  width: 100%; padding: 0.55rem 0.7rem; border: none; background: transparent; border-radius: 9px;
+  cursor: pointer; font-family: inherit; font-size: 0.88rem; color: var(--gray-900); text-align: start;
+  transition: background 0.15s;
+}
+.tbt-result:hover { background: var(--gray-100); }
+.tbt-result-sec { font-size: 0.72rem; color: var(--gray-500); flex-shrink: 0; }
+.tbt-empty { padding: 0.9rem; text-align: center; color: var(--gray-500); font-size: 0.85rem; }
+
+/* الأزرار (رسائل/جرس) */
+.tbt-slot { position: relative; }
+.tbt-btn {
+  position: relative; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center;
+  border: 1px solid var(--line); background: #fff; color: var(--gray-700); cursor: pointer;
+  transition: color 0.18s, border-color 0.18s, background 0.18s;
+}
+.tbt-btn:hover { color: var(--purple-500); border-color: var(--purple-300); background: var(--gray-100); }
+.tbt-dot {
+  position: absolute; top: -3px; inset-inline-start: -3px; min-width: 17px; height: 17px; padding: 0 4px;
+  border-radius: 100px; background: #e0483d; color: #fff; font-size: 0.64rem; font-weight: 800;
+  display: grid; place-items: center; border: 2px solid #fff;
+}
+
+/* صندوق الرسائل/الإشعارات */
+.tbt-inbox { width: 320px; max-width: calc(100vw - 2rem); max-height: 420px; overflow-y: auto; padding: 0.5rem; }
+.tbt-inbox-head { font-weight: 700; font-size: 0.82rem; color: var(--purple-900); padding: 0.5rem 0.6rem; }
+.tbt-msg { padding: 0.6rem; border-radius: 10px; transition: background 0.15s; }
+.tbt-msg:hover { background: var(--gray-100); }
+.tbt-msg-top { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; }
+.tbt-msg-title { font-weight: 700; font-size: 0.85rem; color: var(--gray-900); }
+.tbt-msg-body { font-size: 0.8rem; color: var(--gray-500); margin: 0.2rem 0 0; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.tbt-time { font-size: 0.68rem; color: var(--gray-500); flex-shrink: 0; white-space: nowrap; }
+.tbt-notif { display: flex; align-items: flex-start; gap: 0.6rem; padding: 0.6rem; border-radius: 10px; transition: background 0.15s; }
+.tbt-notif:hover { background: var(--gray-100); }
+.tbt-notif-ic { width: 30px; height: 30px; border-radius: 9px; background: var(--gray-100); display: grid; place-items: center; font-size: 0.9rem; flex-shrink: 0; }
+.tbt-notif-tx { display: flex; flex-direction: column; gap: 0.15rem; font-size: 0.83rem; color: var(--gray-900); }
