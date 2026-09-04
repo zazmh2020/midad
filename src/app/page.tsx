@@ -49,7 +49,7 @@ export default function HomePage() {
         <section id="home" className="mdl-hero">
           <div className="mdl-wrap mdl-hero-grid">
             <div>
-              <Reveal><h1>كل مؤسستك <span className="hl">في مكان واحد</span></h1></Reveal>
+              <Reveal><h1>كل مؤسستك<br /><span className="hl">في مكان واحد</span></h1></Reveal>
               <Reveal delay={0.1}>
                 <p className="mdl-hero-sub">
                   منصة مِداد الرقمية تجمع إدارة المؤسسة والموارد والمشاريع والبرامج

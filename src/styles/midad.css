@@ -573,3 +573,9 @@
   .mdl-story-quotemark { display: none; }
   .mdl-story-chip-org { display: none; }
 }
+
+/* ---------- تمرير سلس + إزاحة تعوّض الشريط العائم ---------- */
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+.mdl-hero, .mdl-section, #home, #platform, #systems, #ai { scroll-margin-top: 90px; }
+.mdl-footer { scroll-margin-top: 90px; }

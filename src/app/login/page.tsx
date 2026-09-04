@@ -108,13 +108,8 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p className="lg-note">
-          الحسابات تُنشأ عبر إدارة المنصّة. للاستفسار{' '}
-          <Link href="/#about">تواصل معنا</Link>.
-        </p>
+        <Link href="/" className="lg-home">← العودة إلى الصفحة الرئيسية</Link>
       </motion.main>
-
-      <Link href="/" className="lg-home">← العودة إلى الصفحة الرئيسية</Link>
     </div>
   );
 }

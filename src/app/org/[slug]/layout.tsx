@@ -45,7 +45,12 @@ export default async function OrgLayout({
           match: [`${base}/resources`, `${base}/beneficiaries`] }] as NavEntry[])
       : []),
     ...(educationSection
-      ? ([{ kind: 'link', href: `${base}/education`, label: 'التعليم', icon: 'education' }] as NavEntry[])
+      ? ([
+          { kind: 'link', href: `${base}/education`, label: 'التعليم', icon: 'education', match: [`${base}/education`] },
+          { kind: 'link', href: `${base}/education/plans`, label: 'الخطط والمقرّرات', icon: 'plans' },
+          { kind: 'link', href: `${base}/education/competitions`, label: 'المسابقات', icon: 'competitions' },
+          { kind: 'link', href: `${base}/education/certificates`, label: 'الشهادات', icon: 'certificates' },
+        ] as NavEntry[])
       : []),
 
     // الطبقة الثانية — المعرفة والذكاء
@@ -69,6 +74,9 @@ export default async function OrgLayout({
 
     // الطبقة الثالثة — إدارة النظام
     { kind: 'divider', label: 'النظام' },
+    ...(canManageSettings(r)
+      ? ([{ kind: 'link', href: `${base}/content`, label: 'إدارة المحتوى', icon: 'content' }] as NavEntry[])
+      : []),
     ...(canManageUsers(r)
       ? ([{ kind: 'link', href: `${base}/admin`, label: 'الإدارة', icon: 'admin' }] as NavEntry[])
       : []),

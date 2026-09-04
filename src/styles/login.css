@@ -75,11 +75,15 @@
   outline: none; border-color: var(--purple-500); box-shadow: 0 0 0 3px rgba(107, 87, 160, 0.14);
 }
 .lg-input-wrap { position: relative; display: block; }
+/* مساحة محجوزة لأيقونة العين حتى لا تتداخل مع النص */
+.lg-input-wrap input { padding-inline-start: 3rem; }
 .lg-eye {
-  position: absolute; inset-inline-start: 0.7rem; top: 50%; transform: translateY(-50%);
-  background: none; border: none; cursor: pointer; color: var(--gray-500); display: flex; padding: 0;
+  position: absolute; inset-inline-start: 0.55rem; top: 50%; transform: translateY(-50%);
+  width: 32px; height: 32px; border-radius: 8px;
+  background: none; border: none; cursor: pointer; color: var(--gray-500);
+  display: grid; place-items: center; padding: 0; transition: background 0.15s, color 0.15s;
 }
-.lg-eye:hover { color: var(--purple-500); }
+.lg-eye:hover { color: var(--purple-500); background: rgba(107, 87, 160, 0.08); }
 
 .lg-remember { display: flex; align-items: center; gap: 0.45rem; font-size: 0.82rem; color: var(--gray-700); cursor: pointer; margin: 0.2rem 0 1.2rem; }
 .lg-remember input { width: 15px; height: 15px; accent-color: var(--purple-500); cursor: pointer; }
@@ -101,12 +105,11 @@
   background: #fdecec; border: 1px solid #f5c6c6; border-radius: 10px; color: #c0392b; font-size: 0.82rem;
 }
 
-.lg-note { text-align: center; font-size: 0.8rem; color: var(--gray-500); margin: 1.3rem 0 0; line-height: 1.7; }
-.lg-note a { color: var(--purple-500); font-weight: 700; }
-.lg-note a:hover { color: var(--purple-700); }
-
-.lg-home { position: relative; z-index: 1; margin-top: 1.4rem; color: rgba(255, 255, 255, 0.7); font-size: 0.82rem; transition: color 0.2s; }
-.lg-home:hover { color: #fff; }
+.lg-home {
+  display: block; text-align: center; margin-top: 1.4rem;
+  color: var(--gray-500); font-size: 0.83rem; font-weight: 600; transition: color 0.2s;
+}
+.lg-home:hover { color: var(--purple-500); }
 
 @media (prefers-reduced-motion: reduce) {
   .lg-blob { animation: none; }
