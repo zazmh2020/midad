@@ -1,0 +1,204 @@
+/* ============================================================
+   مِداد — صفحة الأسعار
+   ============================================================ */
+
+/* ---------- مفتاح الفوترة (شهري / سنوي) ---------- */
+.pricing-wrap { display: block; text-align: center; }
+
+.billing-toggle {
+  display: inline-flex;
+  gap: 0.25rem;
+  padding: 0.28rem;
+  margin: 0 0 2rem;
+  background: var(--purple-100);
+  border-radius: 100px;
+}
+
+.billing-opt {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0.5rem 1.25rem;
+  border-radius: 100px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--purple-700);
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.billing-opt.is-active {
+  background: var(--purple-500);
+  color: #fff;
+  box-shadow: var(--shadow-soft);
+}
+
+.billing-save {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.65rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.22);
+  color: inherit;
+  white-space: nowrap;
+}
+.billing-opt:not(.is-active) .billing-save {
+  background: var(--purple-500);
+  color: #fff;
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1rem;
+  max-width: var(--container);
+  margin-inline: auto;
+  align-items: stretch;
+  text-align: start;
+}
+
+.plan-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1.75rem 1.4rem 1.4rem;
+  box-shadow: var(--shadow-soft);
+}
+
+.plan-card.is-featured {
+  border-color: var(--purple-500);
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-6px);
+}
+
+.plan-badge {
+  position: absolute;
+  top: -12px;
+  inset-inline-start: 50%;
+  transform: translateX(50%);
+  background: var(--purple-500);
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.72rem;
+  padding: 0.3rem 0.9rem;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+
+.plan-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--purple-900);
+  margin: 0;
+}
+.plan-en {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: var(--purple-300);
+  letter-spacing: 0.02em;
+}
+.plan-tagline {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  margin: 0.3rem 0 1rem;
+}
+
+.plan-price {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--line);
+  min-height: 2.6rem;
+}
+.plan-permonth {
+  flex-basis: 100%;
+  color: var(--purple-500);
+  font-size: 0.72rem;
+  font-weight: 600;
+  margin-top: 0.15rem;
+}
+.plan-amount {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.9rem;
+  color: var(--purple-900);
+  line-height: 1;
+}
+.plan-period { color: var(--text-muted); font-size: 0.78rem; }
+.plan-custom {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--purple-700);
+}
+
+.plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+.plan-features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.83rem;
+  color: var(--text);
+  line-height: 1.5;
+}
+.plan-features svg {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  color: var(--purple-500);
+  margin-top: 1px;
+}
+
+.plan-cta {
+  display: block;
+  text-align: center;
+  padding: 0.6rem 1rem;
+  border-radius: 9px;
+  border: 1.5px solid var(--purple-500);
+  color: var(--purple-700);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.88rem;
+  transition: background 0.2s, color 0.2s;
+}
+.plan-cta:hover { background: var(--purple-100); }
+.plan-cta.is-primary {
+  background: var(--purple-500);
+  color: #fff;
+  border-color: var(--purple-500);
+}
+.plan-cta.is-primary:hover { background: var(--purple-700); border-color: var(--purple-700); }
+
+.pricing-note {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  margin-top: var(--space-5);
+  max-width: 60ch;
+  margin-inline: auto;
+}
+
+@media (max-width: 520px) {
+  .plan-card.is-featured { transform: none; }
+}

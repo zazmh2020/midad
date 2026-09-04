@@ -1,0 +1,349 @@
+import type {
+  Role,
+  ProjectStatus,
+  ProgramCategory,
+  ProgramStatus,
+  CampaignType,
+  CampaignStatus,
+  BeneficiaryCategory,
+  BeneficiaryStatus,
+  DonationMethod,
+  DonationStatus,
+  StudentStatus,
+  HalaqaType,
+  AttendanceStatus,
+  MemorizationKind,
+  MemorizationRating,
+  EmployeeStatus,
+  VolunteerStatus,
+} from '@/generated/prisma/client';
+
+/* ============================================================
+   الأدوار والصلاحيات
+   مصدر واحد لأسماء الأدوار والقدرات المرتبطة بها.
+   ============================================================ */
+
+export const ROLE_LABELS: Record<Role, string> = {
+  PLATFORM_OWNER: 'مالك المنصة',
+  ORG_ADMIN: 'مدير المؤسسة',
+  STAFF: 'موظف',
+  MEMBER: 'عضو',
+};
+
+export function roleLabel(role: string): string {
+  return ROLE_LABELS[role as Role] ?? role;
+}
+
+/** الأدوار التي يمكن إسنادها لمستخدم داخل مؤسسة — لا يُسند دور مالك المنصة أبدًا */
+export const ASSIGNABLE_ROLES: Role[] = ['ORG_ADMIN', 'STAFF', 'MEMBER'];
+
+export function isAssignableRole(role: string): role is Role {
+  return (ASSIGNABLE_ROLES as string[]).includes(role);
+}
+
+/** من يدير حسابات المؤسسة (إضافة، تعديل دور، إيقاف) */
+export function canManageUsers(role: string): boolean {
+  return role === 'ORG_ADMIN';
+}
+
+/** من يطّلع على قائمة المستخدمين */
+export function canViewUsers(role: string): boolean {
+  return role === 'ORG_ADMIN' || role === 'STAFF';
+}
+
+/** من يعدّل إعدادات المؤسسة */
+export function canManageSettings(role: string): boolean {
+  return role === 'ORG_ADMIN';
+}
+
+/* ---------- المشاريع ---------- */
+
+export const PROJECT_STATUS_LABELS: Record<ProjectStatus, string> = {
+  PLANNED: 'مخطّط',
+  ACTIVE: 'جارٍ',
+  ON_HOLD: 'متوقّف',
+  COMPLETED: 'مكتمل',
+  CANCELLED: 'ملغى',
+};
+
+export const PROJECT_STATUSES = Object.keys(PROJECT_STATUS_LABELS) as ProjectStatus[];
+
+export function projectStatusLabel(status: string): string {
+  return PROJECT_STATUS_LABELS[status as ProjectStatus] ?? status;
+}
+
+export function isProjectStatus(value: string): value is ProjectStatus {
+  return (PROJECT_STATUSES as string[]).includes(value);
+}
+
+/** من يطّلع على مشاريع المؤسسة — جميع أعضائها */
+export function canViewProjects(role: string): boolean {
+  return role === 'ORG_ADMIN' || role === 'STAFF' || role === 'MEMBER';
+}
+
+/** من ينشئ ويعدّل ويحذف المشاريع */
+export function canManageProjects(role: string): boolean {
+  return role === 'ORG_ADMIN' || role === 'STAFF';
+}
+
+/* ---------- الهيكل المؤسسي ---------- */
+
+/** من يطّلع على الهيكل التنظيمي — جميع أعضاء المؤسسة */
+export function canViewStructure(role: string): boolean {
+  return role === 'ORG_ADMIN' || role === 'STAFF' || role === 'MEMBER';
+}
+
+/** من يبني الهيكل ويسند الأعضاء إليه */
+export function canManageStructure(role: string): boolean {
+  return role === 'ORG_ADMIN';
+}
+
+/* ---------- البرامج ---------- */
+
+export const PROGRAM_CATEGORY_LABELS: Record<ProgramCategory, string> = {
+  EDUCATIONAL: 'تعليمي',
+  HUMANITARIAN: 'إنساني',
+  DEVELOPMENTAL: 'تنموي',
+  RELIGIOUS: 'ديني / قرآني',
+  HEALTH: 'صحي',
+};
+export const PROGRAM_CATEGORIES = Object.keys(PROGRAM_CATEGORY_LABELS) as ProgramCategory[];
+export function programCategoryLabel(v: string): string {
+  return PROGRAM_CATEGORY_LABELS[v as ProgramCategory] ?? v;
+}
+export function isProgramCategory(v: string): v is ProgramCategory {
+  return (PROGRAM_CATEGORIES as string[]).includes(v);
+}
+
+export const PROGRAM_STATUS_LABELS: Record<ProgramStatus, string> = {
+  PLANNED: 'مخطّط',
+  ACTIVE: 'جارٍ',
+  COMPLETED: 'منتهٍ',
+  SUSPENDED: 'موقوف',
+};
+export const PROGRAM_STATUSES = Object.keys(PROGRAM_STATUS_LABELS) as ProgramStatus[];
+export function programStatusLabel(v: string): string {
+  return PROGRAM_STATUS_LABELS[v as ProgramStatus] ?? v;
+}
+export function isProgramStatus(v: string): v is ProgramStatus {
+  return (PROGRAM_STATUSES as string[]).includes(v);
+}
+
+/** من يطّلع على برامج المؤسسة — جميع أعضائها */
+export function canViewPrograms(role: string): boolean {
+  return role === 'ORG_ADMIN' || role === 'STAFF' || role === 'MEMBER';
+}
+
+/** من ينشئ ويعدّل ويحذف البرامج */
+export function canManagePrograms(role: string): boolean {
+  return role === 'ORG_ADMIN' || role === 'STAFF';
+}
+
+/* ---------- الحملات ---------- */
+
+export const CAMPAIGN_TYPE_LABELS: Record<CampaignType, string> = {
+  CHARITY: 'خيرية',
+  SEASONAL: 'موسمية',
+  AWARENESS: 'توعوية',
+};
+export const CAMPAIGN_TYPES = Object.keys(CAMPAIGN_TYPE_LABELS) as CampaignType[];
+export function campaignTypeLabel(v: string): string {
+  return CAMPAIGN_TYPE_LABELS[v as CampaignType] ?? v;
+}
+export function isCampaignType(v: string): v is CampaignType {
+  return (CAMPAIGN_TYPES as string[]).includes(v);
+}
+
+export const CAMPAIGN_STATUS_LABELS: Record<CampaignStatus, string> = {
+  PLANNED: 'مخطّطة',
+  ACTIVE: 'جارية',
+  COMPLETED: 'منتهية',
+  CANCELLED: 'ملغاة',
+};
+export const CAMPAIGN_STATUSES = Object.keys(CAMPAIGN_STATUS_LABELS) as CampaignStatus[];
+export function campaignStatusLabel(v: string): string {
+  return CAMPAIGN_STATUS_LABELS[v as CampaignStatus] ?? v;
+}
+export function isCampaignStatus(v: string): v is CampaignStatus {
+  return (CAMPAIGN_STATUSES as string[]).includes(v);
+}
+
+export function canViewCampaigns(role: string): boolean {
+  return role === 'ORG_ADMIN' || role === 'STAFF' || role === 'MEMBER';
+}
+export function canManageCampaigns(role: string): boolean {
+  return role === 'ORG_ADMIN' || role === 'STAFF';
+}
+
+/* ---------- المستفيدون ---------- */
+
+export const BENEFICIARY_CATEGORY_LABELS: Record<BeneficiaryCategory, string> = {
+  FAMILY: 'أسرة',
+  ORPHAN: 'يتيم',
+  STUDENT: 'طالب',
+  ELDERLY: 'مسنّ',
+  OTHER: 'أخرى',
+};
+export const BENEFICIARY_CATEGORIES = Object.keys(BENEFICIARY_CATEGORY_LABELS) as BeneficiaryCategory[];
+export function beneficiaryCategoryLabel(v: string): string {
+  return BENEFICIARY_CATEGORY_LABELS[v as BeneficiaryCategory] ?? v;
+}
+export function isBeneficiaryCategory(v: string): v is BeneficiaryCategory {
+  return (BENEFICIARY_CATEGORIES as string[]).includes(v);
+}
+
+export const BENEFICIARY_STATUS_LABELS: Record<BeneficiaryStatus, string> = {
+  ACTIVE: 'نشط',
+  PENDING: 'قيد المراجعة',
+  INACTIVE: 'موقوف',
+};
+export const BENEFICIARY_STATUSES = Object.keys(BENEFICIARY_STATUS_LABELS) as BeneficiaryStatus[];
+export function beneficiaryStatusLabel(v: string): string {
+  return BENEFICIARY_STATUS_LABELS[v as BeneficiaryStatus] ?? v;
+}
+export function isBeneficiaryStatus(v: string): v is BeneficiaryStatus {
+  return (BENEFICIARY_STATUSES as string[]).includes(v);
+}
+
+/** بيانات المستفيدين حسّاسة — تُقصر على من يديرها */
+export function canViewBeneficiaries(role: string): boolean {
+  return role === 'ORG_ADMIN' || role === 'STAFF';
+}
+export function canManageBeneficiaries(role: string): boolean {
+  return role === 'ORG_ADMIN' || role === 'STAFF';
+}
+
+/* ---------- التبرعات ---------- */
+
+export const DONATION_METHOD_LABELS: Record<DonationMethod, string> = {
+  CASH: 'نقداً',
+  BANK: 'تحويل بنكي',
+  CARD: 'بطاقة',
+  ONLINE: 'إلكتروني',
+};
+export const DONATION_METHODS = Object.keys(DONATION_METHOD_LABELS) as DonationMethod[];
+export function donationMethodLabel(v: string): string {
+  return DONATION_METHOD_LABELS[v as DonationMethod] ?? v;
+}
+export function isDonationMethod(v: string): v is DonationMethod {
+  return (DONATION_METHODS as string[]).includes(v);
+}
+
+export const DONATION_STATUS_LABELS: Record<DonationStatus, string> = {
+  PLEDGED: 'متعهَّد به',
+  RECEIVED: 'مستلَم',
+};
+export const DONATION_STATUSES = Object.keys(DONATION_STATUS_LABELS) as DonationStatus[];
+export function donationStatusLabel(v: string): string {
+  return DONATION_STATUS_LABELS[v as DonationStatus] ?? v;
+}
+export function isDonationStatus(v: string): v is DonationStatus {
+  return (DONATION_STATUSES as string[]).includes(v);
+}
+
+/** التبرعات مالية — للإدارة والموظفين */
+export function canViewDonations(role: string): boolean {
+  return role === 'ORG_ADMIN' || role === 'STAFF';
+}
+export function canManageDonations(role: string): boolean {
+  return role === 'ORG_ADMIN' || role === 'STAFF';
+}
+
+/* ---------- قاعدة المعرفة ---------- */
+
+/** يرى المنشور جميع الأعضاء؛ والمسودّات لمن يدير */
+export function canViewKnowledge(role: string): boolean {
+  return role === 'ORG_ADMIN' || role === 'STAFF' || role === 'MEMBER';
+}
+export function canManageKnowledge(role: string): boolean {
+  return role === 'ORG_ADMIN' || role === 'STAFF';
+}
+
+/* ---------- التقارير ---------- */
+
+export function canViewReports(role: string): boolean {
+  return role === 'ORG_ADMIN' || role === 'STAFF';
+}
+
+/* ---------- الوثائق ---------- */
+
+/** يطّلع على وثائق المؤسسة جميع الأعضاء */
+export function canViewDocuments(role: string): boolean {
+  return role === 'ORG_ADMIN' || role === 'STAFF' || role === 'MEMBER';
+}
+/** يرفع ويحذف الوثائق: الإدارة والموظفون */
+export function canManageDocuments(role: string): boolean {
+  return role === 'ORG_ADMIN' || role === 'STAFF';
+}
+
+/* ---------- التعليم / الحلقات ---------- */
+
+export const STUDENT_STATUS_LABELS: Record<StudentStatus, string> = {
+  ACTIVE: 'منتظم', PAUSED: 'متوقّف', GRADUATED: 'متخرّج', WITHDRAWN: 'منسحب',
+};
+export const STUDENT_STATUSES = Object.keys(STUDENT_STATUS_LABELS) as StudentStatus[];
+export const studentStatusLabel = (v: string) => STUDENT_STATUS_LABELS[v as StudentStatus] ?? v;
+export const isStudentStatus = (v: string): v is StudentStatus => (STUDENT_STATUSES as string[]).includes(v);
+
+export const HALAQA_TYPE_LABELS: Record<HalaqaType, string> = {
+  MEMORIZATION: 'تحفيظ', TAJWEED: 'تجويد', REVIEW: 'مراجعة', OTHER: 'أخرى',
+};
+export const HALAQA_TYPES = Object.keys(HALAQA_TYPE_LABELS) as HalaqaType[];
+export const halaqaTypeLabel = (v: string) => HALAQA_TYPE_LABELS[v as HalaqaType] ?? v;
+export const isHalaqaType = (v: string): v is HalaqaType => (HALAQA_TYPES as string[]).includes(v);
+
+export const ATTENDANCE_STATUS_LABELS: Record<AttendanceStatus, string> = {
+  PRESENT: 'حاضر', ABSENT: 'غائب', LATE: 'متأخّر', EXCUSED: 'بعذر',
+};
+export const ATTENDANCE_STATUSES = Object.keys(ATTENDANCE_STATUS_LABELS) as AttendanceStatus[];
+export const attendanceStatusLabel = (v: string) => ATTENDANCE_STATUS_LABELS[v as AttendanceStatus] ?? v;
+export const isAttendanceStatus = (v: string): v is AttendanceStatus => (ATTENDANCE_STATUSES as string[]).includes(v);
+
+export const MEMO_KIND_LABELS: Record<MemorizationKind, string> = { NEW: 'حفظ جديد', REVIEW: 'مراجعة' };
+export const MEMO_KINDS = Object.keys(MEMO_KIND_LABELS) as MemorizationKind[];
+export const memoKindLabel = (v: string) => MEMO_KIND_LABELS[v as MemorizationKind] ?? v;
+export const isMemoKind = (v: string): v is MemorizationKind => (MEMO_KINDS as string[]).includes(v);
+
+export const MEMO_RATING_LABELS: Record<MemorizationRating, string> = {
+  EXCELLENT: 'ممتاز', GOOD: 'جيد', NEEDS_REPEAT: 'يحتاج إعادة',
+};
+export const MEMO_RATINGS = Object.keys(MEMO_RATING_LABELS) as MemorizationRating[];
+export const memoRatingLabel = (v: string) => MEMO_RATING_LABELS[v as MemorizationRating] ?? v;
+export const isMemoRating = (v: string): v is MemorizationRating => (MEMO_RATINGS as string[]).includes(v);
+
+/** يطّلع على التعليم: الإدارة والموظفون */
+export function canViewEducation(role: string): boolean {
+  return role === 'ORG_ADMIN' || role === 'STAFF';
+}
+export function canManageEducation(role: string): boolean {
+  return role === 'ORG_ADMIN' || role === 'STAFF';
+}
+
+/* ---------- الموارد البشرية ---------- */
+
+export const EMPLOYEE_STATUS_LABELS: Record<EmployeeStatus, string> = {
+  ACTIVE: 'على رأس العمل', ON_LEAVE: 'في إجازة', TERMINATED: 'منتهية الخدمة',
+};
+export const EMPLOYEE_STATUSES = Object.keys(EMPLOYEE_STATUS_LABELS) as EmployeeStatus[];
+export const employeeStatusLabel = (v: string) => EMPLOYEE_STATUS_LABELS[v as EmployeeStatus] ?? v;
+export const isEmployeeStatus = (v: string): v is EmployeeStatus => (EMPLOYEE_STATUSES as string[]).includes(v);
+
+export const VOLUNTEER_STATUS_LABELS: Record<VolunteerStatus, string> = { ACTIVE: 'نشط', INACTIVE: 'غير نشط' };
+export const VOLUNTEER_STATUSES = Object.keys(VOLUNTEER_STATUS_LABELS) as VolunteerStatus[];
+export const volunteerStatusLabel = (v: string) => VOLUNTEER_STATUS_LABELS[v as VolunteerStatus] ?? v;
+export const isVolunteerStatus = (v: string): v is VolunteerStatus => (VOLUNTEER_STATUSES as string[]).includes(v);
+
+/** الموارد البشرية حسّاسة — للإدارة والموظفين */
+export function canViewHR(role: string): boolean {
+  return role === 'ORG_ADMIN' || role === 'STAFF';
+}
+export function canManageHR(role: string): boolean {
+  return role === 'ORG_ADMIN' || role === 'STAFF';
+}
+
+/* ---------- المساعد الذكي ---------- */
+
+/** يستخدم المساعد جميع أعضاء المؤسسة — لكن ضمن حدود ما يحقّ لهم رؤيته */
+export function canUseAssistant(role: string): boolean {
+  return role === 'ORG_ADMIN' || role === 'STAFF' || role === 'MEMBER';
+}

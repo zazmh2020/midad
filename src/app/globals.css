@@ -1,5 +1,16 @@
-/* الخطوط — نسخة مؤقتة حتى إضافة خط «قمرة» */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700;800&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap');
-
 @import '../styles/tokens.css';
 @import '../styles/base.css';
+@import '../styles/glass.css';
+
+/* نظام أيقونات مِداد — يُلوَّن بلون النص عبر القناع */
+.app-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  background-color: currentColor;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}

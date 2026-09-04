@@ -1,0 +1,71 @@
+/* ============================================================
+   مِداد — صفحة الإحصاءات (تطوّر الإنجاز)
+   ============================================================ */
+
+/* مسار تنقّل */
+.org-crumb {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-size: 0.8rem; color: var(--gray-500); margin-bottom: 1rem;
+}
+.org-crumb a { color: var(--gray-500); transition: color 0.15s; }
+.org-crumb a:hover { color: var(--purple-500); }
+.org-crumb .is-current { color: var(--purple-900); font-weight: 600; }
+
+.stat { display: flex; flex-direction: column; gap: 1.25rem; transition: opacity 0.2s; }
+.stat.is-loading { opacity: 0.7; }
+
+/* الفلاتر */
+.stat-filters {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.9rem;
+  background: #fff; border: 1px solid var(--line); border-radius: 14px;
+  padding: 1rem 1.1rem; box-shadow: var(--shadow-soft);
+}
+.stat-field { display: flex; flex-direction: column; gap: 0.35rem; min-width: 0; }
+.stat-field label { font-size: 0.75rem; font-weight: 600; color: var(--gray-700); }
+.stat-field select,
+.stat-field input {
+  width: 100%; padding: 0.55rem 0.7rem; font-family: var(--font-body);
+  font-size: 0.85rem; color: var(--gray-900); background: var(--off-white);
+  border: 1px solid var(--line); border-radius: 9px; cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.stat-field select:focus,
+.stat-field input:focus { outline: none; border-color: var(--purple-500); box-shadow: 0 0 0 3px rgba(107, 87, 160, 0.12); background: #fff; }
+
+/* KPIs */
+.stat-kpis { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.9rem; }
+.stat-kpi {
+  background: #fff; border: 1px solid var(--line); border-radius: 14px;
+  padding: 1rem 1.1rem; box-shadow: var(--shadow-soft);
+}
+.stat-kpi.is-accent { background: linear-gradient(140deg, var(--purple-700), var(--purple-900)); border-color: transparent; }
+.stat-kpi-k { font-size: 0.78rem; color: var(--gray-500); margin-bottom: 0.4rem; }
+.stat-kpi.is-accent .stat-kpi-k { color: rgba(255, 255, 255, 0.75); }
+.stat-kpi-v { font-family: var(--font-display); font-weight: 800; font-size: 1.75rem; color: var(--purple-900); line-height: 1; }
+.stat-kpi.is-accent .stat-kpi-v { color: #fff; }
+
+/* بطاقات الرسم */
+.stat-chart-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 1.25rem 1.4rem; box-shadow: var(--shadow-soft); }
+.stat-card-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.6rem; }
+.stat-card-hd h3 { font-family: var(--font-display); font-size: 1rem; color: var(--purple-900); margin: 0; }
+.stat-legend { display: flex; gap: 1rem; font-size: 0.8rem; color: var(--gray-700); }
+.stat-legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
+.stat-legend i { width: 12px; height: 3px; border-radius: 3px; display: inline-block; }
+
+.stat-chart { width: 100%; height: 240px; display: block; }
+.stat-empty { color: var(--gray-500); font-size: 0.9rem; text-align: center; padding: 2.5rem 0; }
+
+/* توزيع التقييم */
+.stat-ratings { display: flex; flex-direction: column; gap: 0.9rem; }
+.stat-rating-hd { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.35rem; color: var(--gray-700); }
+.stat-rating-hd strong { color: var(--purple-900); }
+.stat-rating-track { height: 9px; border-radius: 100px; background: var(--gray-100); overflow: hidden; }
+.stat-rating-track i { display: block; height: 100%; border-radius: 100px; transition: width 0.4s var(--ease); }
+
+@media (max-width: 900px) {
+  .stat-filters { grid-template-columns: 1fr 1fr; }
+  .stat-kpis { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 560px) {
+  .stat-filters, .stat-kpis { grid-template-columns: 1fr 1fr; }
+}

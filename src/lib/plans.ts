@@ -1,0 +1,116 @@
+import type { OrgPlan } from '@/generated/prisma/client';
+
+/* ============================================================
+   باقات مِداد — مقترح مبدئي قابل للتعديل بسهولة من هذا الملف.
+   العملة والأسعار والحدود كلها هنا في مكان واحد.
+   ============================================================ */
+
+export const CURRENCY = 'ر.س'; // غيّرها حسب سوقك ($ / ر.س / ₺ …)
+
+export interface Plan {
+  id: OrgPlan;
+  name: string;
+  tagline: string;
+  /** السعر الشهري؛ 0 = مجاني، null = تسعير مخصّص */
+  price: number | null;
+  /** السعر السنوي الإجمالي؛ إن لم يُحدَّد يُحسب تلقائيًا بخصم شهرين (price × 10) */
+  priceYearly?: number | null;
+  /** الحد الأقصى للمستخدمين؛ null = بلا حدّ */
+  maxUsers: number | null;
+  /** مساحة الوثائق بالغيغابايت؛ null = بلا حدّ */
+  storageGb: number | null;
+  /** الاسم الإنجليزي المرافق */
+  en: string;
+  features: string[];
+  highlighted?: boolean;
+}
+
+export const PLANS: Plan[] = [
+  {
+    id: 'STARTER',
+    name: 'انطلاقة',
+    en: 'Launch',
+    tagline: 'للمؤسسات الصغيرة في بدايتها',
+    price: 0,
+    maxUsers: 5,
+    storageGb: 1,
+    features: [
+      'حتى 5 مستخدمين',
+      'الهيكل التنظيمي والمشاريع',
+      'المستندات (1 غيغابايت)',
+      'دعم عبر البريد',
+    ],
+  },
+  {
+    id: 'GROWTH',
+    name: 'نمو',
+    en: 'Growth',
+    tagline: 'للمؤسسات المتنامية',
+    price: 149,
+    maxUsers: 20,
+    storageGb: 10,
+    highlighted: true,
+    features: [
+      'حتى 20 مستخدمًا',
+      'كل مزايا انطلاقة + البرامج والحملات والتبرعات',
+      'إدارة المستفيدين وقاعدة المعرفة',
+      'مستندات (10 غيغابايت)',
+      'التقارير والتحليلات',
+    ],
+  },
+  {
+    id: 'PROFESSIONAL',
+    name: 'تمكين',
+    en: 'Empower',
+    tagline: 'للمؤسسات المتقدّمة',
+    price: 449,
+    maxUsers: 100,
+    storageGb: 50,
+    features: [
+      'حتى 100 مستخدم',
+      'كل الوحدات + نظام التعليم والحلقات',
+      'الموارد البشرية (موظفون، متطوعون، فرق)',
+      'المساعد الذكي مِداد AI',
+      'مستندات (50 غيغابايت)',
+      'دعم بأولوية',
+    ],
+  },
+  {
+    id: 'ENTERPRISE',
+    name: 'أثر',
+    en: 'Impact',
+    tagline: 'للمؤسسات الكبيرة والشبكات',
+    price: null,
+    maxUsers: null,
+    storageGb: null,
+    features: [
+      'مستخدمون ومساحة بلا حدود',
+      'الهوية الرقمية والتكاملات المخصّصة',
+      'اتفاقية مستوى خدمة (SLA)',
+      'مدير حساب مخصّص',
+      'تهيئة وتدريب',
+    ],
+  },
+];
+
+/** عدد الأشهر المدفوعة في الاشتراك السنوي (12 − 2 مجانًا) */
+export const YEARLY_MONTHS = 10;
+
+/** السعر السنوي الإجمالي للباقة (null للمجاني/المخصّص) */
+export function yearlyPrice(plan: Plan): number | null {
+  if (plan.price === null || plan.price === 0) return plan.price;
+  return plan.priceYearly ?? plan.price * YEARLY_MONTHS;
+}
+
+export const PLAN_BY_ID: Record<OrgPlan, Plan> = Object.fromEntries(
+  PLANS.map((p) => [p.id, p]),
+) as Record<OrgPlan, Plan>;
+
+export function planLabel(id: string): string {
+  return PLAN_BY_ID[id as OrgPlan]?.name ?? id;
+}
+
+/** الحدّ الأقصى للمستخدمين لباقة مؤسسة (null = بلا حدّ) */
+export function planUserLimit(id: string): number | null {
+  return PLAN_BY_ID[id as OrgPlan]?.maxUsers ?? null;
+}

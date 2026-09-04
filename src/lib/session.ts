@@ -14,12 +14,31 @@ export interface SessionData {
   email: string;
   name: string;
   role: string;
+  organizationId: string | null;
+  organizationSlug: string | null;
 }
 
 function secret(): string {
   const value = process.env.AUTH_SECRET;
   if (!value) throw new Error('AUTH_SECRET غير معرّف في ملف .env');
   return value;
+}
+
+/**
+ * النطاق الأب المشترك بين كل الدومينات الفرعية، ليُقرأ الكوكي على
+ * الموقع التعريفي ولوحة الإدارة ومساحات المؤسسات معًا.
+ *
+ *   midad.localhost           →  midad.localhost
+ *   testco.midad.localhost    →  midad.localhost
+ *   admin.midad.app           →  midad.app
+ *   localhost                 →  undefined (كوكي مربوط بالمضيف)
+ */
+export function sessionCookieDomain(host: string | null | undefined): string | undefined {
+  if (!host) return undefined;
+  const hostname = host.split(':')[0];
+  const parts = hostname.split('.');
+  if (parts.length < 2) return undefined; // مثل localhost وحده
+  return parts.slice(-2).join('.'); // آخر جزأين: النطاق الأب
 }
 
 function sign(payload: string): string {
@@ -50,13 +69,18 @@ export function parseSession(token: string): SessionData | null {
   }
 }
 
-export async function createSession(data: SessionData, remember: boolean) {
+export async function createSession(
+  data: SessionData,
+  remember: boolean,
+  domain?: string,
+) {
   const store = await cookies();
   store.set(COOKIE_NAME, serializeSession(data), {
     httpOnly: true,
     sameSite: 'lax',
     secure: process.env.NODE_ENV === 'production',
     path: '/',
+    domain, // مشترك بين الدومينات الفرعية عند تمريره
     maxAge: remember ? MAX_AGE_DAYS * 24 * 60 * 60 : undefined,
   });
 }
@@ -67,7 +91,15 @@ export async function getSession(): Promise<SessionData | null> {
   return token ? parseSession(token) : null;
 }
 
-export async function destroySession() {
+export async function destroySession(domain?: string) {
   const store = await cookies();
-  store.delete(COOKIE_NAME);
+  // نحذف بنفس النطاق الذي أُنشئ به، وإلا يبقى الكوكي المشترك حيًّا
+  store.set(COOKIE_NAME, '', {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    path: '/',
+    domain,
+    maxAge: 0,
+  });
 }

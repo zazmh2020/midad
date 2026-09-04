@@ -1,52 +1,84 @@
 /* ============================================================
-   مِداد | MIDAD — رموز التصميم
-   المصدر الوحيد للألوان والخطوط والمسافات.
-   أي تغيير في الهوية يبدأ من هنا.
+   مِداد | MIDAD — Design Tokens
    ============================================================ */
 
-:root {
-  /* ---------- لوحة الهوية الأساسية ---------- */
-  --turquoise: #20bec6; /* Bright Turquoise */
-  --teal-500: #1998a1; /* Medium Teal */
-  --teal-700: #005e67; /* Dark Teal */
-  --teal-800: #004650; /* Deep Teal */
-  --teal-900: #00303c; /* الأعمق */
+/* ---------- خط قمرة العربي ---------- */
+@font-face {
+  font-family: 'Qomra';
+  src: url('/fonts/itfQomraArabic-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Qomra';
+  src: url('/fonts/itfQomraArabic-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Qomra';
+  src: url('/fonts/itfQomraArabic-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Qomra';
+  src: url('/fonts/itfQomraArabic-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Qomra';
+  src: url('/fonts/itfQomraArabic-Black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
 
-  /* درجات مشتقة من اللوحة (25% و 50%) */
-  --teal-050: #e9f6f7;
-  --teal-100: #d3edef;
-  --teal-200: #b8e2e5;
+:root {
+  /* ---------- لوحة الألوان البنفسجية (هوية مِداد) — مريحة للعين ----------
+     فاتحة غالبًا، والغامق للضرورة. */
+  --purple-100: #C4B3D9;  /* أفتح — للنصوص الهادئة على الداكن */
+  --purple-300: #8873AF;  /* متوسط فاتح */
+  --purple-500: #6B57A0;  /* أساسي — الأزرار */
+  --purple-700: #3D2879;  /* داكن */
+  --purple-900: #2B1A4E;  /* أعمق — للضرورة (خلفيات/عناوين) */
 
   /* ---------- المحايدات ---------- */
   --white: #ffffff;
-  --gray-100: #f4f6f7;
-  --gray-500: #6b7477;
-  --gray-700: #3f4b4e;
+  --off-white: #f7f6fb;
+  --gray-100: #f1eff6;
+  --gray-300: #d3cfdc;
+  --gray-500: #7c7788;
+  --gray-700: #423d4f;
+  --gray-900: #1d1a26;
 
   /* ---------- الأدوار ---------- */
   --bg: var(--white);
-  --bg-tint: var(--teal-050);
-  --bg-deep: var(--teal-900);
+  --bg-deep: var(--purple-900);
   --surface: var(--white);
 
-  --text: var(--gray-500);
-  --text-strong: var(--teal-900);
-  --text-muted: #98a3a6;
-  --text-on-deep: rgba(255, 255, 255, 0.74);
+  --text: var(--gray-700);
+  --text-strong: var(--purple-900);
+  --text-muted: var(--gray-500);
+  --text-on-deep: rgba(255, 255, 255, 0.78);
   --text-on-deep-strong: var(--white);
+  --text-on-deep-muted: var(--purple-100);
 
-  /* اللمسة اللونية — هادئة على الفاتح، فاتحة على الداكن */
-  --accent: var(--teal-700);
-  --accent-on-deep: var(--turquoise);
+  --accent: var(--purple-500);
+  --accent-strong: var(--purple-700);
 
-  --line: rgba(0, 48, 60, 0.1);
-  --line-strong: rgba(0, 48, 60, 0.18);
+  --line: rgba(43, 26, 78, 0.1);
+  --line-strong: rgba(43, 26, 78, 0.2);
   --line-on-deep: rgba(255, 255, 255, 0.14);
 
   /* ---------- الخطوط ---------- */
-  /* عند إضافة خط «قمرة» لاحقاً: غيّر --font-display فقط */
-  --font-display: 'Noto Kufi Arabic', 'Segoe UI', system-ui, sans-serif;
-  --font-body: 'Noto Sans Arabic', 'Segoe UI', system-ui, sans-serif;
+  --font-display: 'Qomra', 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'Qomra', 'Segoe UI', system-ui, sans-serif;
 
   /* ---------- مقياس الحجم ---------- */
   --step--1: clamp(0.76rem, 0.745rem + 0.07vw, 0.81rem);
@@ -55,6 +87,7 @@
   --step-2: clamp(1.15rem, 1.08rem + 0.32vw, 1.36rem);
   --step-3: clamp(1.4rem, 1.24rem + 0.72vw, 1.9rem);
   --step-4: clamp(1.75rem, 1.44rem + 1.36vw, 2.65rem);
+  --step-5: clamp(2.5rem, 1.9rem + 2.6vw, 4.2rem);
 
   /* ---------- المسافات ---------- */
   --space-1: 0.4rem;
@@ -64,17 +97,18 @@
   --space-5: 2.4rem;
   --space-6: 3.4rem;
   --space-7: 4.6rem;
+  --space-8: 6rem;
 
   /* ---------- التخطيط ---------- */
-  --container: 1120px;
+  --container: 1240px;
   --radius-sm: 6px;
   --radius: 10px;
   --radius-lg: 16px;
 
-  --shadow-soft: 0 1px 2px rgba(0, 48, 60, 0.04),
-    0 10px 26px -18px rgba(0, 48, 60, 0.26);
-  --shadow-lift: 0 2px 4px rgba(0, 48, 60, 0.05),
-    0 22px 48px -28px rgba(0, 48, 60, 0.4);
+  --shadow-soft: 0 1px 2px rgba(43, 26, 78, 0.05),
+    0 10px 26px -18px rgba(43, 26, 78, 0.28);
+  --shadow-lift: 0 2px 4px rgba(43, 26, 78, 0.06),
+    0 22px 48px -28px rgba(43, 26, 78, 0.45);
 
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
 }

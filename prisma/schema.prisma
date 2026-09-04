@@ -5,21 +5,373 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  // رابط الاتصال يُقرأ من prisma.config.ts (Prisma v7)
 }
 
 /// المؤسسة — كل مؤسسة بيئة معزولة عن غيرها
 model Organization {
-  id        String   @id @default(cuid())
-  name      String
-  slug      String   @unique
-  type      OrgType  @default(ASSOCIATION)
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique  // يُستخدم في الدومين الفرعي والمسار
+  type        OrgType  @default(ASSOCIATION)
+  isActive    Boolean  @default(true)
+  plan        OrgPlan  @default(STARTER)
+  planRenewsAt DateTime?
+  brandColor  String?  // لون الهوية الأساسي للجهة (hex)
+  logoUrl     String?  // شعار الجهة (رابط)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  users     User[]
+  users         User[]
+  projects      Project[]
+  departments   Department[]
+  programs      Program[]
+  campaigns     Campaign[]
+  beneficiaries Beneficiary[]
+  donations     Donation[]
+  articles      KnowledgeArticle[]
+  documents     Document[]
+  teachers      Teacher[]
+  students      Student[]
+  halaqat       Halaqa[]
+  attendance    AttendanceRecord[]
+  memorization  MemorizationEntry[]
+  announcements Announcement[]
+  competitions  Competition[]
+  employees     Employee[]
+  volunteers    Volunteer[]
+  teams         Team[]
 
   @@map("organizations")
+}
+
+/* ============================================================
+   الموارد البشرية
+   ============================================================ */
+
+/// الموظف
+model Employee {
+  id        String         @id @default(cuid())
+  name      String
+  phone     String?
+  email     String?
+  position  String?
+  hireDate  DateTime?
+  status    EmployeeStatus @default(ACTIVE)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  departmentId String?
+  department   Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([departmentId])
+  @@map("employees")
+}
+
+enum EmployeeStatus {
+  ACTIVE     // على رأس العمل
+  ON_LEAVE   // في إجازة
+  TERMINATED // منتهية خدمته
+}
+
+/// المتطوّع
+model Volunteer {
+  id        String          @id @default(cuid())
+  name      String
+  phone     String?
+  skills    String?
+  status    VolunteerStatus @default(ACTIVE)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@map("volunteers")
+}
+
+enum VolunteerStatus {
+  ACTIVE   // نشط
+  INACTIVE // غير نشط
+}
+
+/// فريق عمل
+model Team {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  lead        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  departmentId String?
+  department   Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([departmentId])
+  @@map("teams")
+}
+
+/* ============================================================
+   نظام التعليم / الحلقات القرآنية
+   ============================================================ */
+
+/// المعلّم — قد لا يكون مستخدمًا في النظام
+model Teacher {
+  id             String   @id @default(cuid())
+  name           String
+  phone          String?
+  specialization String?
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  halaqat        Halaqa[]
+
+  @@index([organizationId])
+  @@map("teachers")
+}
+
+/// الطالب — قد ينتمي لحلقة واحدة
+model Student {
+  id            String        @id @default(cuid())
+  name          String
+  phone         String?
+  guardianName  String?
+  guardianPhone String?
+  birthDate     DateTime?
+  status        StudentStatus @default(ACTIVE)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  halaqaId String?
+  halaqa   Halaqa? @relation(fields: [halaqaId], references: [id], onDelete: SetNull)
+
+  attendance   AttendanceRecord[]
+  memorization MemorizationEntry[]
+
+  @@index([organizationId])
+  @@index([halaqaId])
+  @@map("students")
+}
+
+enum StudentStatus {
+  ACTIVE     // منتظم
+  PAUSED     // متوقّف مؤقتًا
+  GRADUATED  // متخرّج
+  WITHDRAWN  // منسحب
+}
+
+/// الحلقة / الفصل
+model Halaqa {
+  id        String     @id @default(cuid())
+  name      String
+  type      HalaqaType @default(MEMORIZATION)
+  schedule  String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  teacherId String?
+  teacher   Teacher? @relation(fields: [teacherId], references: [id], onDelete: SetNull)
+
+  students   Student[]
+  attendance AttendanceRecord[]
+
+  @@index([organizationId])
+  @@index([teacherId])
+  @@map("halaqat")
+}
+
+enum HalaqaType {
+  MEMORIZATION // تحفيظ
+  TAJWEED      // تجويد
+  REVIEW       // مراجعة
+  OTHER        // أخرى
+}
+
+/// سجل حضور — طالب في حلقة بتاريخ محدّد
+model AttendanceRecord {
+  id        String           @id @default(cuid())
+  date      DateTime
+  status    AttendanceStatus @default(PRESENT)
+  createdAt DateTime         @default(now())
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  halaqaId String
+  halaqa   Halaqa @relation(fields: [halaqaId], references: [id], onDelete: Cascade)
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([halaqaId, studentId, date])
+  @@index([organizationId])
+  @@index([studentId])
+  @@map("attendance_records")
+}
+
+enum AttendanceStatus {
+  PRESENT  // حاضر
+  ABSENT   // غائب
+  LATE     // متأخّر
+  EXCUSED  // بعذر
+}
+
+/// سجل حفظ / تسميع
+model MemorizationEntry {
+  id        String             @id @default(cuid())
+  date      DateTime           @default(now())
+  kind      MemorizationKind   @default(NEW)
+  content   String
+  rating    MemorizationRating @default(GOOD)
+  notes     String?
+  createdAt DateTime           @default(now())
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([studentId])
+  @@map("memorization_entries")
+}
+
+enum MemorizationKind {
+  NEW    // حفظ جديد
+  REVIEW // مراجعة
+}
+
+/// إعلان / خبر ضمن إدارة المحتوى
+model Announcement {
+  id          String   @id @default(cuid())
+  title       String
+  body        String
+  pinned      Boolean  @default(false)
+  isPublished Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@map("announcements")
+}
+
+/// مسابقة حفظ/تجويد
+model Competition {
+  id             String   @id @default(cuid())
+  name           String
+  level          String?  // المستوى: جزء عمّ، 5 أجزاء، القرآن كاملًا…
+  startDate      DateTime?
+  status         String   @default("UPCOMING") // UPCOMING / OPEN / CLOSED
+  participants   Int      @default(0)
+  createdAt      DateTime @default(now())
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@map("competitions")
+}
+
+enum MemorizationRating {
+  EXCELLENT    // ممتاز
+  GOOD         // جيد
+  NEEDS_REPEAT // يحتاج إعادة
+}
+
+/// وحدة تنظيمية (إدارة / قسم / فرع) — شجرة تُبنى بالإسناد الذاتي parentId
+model Department {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  parentId String?
+  parent   Department?  @relation("DepartmentTree", fields: [parentId], references: [id], onDelete: Cascade)
+  children Department[] @relation("DepartmentTree")
+
+  members       User[]
+  projects      Project[]
+  programs      Program[]
+  campaigns     Campaign[]
+  beneficiaries Beneficiary[]
+  documents     Document[]
+  employees     Employee[]
+  teams         Team[]
+
+  @@index([organizationId])
+  @@index([parentId])
+  @@map("departments")
+}
+
+/// البرنامج — نشاط مؤسسي مصنّف (تعليمي/إنساني/…) بسعة مستهدفة
+model Program {
+  id          String          @id @default(cuid())
+  name        String
+  description String?
+  category    ProgramCategory @default(EDUCATIONAL)
+  status      ProgramStatus   @default(ACTIVE)
+  capacity    Int?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  departmentId String?
+  department   Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+
+  beneficiaries Beneficiary[]
+
+  @@index([organizationId])
+  @@index([departmentId])
+  @@map("programs")
+}
+
+/// المشروع — كيان يخصّ مؤسسة واحدة، أول الوحدات الوظيفية
+model Project {
+  id          String        @id @default(cuid())
+  name        String
+  description String?
+  status      ProjectStatus @default(PLANNED)
+  startDate   DateTime?
+  endDate     DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  departmentId String?
+  department   Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([departmentId])
+  @@map("projects")
 }
 
 /// المستخدم — ينتمي لمؤسسة واحدة، أو لا ينتمي لأي منها إن كان مالك المنصة
@@ -30,6 +382,7 @@ model User {
   passwordHash String
   role         Role      @default(MEMBER)
   isActive     Boolean   @default(true)
+  avatarUrl    String?
   lastLoginAt  DateTime?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
@@ -37,11 +390,140 @@ model User {
   organizationId String?
   organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
+  departmentId String?
+  department   Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+
+  articles  KnowledgeArticle[]
+  documents Document[]
+
   @@index([organizationId])
+  @@index([departmentId])
   @@map("users")
 }
 
-/// أنواع المؤسسات
+/// الحملة — حملة خيرية/موسمية/توعوية بهدف مالي ومتابعة
+model Campaign {
+  id          String         @id @default(cuid())
+  name        String
+  description String?
+  type        CampaignType   @default(CHARITY)
+  status      CampaignStatus @default(ACTIVE)
+  goalAmount  Int?
+  startDate   DateTime?
+  endDate     DateTime?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  departmentId String?
+  department   Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+
+  donations Donation[]
+
+  @@index([organizationId])
+  @@index([departmentId])
+  @@map("campaigns")
+}
+
+/// المستفيد — ملف حالة تخدمه المؤسسة
+model Beneficiary {
+  id         String              @id @default(cuid())
+  name       String
+  phone      String?
+  nationalId String?
+  category   BeneficiaryCategory @default(FAMILY)
+  status     BeneficiaryStatus   @default(ACTIVE)
+  notes      String?
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  departmentId String?
+  department   Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+
+  programId String?
+  program   Program? @relation(fields: [programId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([departmentId])
+  @@index([programId])
+  @@map("beneficiaries")
+}
+
+/// التبرع — عملية مالية واردة، قد ترتبط بحملة
+model Donation {
+  id        String         @id @default(cuid())
+  donorName String
+  amount    Int
+  method    DonationMethod @default(CASH)
+  status    DonationStatus @default(RECEIVED)
+  note      String?
+  donatedAt DateTime       @default(now())
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  campaignId String?
+  campaign   Campaign? @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([campaignId])
+  @@map("donations")
+}
+
+/// وثيقة مخزَّنة في مخزن متوافق مع S3 — نحفظ بياناتها الوصفية فقط
+model Document {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  category    String?
+  fileKey     String   @unique // مفتاح الكائن في المخزن
+  fileName    String   // الاسم الأصلي
+  contentType String
+  size        Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  departmentId String?
+  department   Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+
+  uploadedById String?
+  uploadedBy   User?   @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([departmentId])
+  @@map("documents")
+}
+
+/// مقالة في قاعدة المعرفة المؤسسية
+model KnowledgeArticle {
+  id          String   @id @default(cuid())
+  title       String
+  body        String
+  category    String?
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  authorId String?
+  author   User?  @relation(fields: [authorId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@map("knowledge_articles")
+}
+
 enum OrgType {
   ASSOCIATION   // جمعية أو مؤسسة
   MOSQUE        // مسجد أو مركز قرآني
@@ -49,10 +531,78 @@ enum OrgType {
   PROJECT       // مشروع خاص
 }
 
-/// الأدوار
+enum OrgPlan {
+  STARTER       // ستارتر
+  GROWTH        // غروث
+  PROFESSIONAL  // بروفيشنال
+  ENTERPRISE    // انتربرايز
+}
+
 enum Role {
-  PLATFORM_OWNER // مالك المنصة — يرى كل المؤسسات
-  ORG_ADMIN      // مدير مؤسسة
-  STAFF          // موظف
-  MEMBER         // مستخدم عادي
+  PLATFORM_OWNER  // مالك المنصة — يرى كل المؤسسات
+  ORG_ADMIN       // مدير المؤسسة — يدير كل شيء داخلها
+  STAFF           // موظف — يعمل داخل المؤسسة بصلاحيات محددة
+  MEMBER          // مستخدم عادي — قراءة وتفاعل محدود
+}
+
+enum ProjectStatus {
+  PLANNED    // مخطّط
+  ACTIVE     // جارٍ
+  ON_HOLD    // متوقّف
+  COMPLETED  // مكتمل
+  CANCELLED  // ملغى
+}
+
+enum ProgramCategory {
+  EDUCATIONAL   // تعليمي
+  HUMANITARIAN  // إنساني
+  DEVELOPMENTAL // تنموي
+  RELIGIOUS     // ديني / قرآني
+  HEALTH        // صحي
+}
+
+enum ProgramStatus {
+  PLANNED    // مخطّط
+  ACTIVE     // جارٍ
+  COMPLETED  // منتهٍ
+  SUSPENDED  // موقوف
+}
+
+enum CampaignType {
+  CHARITY    // خيرية
+  SEASONAL   // موسمية
+  AWARENESS  // توعوية
+}
+
+enum CampaignStatus {
+  PLANNED    // مخطّطة
+  ACTIVE     // جارية
+  COMPLETED  // منتهية
+  CANCELLED  // ملغاة
+}
+
+enum BeneficiaryCategory {
+  FAMILY   // أسرة
+  ORPHAN   // يتيم
+  STUDENT  // طالب
+  ELDERLY  // مسنّ
+  OTHER    // أخرى
+}
+
+enum BeneficiaryStatus {
+  ACTIVE   // نشط
+  PENDING  // قيد المراجعة
+  INACTIVE // موقوف
+}
+
+enum DonationMethod {
+  CASH    // نقداً
+  BANK    // تحويل بنكي
+  CARD    // بطاقة
+  ONLINE  // إلكتروني
+}
+
+enum DonationStatus {
+  PLEDGED   // متعهَّد به
+  RECEIVED  // مستلَم
 }

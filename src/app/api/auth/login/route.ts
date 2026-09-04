@@ -1,7 +1,26 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
-import { createSession } from '@/lib/session';
+import { createSession, sessionCookieDomain } from '@/lib/session';
+
+/** يبني وجهة ما بعد الدخول على المضيف الصحيح لكل دور */
+function destinationFor(
+  request: Request,
+  role: string,
+  slug: string | null,
+): string {
+  const host = request.headers.get('host') ?? '';
+  const hostname = host.split(':')[0];
+  const port = host.includes(':') ? `:${host.split(':')[1]}` : '';
+  const proto = new URL(request.url).protocol; // http: أو https:
+  const base = sessionCookieDomain(host) ?? hostname;
+
+  let targetHost = hostname;
+  if (role === 'PLATFORM_OWNER') targetHost = `admin.${base}`;
+  else if (slug) targetHost = `${slug}.${base}`;
+
+  return `${proto}//${targetHost}${port}/`;
+}
 
 export async function POST(request: Request) {
   let body: { email?: string; password?: string; remember?: boolean };
@@ -22,7 +41,10 @@ export async function POST(request: Request) {
     );
   }
 
-  const user = await prisma.user.findUnique({ where: { email } });
+  const user = await prisma.user.findUnique({
+    where: { email },
+    include: { organization: { select: { slug: true, isActive: true } } },
+  });
 
   // رسالة واحدة للحالتين — حتى لا نكشف أي بريد مسجّل وأيّها ليس كذلك
   const invalid = NextResponse.json(
@@ -47,15 +69,27 @@ export async function POST(request: Request) {
     data: { lastLoginAt: new Date() },
   });
 
+  // منع دخول مستخدم مؤسسة معطّلة
+  if (user.organization && !user.organization.isActive) {
+    return NextResponse.json(
+      { error: 'مؤسستك موقوفة حالياً. تواصل مع إدارة مِداد.' },
+      { status: 403 },
+    );
+  }
+
   await createSession(
     {
       userId: user.id,
       email: user.email,
       name: user.name,
       role: user.role,
+      organizationId: user.organizationId,
+      organizationSlug: user.organization?.slug ?? null,
     },
     body.remember === true,
+    sessionCookieDomain(request.headers.get('host')),
   );
 
-  return NextResponse.json({ ok: true });
+  const redirectTo = destinationFor(request, user.role, user.organization?.slug ?? null);
+  return NextResponse.json({ ok: true, redirectTo });
 }

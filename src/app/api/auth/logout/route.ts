@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { destroySession } from '@/lib/session';
+import { destroySession, sessionCookieDomain } from '@/lib/session';
 
-export async function POST() {
-  await destroySession();
+export async function POST(request: Request) {
+  await destroySession(sessionCookieDomain(request.headers.get('host')));
   return NextResponse.json({ ok: true });
 }

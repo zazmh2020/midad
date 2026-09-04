@@ -1,0 +1,37 @@
+import { redirect } from 'next/navigation';
+import { getSession } from '@/lib/session';
+import { prisma } from '@/lib/prisma';
+import ProfileForm from '@/components/ProfileForm';
+import LogoutButton from '@/components/LogoutButton';
+import '@/styles/org.css';
+
+export const dynamic = 'force-dynamic';
+
+export default async function AdminSettingsPage() {
+  const session = await getSession();
+  if (!session) redirect('/login');
+  if (session.role !== 'PLATFORM_OWNER') redirect('/login');
+
+  const me = await prisma.user.findUnique({
+    where: { id: session.userId },
+    select: { name: true, email: true, role: true, avatarUrl: true },
+  });
+  if (!me) redirect('/login');
+
+  return (
+    <div className="admin-page-header" style={{ display: 'block' }}>
+      <div style={{ marginBottom: '1.5rem' }}>
+        <h1>الملف الشخصي والإعدادات</h1>
+        <p>بيانات حسابك كمالك للمنصة.</p>
+      </div>
+
+      <div style={{ maxWidth: 620 }}>
+        <h2 className="org-settings-h2">الملف الشخصي</h2>
+        <ProfileForm name={me.name} email={me.email} role={me.role} avatarUrl={me.avatarUrl} />
+
+        <h2 className="org-settings-h2">الحساب</h2>
+        <LogoutButton redirectTo="http://midad.localhost:3000/login" />
+      </div>
+    </div>
+  );
+}

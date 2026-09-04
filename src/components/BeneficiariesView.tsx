@@ -1,0 +1,215 @@
+'use client';
+
+import { useMemo, useState, type FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
+import {
+  BENEFICIARY_CATEGORIES, BENEFICIARY_STATUSES,
+  beneficiaryCategoryLabel, beneficiaryStatusLabel,
+} from '@/lib/permissions';
+
+type Beneficiary = {
+  id: string; name: string; phone: string | null; nationalId: string | null;
+  category: string; status: string; notes: string | null;
+  departmentId: string | null; programId: string | null;
+};
+type Ref = { id: string; name: string };
+
+export default function BeneficiariesView({
+  beneficiaries, departments, programs, canManage,
+}: { beneficiaries: Beneficiary[]; departments: Ref[]; programs: Ref[]; canManage: boolean }) {
+  const router = useRouter();
+  const [creating, setCreating] = useState(false);
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const [error, setError] = useState('');
+  const [filter, setFilter] = useState('ALL');
+
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [nationalId, setNationalId] = useState('');
+  const [category, setCategory] = useState('FAMILY');
+  const [status, setStatus] = useState('ACTIVE');
+  const [departmentId, setDepartmentId] = useState('');
+  const [programId, setProgramId] = useState('');
+  const [notes, setNotes] = useState('');
+
+  const nameOf = (list: Ref[], id: string | null) => (id ? list.find((x) => x.id === id)?.name ?? '—' : '—');
+  const shown = useMemo(
+    () => (filter === 'ALL' ? beneficiaries : beneficiaries.filter((b) => b.category === filter)),
+    [beneficiaries, filter],
+  );
+
+  function resetForm() {
+    setName(''); setPhone(''); setNationalId(''); setCategory('FAMILY');
+    setStatus('ACTIVE'); setDepartmentId(''); setProgramId(''); setNotes('');
+  }
+
+  async function handleCreate(e: FormEvent) {
+    e.preventDefault();
+    setError(''); setBusyId('__new');
+    try {
+      const res = await fetch('/api/org/beneficiaries', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, phone, nationalId, category, status, notes, departmentId: departmentId || null, programId: programId || null }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) setError(data.error ?? 'تعذّر الإنشاء.');
+      else { resetForm(); setCreating(false); router.refresh(); }
+    } catch { setError('تعذّر الاتصال بالخادم.'); }
+    finally { setBusyId(null); }
+  }
+
+  async function patch(id: string, body: Record<string, unknown>) {
+    setError(''); setBusyId(id);
+    try {
+      const res = await fetch(`/api/org/beneficiaries/${id}`, {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) setError(data.error ?? 'تعذّر الحفظ.');
+      else router.refresh();
+    } catch { setError('تعذّر الاتصال بالخادم.'); }
+    finally { setBusyId(null); }
+  }
+
+  async function remove(id: string) {
+    if (!confirm('حذف ملف هذا المستفيد نهائياً؟')) return;
+    setError(''); setBusyId(id);
+    try {
+      const res = await fetch(`/api/org/beneficiaries/${id}`, { method: 'DELETE' });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) setError(data.error ?? 'تعذّر الحذف.');
+      else router.refresh();
+    } catch { setError('تعذّر الاتصال بالخادم.'); }
+    finally { setBusyId(null); }
+  }
+
+  return (
+    <>
+      <div className="org-toolbar">
+        <select className="org-inline-select" value={filter} onChange={(e) => setFilter(e.target.value)} aria-label="تصفية حسب التصنيف">
+          <option value="ALL">كل التصنيفات</option>
+          {BENEFICIARY_CATEGORIES.map((c) => <option key={c} value={c}>{beneficiaryCategoryLabel(c)}</option>)}
+        </select>
+        <span className="org-toolbar-spacer" />
+        {canManage && (
+          <button className="org-btn org-btn-primary" onClick={() => { setCreating((v) => !v); setError(''); }}>
+            {creating ? 'إلغاء' : '+ مستفيد جديد'}
+          </button>
+        )}
+      </div>
+
+      {error && <div className="org-alert">{error}</div>}
+
+      {creating && (
+        <form className="org-form" onSubmit={handleCreate}>
+          <div className="org-field-row">
+            <div className="org-field">
+              <label htmlFor="b-name">الاسم</label>
+              <input id="b-name" value={name} onChange={(e) => setName(e.target.value)} required />
+            </div>
+            <div className="org-field">
+              <label htmlFor="b-phone">الهاتف <span className="org-hint">اختياري</span></label>
+              <input id="b-phone" dir="ltr" value={phone} onChange={(e) => setPhone(e.target.value)} />
+            </div>
+            <div className="org-field">
+              <label htmlFor="b-nid">رقم الهوية <span className="org-hint">اختياري</span></label>
+              <input id="b-nid" dir="ltr" value={nationalId} onChange={(e) => setNationalId(e.target.value)} />
+            </div>
+          </div>
+          <div className="org-field-row">
+            <div className="org-field">
+              <label htmlFor="b-cat">التصنيف</label>
+              <select id="b-cat" value={category} onChange={(e) => setCategory(e.target.value)}>
+                {BENEFICIARY_CATEGORIES.map((c) => <option key={c} value={c}>{beneficiaryCategoryLabel(c)}</option>)}
+              </select>
+            </div>
+            <div className="org-field">
+              <label htmlFor="b-status">الحالة</label>
+              <select id="b-status" value={status} onChange={(e) => setStatus(e.target.value)}>
+                {BENEFICIARY_STATUSES.map((s) => <option key={s} value={s}>{beneficiaryStatusLabel(s)}</option>)}
+              </select>
+            </div>
+          </div>
+          <div className="org-field-row">
+            <div className="org-field">
+              <label htmlFor="b-dept">الوحدة</label>
+              <select id="b-dept" value={departmentId} onChange={(e) => setDepartmentId(e.target.value)}>
+                <option value="">— بلا وحدة</option>
+                {departments.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
+              </select>
+            </div>
+            <div className="org-field">
+              <label htmlFor="b-prog">البرنامج</label>
+              <select id="b-prog" value={programId} onChange={(e) => setProgramId(e.target.value)}>
+                <option value="">— بلا برنامج</option>
+                {programs.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+              </select>
+            </div>
+          </div>
+          <div className="org-field">
+            <label htmlFor="b-notes">ملاحظات <span className="org-hint">اختياري</span></label>
+            <textarea id="b-notes" rows={2} value={notes} onChange={(e) => setNotes(e.target.value)} />
+          </div>
+          <div className="org-form-actions">
+            <button type="submit" className="org-btn org-btn-primary" disabled={busyId === '__new'}>
+              {busyId === '__new' ? 'جارٍ الحفظ…' : 'إنشاء الملف'}
+            </button>
+          </div>
+        </form>
+      )}
+
+      {shown.length === 0 ? (
+        <div className="org-empty">{beneficiaries.length === 0 ? 'لا يوجد مستفيدون بعد.' : 'لا مستفيدين بهذا التصنيف.'}</div>
+      ) : (
+        <div className="org-table-wrap">
+          <table className="org-table">
+            <thead>
+              <tr>
+                <th>المستفيد</th>
+                <th>التصنيف</th>
+                <th>الحالة</th>
+                <th>الوحدة</th>
+                <th>البرنامج</th>
+                {canManage && <th></th>}
+              </tr>
+            </thead>
+            <tbody>
+              {shown.map((b) => (
+                <tr key={b.id}>
+                  <td>
+                    <strong>{b.name}</strong>
+                    {b.phone && <small dir="ltr">{b.phone}</small>}
+                    {b.nationalId && <small dir="ltr">هوية: {b.nationalId}</small>}
+                  </td>
+                  <td>
+                    {canManage ? (
+                      <select className="org-inline-select" value={b.category} disabled={busyId === b.id}
+                        onChange={(e) => patch(b.id, { category: e.target.value })}>
+                        {BENEFICIARY_CATEGORIES.map((c) => <option key={c} value={c}>{beneficiaryCategoryLabel(c)}</option>)}
+                      </select>
+                    ) : beneficiaryCategoryLabel(b.category)}
+                  </td>
+                  <td>
+                    {canManage ? (
+                      <select className="org-inline-select" value={b.status} disabled={busyId === b.id}
+                        onChange={(e) => patch(b.id, { status: e.target.value })}>
+                        {BENEFICIARY_STATUSES.map((s) => <option key={s} value={s}>{beneficiaryStatusLabel(s)}</option>)}
+                      </select>
+                    ) : beneficiaryStatusLabel(b.status)}
+                  </td>
+                  <td>{nameOf(departments, b.departmentId)}</td>
+                  <td>{nameOf(programs, b.programId)}</td>
+                  {canManage && (
+                    <td className="org-row-actions">
+                      <button className="org-btn org-btn-danger" disabled={busyId === b.id} onClick={() => remove(b.id)}>حذف</button>
+                    </td>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </>
+  );
+}
