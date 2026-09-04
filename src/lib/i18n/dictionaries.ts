@@ -122,6 +122,32 @@ const ar: Dict = {
   'mega.jihat.quran.t': 'مراكز القرآن', 'mega.jihat.quran.d': 'حلقات وحفظ وتسميع وشهادات.',
   'mega.jihat.edu.t': 'المراكز التعليمية', 'mega.jihat.edu.d': 'صفوف وتقييمات وحضور.',
   'mega.jihat.humanitarian.t': 'المؤسسات الإنسانية', 'mega.jihat.humanitarian.d': 'برامج ميدانية وفرق عمل.',
+
+  'common.new': 'جديد',
+  // عرض الأنظمة (SystemsShowcase)
+  'sysh.org.label': 'إدارة المؤسسة', 'sysh.org.desc': 'الهيكل الإداري والإدارات والأقسام والفروع في مكان واحد.', 'sysh.cat.admin': 'الإدارة',
+  'sysh.hr.label': 'الموارد البشرية', 'sysh.hr.desc': 'ملفات الموظفين والعقود والفرق والصلاحيات.', 'sysh.cat.resources': 'الموارد',
+  'sysh.people.label': 'الموظفون والمتطوعون', 'sysh.people.desc': 'إدارة المتطوعين والمهام والحضور بسهولة.',
+  'sysh.projects.label': 'المشاريع والبرامج', 'sysh.projects.desc': 'خطط ومهام ومراحل تنفيذ ومتابعة إنجاز لحظية.', 'sysh.cat.ops': 'العمليات',
+  'sysh.beneficiaries.label': 'المستفيدون', 'sysh.beneficiaries.desc': 'سجل الحالات والخدمات المقدَّمة بمستويات وصول آمنة.',
+  'sysh.education.label': 'التعليم والبرامج', 'sysh.education.desc': 'حلقات وطلاب وحضور وتقدّم حفظ وتقييم.', 'sysh.cat.education': 'التعليم',
+  'sysh.finance.label': 'المالية والتبرعات', 'sysh.finance.desc': 'حملات ومتبرعون وعمليات مالية جاهزة للربط.', 'sysh.cat.finance': 'المالية',
+  'sysh.reports.label': 'التقارير والتحليلات', 'sysh.reports.desc': 'مؤشرات ورسوم بيانية تُبنى من بياناتك مباشرة.', 'sysh.cat.analytics': 'التحليلات',
+  'sysh.documents.label': 'إدارة الوثائق', 'sysh.documents.desc': 'سياسات ونماذج وأرشيف قابل للبحث والاسترجاع.', 'sysh.cat.docs': 'الوثائق',
+  'sysh.ai.label': 'مِداد AI', 'sysh.ai.desc': 'مساعد ذكي يجيب ويحلّل ضمن حدود صلاحياتك.', 'sysh.cat.ai': 'الذكاء الاصطناعي',
+  // عرض المنتج (ProductShowcase)
+  'prod.dashboard.t': 'لوحة تحكم شاملة', 'prod.dashboard.d': 'نظرة واحدة على مؤسستك: المؤشرات والنشاط والتقدّم لحظةً بلحظة.', 'prod.dashboard.p1': 'مؤشرات أداء مباشرة', 'prod.dashboard.p2': 'نشاط ورسوم بيانية', 'prod.dashboard.p3': 'وصول سريع لكل الأنظمة',
+  'prod.hr.t': 'الموظفون والمتطوعون', 'prod.hr.d': 'ملفات كاملة للموظفين والمتطوعين والفرق والصلاحيات.', 'prod.hr.p1': 'ملفات وعقود', 'prod.hr.p2': 'فرق وأقسام', 'prod.hr.p3': 'صلاحيات دقيقة',
+  'prod.projects.t': 'المشاريع والبرامج', 'prod.projects.d': 'خطط ومهام ومراحل تنفيذ ومتابعة إنجاز في لوحة واحدة.', 'prod.projects.p1': 'متابعة نسب الإنجاز', 'prod.projects.p2': 'توزيع المهام', 'prod.projects.p3': 'تنبيهات التأخير',
+  'prod.education.t': 'البرامج والتعليم', 'prod.education.d': 'حلقات وطلاب وحضور وتقدّم حفظ وتقييم مترابط.', 'prod.education.p1': 'حلقات وطلاب', 'prod.education.p2': 'حضور وتقييم', 'prod.education.p3': 'تقدّم الحفظ',
+  'prod.beneficiaries.t': 'المستفيدون', 'prod.beneficiaries.d': 'سجل الحالات والخدمات المقدَّمة بمستويات وصول آمنة.', 'prod.beneficiaries.p1': 'سجل الحالات', 'prod.beneficiaries.p2': 'الخدمات المقدَّمة', 'prod.beneficiaries.p3': 'وصول محمي',
+  'prod.reports.t': 'التقارير والتحليلات', 'prod.reports.d': 'حوّل بياناتك إلى رؤى واضحة تدعم قرارك.', 'prod.reports.p1': 'رسوم تفاعلية', 'prod.reports.p2': 'مؤشرات مخصّصة', 'prod.reports.p3': 'تصدير ومشاركة',
+  // كيف تعمل (HowItWorks)
+  'how.1.t': 'أنشئ مؤسستك', 'how.1.d': 'ابدأ بإعداد بيانات المؤسسة وهيكلها الإداري.',
+  'how.2.t': 'فعّل الأنظمة', 'how.2.d': 'اختر الوحدات التي تحتاجها فقط، والباقي يبقى مطفأً.',
+  'how.3.t': 'أدر أعمالك', 'how.3.d': 'أدر الموظفين والمشاريع والبرامج والمستفيدين.',
+  'how.4.t': 'تابع الأداء', 'how.4.d': 'راقب مؤشرات الأداء والتقارير لحظةً بلحظة.',
+  'how.5.t': 'اتخذ قرارات أذكى', 'how.5.d': 'استخدم التحليلات والذكاء الاصطناعي لدعم القرار.',
 };
 
 const en: Dict = {
@@ -227,6 +253,29 @@ const en: Dict = {
   'mega.jihat.quran.t': 'Quran centers', 'mega.jihat.quran.d': 'Circles, memorization, recitation and certificates.',
   'mega.jihat.edu.t': 'Educational centers', 'mega.jihat.edu.d': 'Classes, assessments and attendance.',
   'mega.jihat.humanitarian.t': 'Humanitarian organizations', 'mega.jihat.humanitarian.d': 'Field programs and work teams.',
+
+  'common.new': 'New',
+  'sysh.org.label': 'Organization management', 'sysh.org.desc': 'Administrative structure, departments, divisions and branches in one place.', 'sysh.cat.admin': 'Administration',
+  'sysh.hr.label': 'Human resources', 'sysh.hr.desc': 'Employee records, contracts, teams and permissions.', 'sysh.cat.resources': 'Resources',
+  'sysh.people.label': 'Staff & volunteers', 'sysh.people.desc': 'Manage volunteers, tasks and attendance with ease.',
+  'sysh.projects.label': 'Projects & programs', 'sysh.projects.desc': 'Plans, tasks, execution stages and live progress tracking.', 'sysh.cat.ops': 'Operations',
+  'sysh.beneficiaries.label': 'Beneficiaries', 'sysh.beneficiaries.desc': 'Case records and services provided with secure access levels.',
+  'sysh.education.label': 'Education & programs', 'sysh.education.desc': 'Circles, students, attendance, memorization progress and assessment.', 'sysh.cat.education': 'Education',
+  'sysh.finance.label': 'Finance & donations', 'sysh.finance.desc': 'Campaigns, donors and financial operations ready to connect.', 'sysh.cat.finance': 'Finance',
+  'sysh.reports.label': 'Reports & analytics', 'sysh.reports.desc': 'Metrics and charts built directly from your data.', 'sysh.cat.analytics': 'Analytics',
+  'sysh.documents.label': 'Document management', 'sysh.documents.desc': 'Policies, forms and a searchable, retrievable archive.', 'sysh.cat.docs': 'Documents',
+  'sysh.ai.label': 'Midad AI', 'sysh.ai.desc': 'A smart assistant that answers and analyzes within your permissions.', 'sysh.cat.ai': 'AI',
+  'prod.dashboard.t': 'Comprehensive dashboard', 'prod.dashboard.d': 'One view of your organization: metrics, activity and progress in real time.', 'prod.dashboard.p1': 'Live performance metrics', 'prod.dashboard.p2': 'Activity and charts', 'prod.dashboard.p3': 'Quick access to all systems',
+  'prod.hr.t': 'Staff & volunteers', 'prod.hr.d': 'Complete records for employees, volunteers, teams and permissions.', 'prod.hr.p1': 'Records and contracts', 'prod.hr.p2': 'Teams and departments', 'prod.hr.p3': 'Precise permissions',
+  'prod.projects.t': 'Projects & programs', 'prod.projects.d': 'Plans, tasks, execution stages and progress tracking in one board.', 'prod.projects.p1': 'Track completion rates', 'prod.projects.p2': 'Task distribution', 'prod.projects.p3': 'Delay alerts',
+  'prod.education.t': 'Programs & education', 'prod.education.d': 'Circles, students, attendance, memorization progress and connected assessment.', 'prod.education.p1': 'Circles and students', 'prod.education.p2': 'Attendance and assessment', 'prod.education.p3': 'Memorization progress',
+  'prod.beneficiaries.t': 'Beneficiaries', 'prod.beneficiaries.d': 'Case records and services provided with secure access levels.', 'prod.beneficiaries.p1': 'Case records', 'prod.beneficiaries.p2': 'Services provided', 'prod.beneficiaries.p3': 'Protected access',
+  'prod.reports.t': 'Reports & analytics', 'prod.reports.d': 'Turn your data into clear insights that support your decisions.', 'prod.reports.p1': 'Interactive charts', 'prod.reports.p2': 'Custom metrics', 'prod.reports.p3': 'Export and share',
+  'how.1.t': 'Create your organization', 'how.1.d': 'Start by setting up your organization’s data and structure.',
+  'how.2.t': 'Enable systems', 'how.2.d': 'Choose only the modules you need; the rest stay off.',
+  'how.3.t': 'Run your work', 'how.3.d': 'Manage employees, projects, programs and beneficiaries.',
+  'how.4.t': 'Track performance', 'how.4.d': 'Monitor performance metrics and reports in real time.',
+  'how.5.t': 'Make smarter decisions', 'how.5.d': 'Use analytics and AI to support your decisions.',
 };
 
 export const DICTIONARIES: Record<Locale, Dict> = { ar, en };

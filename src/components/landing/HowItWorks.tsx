@@ -2,27 +2,29 @@
 
 import Reveal from '@/components/Reveal';
 import Icon from '@/components/Icon';
+import { useT } from '@/lib/i18n/LocaleProvider';
 
-const STEPS: { t: string; d: string; icon: string }[] = [
-  { t: 'أنشئ مؤسستك', d: 'ابدأ بإعداد بيانات المؤسسة وهيكلها الإداري.', icon: 'organization/organization-institution' },
-  { t: 'فعّل الأنظمة', d: 'اختر الوحدات التي تحتاجها فقط، والباقي يبقى مطفأً.', icon: 'operations/operations-activities' },
-  { t: 'أدر أعمالك', d: 'أدر الموظفين والمشاريع والبرامج والمستفيدين.', icon: 'operations/operations-projects' },
-  { t: 'تابع الأداء', d: 'راقب مؤشرات الأداء والتقارير لحظةً بلحظة.', icon: 'analytics/analytics-analytics' },
-  { t: 'اتخذ قرارات أذكى', d: 'استخدم التحليلات والذكاء الاصطناعي لدعم القرار.', icon: 'ai/ai-ai-assistant' },
+const STEPS: { k: string; icon: string }[] = [
+  { k: 'how.1', icon: 'organization/organization-institution' },
+  { k: 'how.2', icon: 'operations/operations-activities' },
+  { k: 'how.3', icon: 'operations/operations-projects' },
+  { k: 'how.4', icon: 'analytics/analytics-analytics' },
+  { k: 'how.5', icon: 'ai/ai-ai-assistant' },
 ];
 
 export default function HowItWorks() {
+  const t = useT();
   return (
     <div className="mdl-steps-grid">
       {STEPS.map((s, i) => (
-        <Reveal key={s.t} delay={i * 0.06} y={24}>
+        <Reveal key={s.k} delay={i * 0.06} y={24}>
           <div className="mdl-stepc">
             <div className="mdl-stepc-top">
               <span className="mdl-stepc-num">{String(i + 1).padStart(2, '0')}</span>
               <span className="mdl-stepc-ic"><Icon name={s.icon} size={20} /></span>
             </div>
-            <h4>{s.t}</h4>
-            <p>{s.d}</p>
+            <h4>{t(`${s.k}.t`)}</h4>
+            <p>{t(`${s.k}.d`)}</p>
           </div>
         </Reveal>
       ))}

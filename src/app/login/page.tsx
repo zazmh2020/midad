@@ -7,6 +7,13 @@ import { LogoMark } from '@/components/Logo';
 import ThemeToggle from '@/components/ThemeToggle';
 import '@/styles/login.css';
 
+const DEMO_ACCOUNTS = [
+  { email: 'owner@midad.local', label: 'مالك المنصة', role: 'لوحة الإدارة' },
+  { email: 'association@midad.local', label: 'جمعية الخير', role: 'مدير جهة' },
+  { email: 'mosque@midad.local', label: 'مركز القرآن', role: 'مدير جهة' },
+  { email: 'school@midad.local', label: 'مركز تعليمي', role: 'مدير جهة' },
+];
+
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -111,6 +118,18 @@ export default function LoginPage() {
             {!busy && <span aria-hidden="true">←</span>}
           </button>
         </form>
+
+        <div className="lg-demo">
+          <div className="lg-demo-head"><span>تجربة سريعة — حسابات وهمية</span></div>
+          <div className="lg-demo-grid">
+            {DEMO_ACCOUNTS.map((a) => (
+              <a key={a.email} className="lg-demo-btn" href={`/api/auth/dev-login?email=${encodeURIComponent(a.email)}`}>
+                <span className="lg-demo-label">{a.label}</span>
+                <span className="lg-demo-role">{a.role}</span>
+              </a>
+            ))}
+          </div>
+        </div>
 
         <Link href="/" className="lg-home">العودة إلى الصفحة الرئيسية</Link>
       </motion.main>
