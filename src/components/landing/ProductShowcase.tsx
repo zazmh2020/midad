@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import Reveal from '@/components/Reveal';
 import Mockup, { type MockKind } from './Mockup';
 
 interface Item {
@@ -25,57 +24,24 @@ const CHECK = (
 );
 
 export default function ProductShowcase() {
-  const [active, setActive] = useState(0);
-  const refs = useRef<(HTMLDivElement | null)[]>([]);
-
-  useEffect(() => {
-    const obs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) setActive(Number((e.target as HTMLElement).dataset.idx));
-        });
-      },
-      { rootMargin: '-50% 0px -50% 0px', threshold: 0 },
-    );
-    refs.current.forEach((el) => el && obs.observe(el));
-    return () => obs.disconnect();
-  }, []);
-
   return (
-    <div className="mdl-sd">
-      <div className="mdl-sd-text">
-        {ITEMS.map((it, i) => (
-          <div
-            key={it.t}
-            data-idx={i}
-            ref={(el) => { refs.current[i] = el; }}
-            className={`mdl-sd-block ${i === active ? 'is-active' : ''}`}
-          >
-            <span className="mdl-sd-badge">{String(i + 1).padStart(2, '0')}</span>
-            <h3>{it.t}</h3>
-            <p>{it.d}</p>
-            <ul>{it.points.map((p) => <li key={p}>{CHECK}<span>{p}</span></li>)}</ul>
-            {/* نسخة مضمّنة للجوال */}
-            <div className="mdl-sd-inline"><Mockup kind={it.kind} /></div>
+    <div className="mdl-shows">
+      {ITEMS.map((it, i) => (
+        <Reveal key={it.t} y={28}>
+          {/* صفوف متبادلة: نقطة يمين/صورة يسار، ثم العكس */}
+          <div className={`mdl-show-row ${i % 2 ? 'rev' : ''}`}>
+            <div className="mdl-show-text">
+              <span className="mdl-sd-badge">{String(i + 1).padStart(2, '0')}</span>
+              <h3>{it.t}</h3>
+              <p>{it.d}</p>
+              <ul>{it.points.map((p) => <li key={p}>{CHECK}<span>{p}</span></li>)}</ul>
+            </div>
+            <div className="mdl-show-media">
+              <Mockup kind={it.kind} />
+            </div>
           </div>
-        ))}
-      </div>
-
-      <div className="mdl-sd-stage">
-        <div className="mdl-sd-sticky">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={active}
-              initial={{ opacity: 0, y: 20, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -16, scale: 0.98 }}
-              transition={{ duration: 0.4, ease: [0.22, 0.61, 0.36, 1] }}
-            >
-              <Mockup kind={ITEMS[active].kind} />
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </div>
+        </Reveal>
+      ))}
     </div>
   );
 }

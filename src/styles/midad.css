@@ -74,7 +74,7 @@
 .mdl-btn-primary:hover { background: var(--pd); transform: translateY(-2px); box-shadow: 0 14px 30px -14px rgba(107, 87, 160, 0.7); }
 .mdl-btn-ghost { background: transparent; color: var(--p); border-color: var(--border); }
 .mdl-btn-ghost:hover { border-color: var(--p); background: var(--white); }
-.mdl-btn-light { background: #fff; color: var(--pd); }
+.mdl-btn.mdl-btn-light { background: #fff; color: #2b1a4e; font-weight: 800; }
 .mdl-btn-light:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
 .mdl-btn-outline-light { background: transparent; color: #fff; border-color: rgba(255,255,255,0.4); }
 .mdl-btn-outline-light:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
@@ -188,7 +188,7 @@
   gap: 3rem; align-items: center;
 }
 .mdl-hero h1 {
-  color: #fff; font-size: clamp(2.3rem, 5vw, 3.8rem); line-height: 1.25; letter-spacing: -0.02em;
+  color: #fff; font-size: clamp(2.3rem, 5vw, 3.8rem); line-height: 1.55; letter-spacing: -0.01em;
 }
 .mdl-hero h1 .hl { color: #d3c6f2; }
 .mdl-hero-sub { color: rgba(255,255,255,0.82); font-size: clamp(1.02rem, 1.6vw, 1.22rem); margin-top: 1.3rem; max-width: 52ch; }
@@ -297,12 +297,16 @@
    Systems interactive showcase
    ============================================================ */
 .mdl-sys {
-  display: grid; grid-template-columns: 0.95fr 1.4fr; gap: 1.75rem; align-items: start; margin-top: 2.5rem;
+  display: grid; grid-template-columns: 1.45fr 1fr; gap: 1.75rem; align-items: start; margin-top: 2.5rem;
   background: linear-gradient(165deg, #ffffff 0%, #f4f1fa 100%);
   border: 1px solid var(--border); border-radius: 26px; padding: 1.5rem;
   box-shadow: 0 30px 70px -44px rgba(43, 26, 78, 0.5);
 }
-.mdl-sys-list { display: flex; flex-direction: column; gap: 0.3rem; }
+/* عمودان: 5 أنظمة وبجانبها 5 */
+.mdl-sys-list {
+  display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(5, auto);
+  grid-auto-flow: column; gap: 0.3rem 0.6rem;
+}
 .mdl-sys-item {
   position: relative; display: flex; align-items: center; gap: 0.85rem; width: 100%; text-align: start;
   background: transparent; border: 1px solid transparent; border-radius: 14px; padding: 0.75rem 0.9rem;
@@ -360,9 +364,17 @@
    Product showcase (alternating)
    ============================================================ */
 .mdl-show { display: flex; flex-direction: column; gap: clamp(3rem, 6vw, 5rem); margin-top: 3rem; }
+.mdl-shows { display: flex; flex-direction: column; gap: clamp(2.5rem, 5vw, 4.5rem); margin-top: 1.5rem; }
 .mdl-show-row { display: grid; grid-template-columns: 1fr 1.2fr; gap: 3rem; align-items: center; }
 .mdl-show-row.rev { grid-template-columns: 1.2fr 1fr; }
 .mdl-show-row.rev .mdl-show-text { order: 2; }
+.mdl-show-media { position: relative; }
+.mdl-show-media::before {
+  content: ''; position: absolute; inset: -6% -3% -10% -3%; z-index: 0; border-radius: 28px;
+  background: radial-gradient(60% 60% at 60% 25%, rgba(107, 87, 160, 0.18), transparent 70%);
+  filter: blur(8px); pointer-events: none;
+}
+.mdl-show-media > * { position: relative; z-index: 1; }
 .mdl-show-text h3 { font-size: clamp(1.4rem, 2.4vw, 1.9rem); }
 .mdl-show-text p { color: var(--muted); margin-top: 0.7rem; }
 .mdl-show-text ul { list-style: none; padding: 0; margin: 1.1rem 0 0; display: flex; flex-direction: column; gap: 0.55rem; }
