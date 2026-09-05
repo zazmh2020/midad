@@ -70,6 +70,7 @@ export default async function OrgLayout({
 
     // الطبقة الثانية — المعرفة والذكاء
     { kind: 'divider', label: t('onav.div.knowledge') },
+    { kind: 'link', href: `${base}/search`, label: t('onav.search'), icon: 'knowledge', match: [`${base}/search`] },
     { kind: 'link', href: `${base}/notifications`, label: t('onav.notifications'), icon: 'reports', match: [`${base}/notifications`] },
     ...(canViewDocuments(r) && moduleEnabled(md, 'documents')
       ? ([{ kind: 'link', href: `${base}/documents`, label: t('onav.documents'), icon: 'documents' }] as NavEntry[])

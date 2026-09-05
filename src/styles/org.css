@@ -921,6 +921,20 @@ a.org-module:hover {
 }
 .org-report-grid .org-panel { margin-bottom: 0; }
 
+/* ---------- البحث الشامل ---------- */
+.srch-bar { display: flex; gap: 0.6rem; margin-bottom: 1.2rem; }
+.srch-bar input {
+  flex: 1; padding: 0.7rem 1rem; border: 1px solid var(--line); border-radius: 12px;
+  background: #fff; color: var(--text); font-family: inherit; font-size: 0.95rem;
+}
+.srch-results { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; align-items: start; }
+.srch-item {
+  display: flex; align-items: center; justify-content: space-between; gap: 0.6rem;
+  padding: 0.6rem 0.4rem; border-bottom: 1px solid var(--line); text-decoration: none; color: var(--text-strong);
+}
+.srch-item:hover { color: var(--purple-700, #6b57a0); }
+.srch-item span { font-size: 0.78rem; color: var(--text-muted); }
+
 /* ---------- روابط وملفات ---------- */
 .org-link { color: var(--purple-700, #6b57a0); text-decoration: none; }
 .org-link:hover { text-decoration: underline; }
