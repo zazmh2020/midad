@@ -25,6 +25,7 @@ export default function StudentsView({ students, halaqat }: { students: Student[
   const [phone, setPhone] = useState('');
   const [guardianName, setGuardianName] = useState('');
   const [guardianPhone, setGuardianPhone] = useState('');
+  const [guardianEmail, setGuardianEmail] = useState('');
   const [status, setStatus] = useState('ACTIVE');
   const [halaqaId, setHalaqaId] = useState('');
 
@@ -41,12 +42,12 @@ export default function StudentsView({ students, halaqat }: { students: Student[
     try {
       const res = await fetch('/api/org/education/students', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, phone, guardianName, guardianPhone, status, halaqaId: halaqaId || null }),
+        body: JSON.stringify({ name, phone, guardianName, guardianPhone, guardianEmail, status, halaqaId: halaqaId || null }),
       });
       const d = await res.json().catch(() => ({}));
       if (!res.ok) setError(d.error ?? t('form.createErr'));
       else {
-        setName(''); setPhone(''); setGuardianName(''); setGuardianPhone(''); setStatus('ACTIVE'); setHalaqaId('');
+        setName(''); setPhone(''); setGuardianName(''); setGuardianPhone(''); setGuardianEmail(''); setStatus('ACTIVE'); setHalaqaId('');
         setCreating(false); router.refresh();
       }
     } catch { setError(t('form.netErr')); } finally { setBusyId(null); }
@@ -111,6 +112,10 @@ export default function StudentsView({ students, halaqat }: { students: Student[
             <div className="org-field">
               <label htmlFor="s-gphone">{t('edu.st.guardianPhone')}</label>
               <input id="s-gphone" dir="ltr" value={guardianPhone} onChange={(e) => setGuardianPhone(e.target.value)} />
+            </div>
+            <div className="org-field">
+              <label htmlFor="s-gemail">{t('edu.st.guardianEmail')} <span className="org-hint">{t('view.optional')}</span></label>
+              <input id="s-gemail" type="email" dir="ltr" value={guardianEmail} onChange={(e) => setGuardianEmail(e.target.value)} />
             </div>
           </div>
           <div className="org-field-row">

@@ -9,6 +9,22 @@ type Dict = Record<string, string>;
 
 const ar: Dict = {
   // ---- Page headings ----
+  'onav.events': 'الفعاليات',
+  'ev.pageTitle': 'الفعاليات والتقويم',
+  'ev.pageSub': 'فعاليات وأحداث {org} القادمة والسابقة.',
+  'ev.new': '+ فعالية جديدة',
+  'ev.title': 'عنوان الفعالية',
+  'ev.start': 'البداية',
+  'ev.end': 'النهاية',
+  'ev.location': 'المكان',
+  'ev.details': 'التفاصيل',
+  'ev.create': 'إنشاء الفعالية',
+  'ev.none': 'لا توجد فعاليات بعد.',
+  'ev.upcoming': 'القادمة',
+  'ev.noUpcoming': 'لا فعاليات قادمة.',
+  'ev.past': 'السابقة',
+  'ev.deleteConfirm': 'حذف هذه الفعالية؟',
+  // ---- Page headings ----
   'onav.myHalaqat': 'حلقاتي',
   'edu.tc.account': 'الحساب',
   'edu.tc.noAccount': '— بلا حساب',
@@ -425,6 +441,7 @@ const ar: Dict = {
   'edu.st.phone': 'هاتف الطالب',
   'edu.st.guardianName': 'اسم ولي الأمر',
   'edu.st.guardianPhone': 'هاتف ولي الأمر',
+  'edu.st.guardianEmail': 'بريد ولي الأمر',
   'edu.st.halaqa': 'الحلقة',
   'edu.st.add': 'إضافة الطالب',
   'edu.st.none': 'لا يوجد طلاب بعد.',
@@ -1099,6 +1116,22 @@ const ar: Dict = {
 
 const en: Dict = {
   // ---- Page headings ----
+  'onav.events': 'Events',
+  'ev.pageTitle': 'Events & calendar',
+  'ev.pageSub': 'Upcoming and past events of {org}.',
+  'ev.new': '+ New event',
+  'ev.title': 'Event title',
+  'ev.start': 'Start',
+  'ev.end': 'End',
+  'ev.location': 'Location',
+  'ev.details': 'Details',
+  'ev.create': 'Create event',
+  'ev.none': 'No events yet.',
+  'ev.upcoming': 'Upcoming',
+  'ev.noUpcoming': 'No upcoming events.',
+  'ev.past': 'Past',
+  'ev.deleteConfirm': 'Delete this event?',
+  // ---- Page headings ----
   'onav.myHalaqat': 'My halaqat',
   'edu.tc.account': 'Account',
   'edu.tc.noAccount': '— No account',
@@ -1515,6 +1548,7 @@ const en: Dict = {
   'edu.st.phone': 'Student phone',
   'edu.st.guardianName': 'Guardian name',
   'edu.st.guardianPhone': 'Guardian phone',
+  'edu.st.guardianEmail': 'Guardian email',
   'edu.st.halaqa': 'Halaqa',
   'edu.st.add': 'Add student',
   'edu.st.none': 'No students yet.',

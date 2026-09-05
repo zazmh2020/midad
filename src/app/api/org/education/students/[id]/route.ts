@@ -25,7 +25,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   if (!body) return NextResponse.json({ error: 'طلب غير صالح.' }, { status: 400 });
 
   const data: {
-    name?: string; phone?: string | null; guardianName?: string | null; guardianPhone?: string | null;
+    name?: string; phone?: string | null; guardianName?: string | null; guardianPhone?: string | null; guardianEmail?: string | null;
     birthDate?: Date | null; status?: StudentStatus; halaqaId?: string | null;
   } = {};
   if (body.name !== undefined) {
@@ -36,6 +36,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   if (body.phone !== undefined) data.phone = String(body.phone).trim() || null;
   if (body.guardianName !== undefined) data.guardianName = String(body.guardianName).trim() || null;
   if (body.guardianPhone !== undefined) data.guardianPhone = String(body.guardianPhone).trim() || null;
+  if (body.guardianEmail !== undefined) data.guardianEmail = String(body.guardianEmail).trim() || null;
   if (body.birthDate !== undefined) {
     const d = parseDate(body.birthDate);
     if (d === undefined) return NextResponse.json({ error: 'تاريخ الميلاد غير صالح.' }, { status: 400 });

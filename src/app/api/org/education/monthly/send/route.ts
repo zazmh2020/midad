@@ -24,7 +24,7 @@ export async function POST(request: Request) {
 
   const student = await prisma.student.findFirst({
     where: { id: studentId, organizationId: actor.organization.id },
-    select: { id: true, name: true, halaqa: { select: { name: true } } },
+    select: { id: true, name: true, guardianEmail: true, halaqa: { select: { name: true } } },
   });
   if (!student) return NextResponse.json({ error: 'الطالب غير موجود.' }, { status: 404 });
 
@@ -77,9 +77,10 @@ export async function POST(request: Request) {
     </div>`;
   }
 
-  const result = await sendEmail({ to: actor.email, subject, html });
+  const to = student.guardianEmail || actor.email;
+  const result = await sendEmail({ to, subject, html });
   if (!result.ok) {
     return NextResponse.json({ ok: false, reason: result.reason ?? 'send_failed' }, { status: 200 });
   }
-  return NextResponse.json({ ok: true, to: actor.email });
+  return NextResponse.json({ ok: true, to });
 }

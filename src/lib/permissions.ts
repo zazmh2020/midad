@@ -130,6 +130,18 @@ export function canManageRequests(role: string): boolean {
   return role === 'ORG_ADMIN';
 }
 
+/* ---------- الفعاليات والرسوم ---------- */
+
+export function canViewEvents(role: string): boolean {
+  return role === 'ORG_ADMIN' || role === 'STAFF' || role === 'MEMBER';
+}
+export function canManageEvents(role: string): boolean {
+  return role === 'ORG_ADMIN' || role === 'STAFF';
+}
+export function canManageFees(role: string): boolean {
+  return role === 'ORG_ADMIN' || role === 'STAFF';
+}
+
 /* ---------- الهيكل المؤسسي ---------- */
 
 /** من يطّلع على الهيكل التنظيمي — جميع أعضاء المؤسسة */

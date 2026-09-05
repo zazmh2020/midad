@@ -21,6 +21,10 @@ model Organization {
   logoUrl     String?  // شعار الجهة (رابط)
   disabledModules String[] @default([]) // وحدات معطّلة لهذه المؤسسة (المفعّلة = الباقي)
   sitePublished Boolean @default(false)  // نشر الموقع العام للمؤسسة
+  contactEmail String?  // بيانات تواصل عامة
+  contactPhone String?
+  address      String?
+  aboutText    String?  // نبذة تُعرض في الموقع العام
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -46,6 +50,8 @@ model Organization {
   tasks         Task[]
   quranRecords  QuranDailyRecord[]
   requests      MemberRequest[]
+  fees          StudentFee[]
+  events        Event[]
 
   @@map("organizations")
 }
@@ -169,13 +175,56 @@ model Student {
   halaqaId String?
   halaqa   Halaqa? @relation(fields: [halaqaId], references: [id], onDelete: SetNull)
 
+  guardianEmail String? // بريد وليّ الأمر — لإرسال التقارير
+
   attendance   AttendanceRecord[]
   memorization MemorizationEntry[]
   quranRecords QuranDailyRecord[]
+  fees         StudentFee[]
 
   @@index([organizationId])
   @@index([halaqaId])
   @@map("students")
+}
+
+/// رسم دراسي/اشتراك لطالب
+model StudentFee {
+  id        String    @id @default(cuid())
+  title     String
+  amount    Int
+  dueDate   DateTime?
+  paid      Boolean   @default(false)
+  paidAt    DateTime?
+  note      String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([studentId])
+  @@map("student_fees")
+}
+
+/// فعالية/حدث في تقويم المؤسسة
+model Event {
+  id        String    @id @default(cuid())
+  title     String
+  details   String?
+  startAt   DateTime
+  endAt     DateTime?
+  location  String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@map("events")
 }
 
 enum StudentStatus {

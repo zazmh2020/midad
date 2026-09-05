@@ -921,6 +921,20 @@ a.org-module:hover {
 }
 .org-report-grid .org-panel { margin-bottom: 0; }
 
+/* ---------- الفعاليات ---------- */
+.ev-list { grid-template-columns: 1fr; }
+.ev-card { display: flex; align-items: flex-start; gap: 1rem; }
+.ev-card.is-past { opacity: 0.6; }
+.ev-date {
+  flex-shrink: 0; width: 56px; text-align: center; border-radius: 12px;
+  background: var(--p-08, rgba(107,87,160,0.08)); color: var(--purple-700, #6b57a0);
+  padding: 0.5rem 0; display: flex; flex-direction: column;
+}
+.ev-day { font-family: var(--font-display); font-weight: 800; font-size: 1.3rem; line-height: 1; }
+.ev-mon { font-size: 0.72rem; margin-top: 0.15rem; }
+.ev-body { flex: 1; min-width: 0; }
+.ev-body h3 { margin: 0 0 0.3rem; font-size: 1rem; color: var(--text-strong); }
+
 /* ---------- الدليل الشهري (شبكة يومية) ---------- */
 /* توسيط ترويسة الصفحة فقط (العنوان والوصف) */
 .qm-page .org-page-head { justify-content: center; text-align: center; }

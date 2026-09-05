@@ -22,6 +22,7 @@ export async function POST(request: Request) {
   const phone = String(body.phone ?? '').trim();
   const guardianName = String(body.guardianName ?? '').trim();
   const guardianPhone = String(body.guardianPhone ?? '').trim();
+  const guardianEmail = String(body.guardianEmail ?? '').trim();
   const status = String(body.status ?? 'ACTIVE');
   const halaqaId = body.halaqaId ? String(body.halaqaId) : null;
 
@@ -42,6 +43,7 @@ export async function POST(request: Request) {
       phone: phone || null,
       guardianName: guardianName || null,
       guardianPhone: guardianPhone || null,
+      guardianEmail: guardianEmail || null,
       birthDate,
       status: status as StudentStatus,
       halaqaId,

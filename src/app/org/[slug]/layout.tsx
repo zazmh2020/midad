@@ -65,6 +65,7 @@ export default async function OrgLayout({
       ? ([{ kind: 'link', href: `${base}/requests`, label: t('onav.requests'), icon: 'documents',
           match: [`${base}/requests`] }] as NavEntry[])
       : []),
+    { kind: 'link', href: `${base}/events`, label: t('onav.events'), icon: 'competitions', match: [`${base}/events`] },
 
     // الطبقة الثانية — المعرفة والذكاء
     { kind: 'divider', label: t('onav.div.knowledge') },
