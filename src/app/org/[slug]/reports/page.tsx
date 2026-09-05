@@ -10,7 +10,7 @@ const numFmt = new Intl.NumberFormat('en-US');
 
 /** يبني آخر n أشهر: [{ key: 'YYYY-M', start, end, label }] */
 function lastMonths(n: number, locale: string) {
-  const fmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar', { month: 'short' });
+  const fmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar-u-nu-latn', { month: 'short' });
   const out: { key: string; start: Date; end: Date; label: string }[] = [];
   const now = new Date();
   for (let i = n - 1; i >= 0; i--) {

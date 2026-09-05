@@ -29,7 +29,7 @@ function timeAgo(iso: string): string {
   if (h < 24) return `منذ ${h} ساعة`;
   const d = Math.floor(h / 24);
   if (d < 30) return `منذ ${d} يوم`;
-  return new Date(iso).toLocaleDateString('ar');
+  return new Date(iso).toLocaleDateString('ar-u-nu-latn');
 }
 
 type Panel = 'search' | 'messages' | 'notif' | null;

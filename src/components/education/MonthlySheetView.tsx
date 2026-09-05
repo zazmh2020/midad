@@ -30,7 +30,7 @@ export default function MonthlySheetView({
   const { t, locale } = useLocale();
   const router = useRouter();
   const pathname = usePathname();
-  const wdFmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar', { weekday: 'short' });
+  const wdFmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar-u-nu-latn', { weekday: 'short' });
 
   const toStr = (v: unknown) => (v === null || v === undefined ? '' : String(v));
   const [data, setData] = useState<Record<string, Record<string, string>>>(() => {

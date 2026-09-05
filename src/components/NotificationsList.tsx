@@ -10,7 +10,7 @@ const ICON: Record<string, string> = {
 
 export default function NotificationsList({ notifications, storageKey }: { notifications: InboxNotification[]; storageKey: string }) {
   const { t, locale } = useLocale();
-  const fmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  const fmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar-u-nu-latn', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
   const [seen, setSeen] = useState(0);
 
   useEffect(() => {

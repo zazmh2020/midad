@@ -53,7 +53,7 @@ export default async function OrgDashboard({
   const { user, org } = await requireOrgAccess(slug);
   const { t, locale } = await getT();
   const dateFmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar-u-nu-latn', { day: 'numeric', month: 'short' });
-  const weekdayFmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar', { weekday: 'short' });
+  const weekdayFmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar-u-nu-latn', { weekday: 'short' });
 
   const w = { organizationId: org.id };
   const days = buildDays();

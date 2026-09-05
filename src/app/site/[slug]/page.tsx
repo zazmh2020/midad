@@ -11,7 +11,7 @@ const TYPE_KEY: Record<string, string> = {
 export default async function PublicSitePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const { t, locale } = await getT();
-  const dateFmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar', { year: 'numeric', month: 'long', day: 'numeric' });
+  const dateFmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar-u-nu-latn', { year: 'numeric', month: 'long', day: 'numeric' });
 
   const org = await prisma.organization.findUnique({
     where: { slug },

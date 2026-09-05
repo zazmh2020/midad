@@ -8,7 +8,7 @@ type Ev = { id: string; title: string; details: string | null; location: string 
 
 export default function EventsView({ events, canManage }: { events: Ev[]; canManage: boolean }) {
   const { t, locale } = useLocale();
-  const fmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar', { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  const fmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar-u-nu-latn', { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
   const router = useRouter();
   const [creating, setCreating] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -49,7 +49,7 @@ export default function EventsView({ events, canManage }: { events: Ev[]; canMan
     <article key={e.id} className={`org-card ev-card ${isPast ? 'is-past' : ''}`}>
       <div className="ev-date">
         <span className="ev-day">{new Date(e.startAt).getDate()}</span>
-        <span className="ev-mon">{new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar', { month: 'short' }).format(new Date(e.startAt))}</span>
+        <span className="ev-mon">{new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar-u-nu-latn', { month: 'short' }).format(new Date(e.startAt))}</span>
       </div>
       <div className="ev-body">
         <h3>{e.title}</h3>

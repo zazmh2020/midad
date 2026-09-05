@@ -41,7 +41,7 @@ export default async function AdminOverview() {
   const { t, locale } = await getT();
   const intlLocale = locale === 'en' ? 'en' : 'ar-u-nu-latn';
   const dateFmt = new Intl.DateTimeFormat(intlLocale, { year: 'numeric', month: 'short', day: 'numeric' });
-  const weekdayFmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar', { weekday: 'short' });
+  const weekdayFmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar-u-nu-latn', { weekday: 'short' });
 
   const startOfMonth = new Date();
   startOfMonth.setDate(1);

@@ -12,7 +12,7 @@ export default function BillingView({
   subscriptionStatus: string | null; renewsAt: string | null; currency: string;
 }) {
   const { t, locale } = useLocale();
-  const dateFmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar', { year: 'numeric', month: 'long', day: 'numeric' });
+  const dateFmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar-u-nu-latn', { year: 'numeric', month: 'long', day: 'numeric' });
   const [busy, setBusy] = useState<string | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
 
