@@ -35,7 +35,7 @@ export default async function CompetitionsPage({ params }: { params: Promise<{ s
           <p>{t('pg.competitions.sub')}</p>
         </div>
       </div>
-      <CompetitionsView competitions={competitions} />
+      <CompetitionsView competitions={competitions} basePath={`/org/${org.slug}/education/competitions`} />
     </div>
   );
 }

@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 import { useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -16,7 +18,7 @@ const STATUS_KIND: Record<string, 'ok' | 'warn' | 'muted'> = {
   CLOSED: 'muted',
 };
 
-export default function CompetitionsView({ competitions }: { competitions: Competition[] }) {
+export default function CompetitionsView({ competitions, basePath }: { competitions: Competition[]; basePath: string }) {
   const { t, locale } = useLocale();
   const dateFmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar-u-nu-latn', { year: 'numeric', month: 'long', day: 'numeric' });
   const router = useRouter();
@@ -108,6 +110,7 @@ export default function CompetitionsView({ competitions }: { competitions: Compe
                   <div className="mod-kpi"><div className="k">{t('comp.level')}</div><div className="v" style={{ fontSize: '0.9rem' }}>{cur.level ?? t('comp.general')}</div></div>
                 </div>
                 <div className="org-form-actions">
+                  <Link className="org-btn org-btn-primary" href={`${basePath}/${cur.id}`}>{t('comp.manageParticipants')}</Link>
                   <button className="org-btn org-btn-danger" onClick={() => remove(cur.id)} disabled={busy}>{t('comp.delete')}</button>
                 </div>
               </div>

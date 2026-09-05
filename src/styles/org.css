@@ -921,6 +921,12 @@ a.org-module:hover {
 }
 .org-report-grid .org-panel { margin-bottom: 0; }
 
+/* ---------- ترتيب المشاركين ---------- */
+.comp-rank { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; font-weight: 800; font-size: 0.8rem; background: var(--gray-100); color: var(--text-strong); }
+.comp-rank-1 { background: #f7d774; color: #6b4e00; }
+.comp-rank-2 { background: #d7dde4; color: #444d57; }
+.comp-rank-3 { background: #e9c39a; color: #6b3e12; }
+
 /* ---------- البحث الشامل ---------- */
 .srch-bar { display: flex; gap: 0.6rem; margin-bottom: 1.2rem; }
 .srch-bar input {
