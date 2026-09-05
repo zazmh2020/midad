@@ -9,6 +9,17 @@ type Dict = Record<string, string>;
 
 const ar: Dict = {
   // ---- Page headings ----
+  'mod.title': 'وحدات المؤسسة',
+  'mod.sub': 'فعّل أو أوقف وحدات المنصة حسب حاجة مؤسستك — الوحدات الموقوفة تُخفى من التنقّل.',
+  'mod.desc.operations': 'المشاريع والبرامج والحملات والتبرعات والمهام.',
+  'mod.desc.resources': 'المستفيدون والموظفون والفرق والمتطوّعون.',
+  'mod.desc.education': 'الحلقات والطلاب والمعلمون والتسميع والحضور.',
+  'mod.desc.documents': 'مكتبة مستندات المؤسسة.',
+  'mod.desc.knowledge': 'قاعدة المعرفة والمقالات.',
+  'mod.desc.reports': 'التقارير والتحليلات والإحصاءات.',
+  'mod.desc.assistant': 'مساعد مِداد الذكي.',
+  'mod.desc.content': 'إدارة الأخبار والمحتوى العام.',
+  // ---- Page headings ----
   'roles.title': 'الأدوار والصلاحيات',
   'roles.sub': 'ما الذي يستطيع كل دور الاطّلاع عليه وإدارته عبر وحدات المنصة.',
   'roles.colModule': 'الوحدة',
@@ -983,6 +994,17 @@ const ar: Dict = {
 };
 
 const en: Dict = {
+  // ---- Page headings ----
+  'mod.title': 'Organization modules',
+  'mod.sub': 'Enable or disable platform modules to fit your organization — disabled modules are hidden from navigation.',
+  'mod.desc.operations': 'Projects, programs, campaigns, donations and tasks.',
+  'mod.desc.resources': 'Beneficiaries, employees, teams and volunteers.',
+  'mod.desc.education': 'Halaqat, students, teachers, recitation and attendance.',
+  'mod.desc.documents': 'Organization document library.',
+  'mod.desc.knowledge': 'Knowledge base and articles.',
+  'mod.desc.reports': 'Reports, analytics and statistics.',
+  'mod.desc.assistant': 'Midad AI assistant.',
+  'mod.desc.content': 'News and public content management.',
   // ---- Page headings ----
   'roles.title': 'Roles & permissions',
   'roles.sub': 'What each role can view and manage across the platform modules.',

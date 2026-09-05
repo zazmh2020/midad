@@ -7,6 +7,7 @@ import {
 } from '@/lib/permissions';
 import OrgShell, { type NavEntry } from '@/components/OrgShell';
 import { getOrgInbox } from '@/lib/inbox';
+import { moduleEnabled } from '@/lib/modules';
 import { getT } from '@/lib/i18n/server';
 import '@/styles/org.css';
 
@@ -28,11 +29,14 @@ export default async function OrgLayout({
   const inbox = await getOrgInbox(org.id);
   const { t } = await getT();
 
-  // الطبقة الأولى — العمل المؤسسي
+  // الوحدات المفعّلة لهذه المؤسسة
+  const md = org.disabledModules;
+
+  // الطبقة الأولى — العمل المؤسسي (الصلاحية + تفعيل الوحدة)
   const orgSection = canViewStructure(r) || canViewUsers(r) || canManageSettings(r);
-  const opsSection = canViewProjects(r) || canViewCampaigns(r);
-  const resourcesSection = canViewBeneficiaries(r);
-  const educationSection = canViewProjects(r); // موظفو المؤسسة يديرون التعليم
+  const opsSection = (canViewProjects(r) || canViewCampaigns(r)) && moduleEnabled(md, 'operations');
+  const resourcesSection = canViewBeneficiaries(r) && moduleEnabled(md, 'resources');
+  const educationSection = canViewProjects(r) && moduleEnabled(md, 'education'); // موظفو المؤسسة يديرون التعليم
 
   const nav: NavEntry[] = [
     { kind: 'link', href: base, label: t('onav.dashboard'), icon: 'home' },
@@ -59,26 +63,26 @@ export default async function OrgLayout({
 
     // الطبقة الثانية — المعرفة والذكاء
     { kind: 'divider', label: t('onav.div.knowledge') },
-    ...(canViewDocuments(r)
+    ...(canViewDocuments(r) && moduleEnabled(md, 'documents')
       ? ([{ kind: 'link', href: `${base}/documents`, label: t('onav.documents'), icon: 'documents' }] as NavEntry[])
       : []),
-    ...(canViewKnowledge(r)
+    ...(canViewKnowledge(r) && moduleEnabled(md, 'knowledge')
       ? ([{ kind: 'link', href: `${base}/knowledge`, label: t('onav.knowledge'), icon: 'knowledge' }] as NavEntry[])
       : []),
-    ...(canViewReports(r)
+    ...(canViewReports(r) && moduleEnabled(md, 'reports')
       ? ([{ kind: 'link', href: `${base}/reports`, label: t('onav.reports'), icon: 'reports' }] as NavEntry[])
       : []),
     ...(educationSection
       ? ([{ kind: 'link', href: `${base}/education/statistics`, label: t('onav.statistics'), icon: 'statistics' }] as NavEntry[])
       : []),
     { kind: 'link', href: `${base}/identity`, label: t('onav.identity'), icon: 'identity' },
-    ...(canUseAssistant(r)
+    ...(canUseAssistant(r) && moduleEnabled(md, 'assistant')
       ? ([{ kind: 'link', href: `${base}/assistant`, label: t('onav.assistant'), icon: 'assistant' }] as NavEntry[])
       : []),
 
     // الطبقة الثالثة — إدارة النظام
     { kind: 'divider', label: t('onav.div.system') },
-    ...(canManageSettings(r)
+    ...(canManageSettings(r) && moduleEnabled(md, 'content')
       ? ([{ kind: 'link', href: `${base}/content`, label: t('onav.content'), icon: 'content' }] as NavEntry[])
       : []),
     ...(canManageUsers(r)

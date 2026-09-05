@@ -19,6 +19,7 @@ model Organization {
   planRenewsAt DateTime?
   brandColor  String?  // لون الهوية الأساسي للجهة (hex)
   logoUrl     String?  // شعار الجهة (رابط)
+  disabledModules String[] @default([]) // وحدات معطّلة لهذه المؤسسة (المفعّلة = الباقي)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

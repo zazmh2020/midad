@@ -880,6 +880,31 @@ a.org-module:hover {
 }
 .org-report-grid .org-panel { margin-bottom: 0; }
 
+/* ---------- تفعيل الوحدات ---------- */
+.org-modules { display: flex; flex-direction: column; gap: 0.7rem; max-width: 640px; }
+.org-module-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 0.85rem 1rem;
+  transition: border-color 0.18s, opacity 0.18s;
+}
+.org-module-row:not(.is-on) { opacity: 0.62; }
+.org-module-tx { display: flex; flex-direction: column; gap: 0.15rem; }
+.org-module-name { font-weight: 700; font-size: 0.92rem; color: var(--dark, #2b1a4e); }
+.org-module-desc { font-size: 0.78rem; color: var(--muted, #6c6780); line-height: 1.5; }
+.org-switch {
+  flex-shrink: 0; width: 46px; height: 26px; border-radius: 100px; border: none; cursor: pointer;
+  background: var(--gray-300, #cfc9db); position: relative; transition: background 0.2s;
+  padding: 0;
+}
+.org-switch.is-on { background: var(--purple-500, #6b57a0); }
+.org-switch:disabled { cursor: default; }
+.org-switch-knob {
+  position: absolute; top: 3px; inset-inline-start: 3px; width: 20px; height: 20px;
+  border-radius: 50%; background: #fff; transition: inset-inline-start 0.2s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+.org-switch.is-on .org-switch-knob { inset-inline-start: 23px; }
+
 /* ---------- مصفوفة الأدوار والصلاحيات ---------- */
 .org-matrix { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
 .org-matrix th, .org-matrix td {
