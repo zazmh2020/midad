@@ -364,3 +364,13 @@ svg {
   .tbar-user-tx { display: none; }
   .tbar-user { padding: 0.25rem; }
 }
+
+/* زر إغلاق نافذة اللغة */
+.lang-gate { position: relative; }
+.lang-gate-x {
+  position: absolute; top: 0.8rem; inset-inline-start: 0.8rem; width: 30px; height: 30px; border-radius: 50%;
+  display: grid; place-items: center; border: none; cursor: pointer;
+  background: var(--gray-100, #f3f0f8); color: var(--gray-500, #7c7788); transition: background 0.18s, color 0.18s;
+}
+.lang-gate-x:hover { background: var(--gray-300, #e0dcea); color: var(--purple-700, #3d2879); }
+:root[data-theme="dark"] .lang-gate-x { background: rgba(255,255,255,0.08); color: #cfc8e0; }

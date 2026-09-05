@@ -13,19 +13,29 @@ interface LocaleContextValue {
 
 const LocaleContext = createContext<LocaleContextValue | null>(null);
 
-/** النطاق الأب (آخر جزأين) ليعمل الكوكي عبر النطاقات الفرعية مثل الجلسة. */
-function baseDomain(): string | undefined {
-  const parts = window.location.hostname.split('.');
+/** النطاق الأب (آخر جزأين) لمشاركة الكوكي عبر النطاقات الفرعية.
+ *  يُتجاهَل للنطاقات العامة (vercel.app…) لأن المتصفح يرفض ضبطها. */
+function shareableDomain(): string | undefined {
+  const host = window.location.hostname;
+  if (/^\d+(\.\d+){3}$/.test(host)) return undefined; // IP
+  const parts = host.split('.');
   if (parts.length < 2) return undefined; // localhost وحده
-  return parts.slice(-2).join('.');
+  const base = parts.slice(-2).join('.');
+  // نطاقات استضافة عامة — لا يمكن ضبط كوكي على نطاقها الأب
+  const PUBLIC_SUFFIXES = ['vercel.app', 'netlify.app', 'github.io', 'pages.dev', 'onrender.com'];
+  if (PUBLIC_SUFFIXES.includes(base)) return undefined;
+  return base;
 }
 
-/** يحفظ اللغة في الكوكي + التخزين المحلي ويعيد التحميل لتطبيقها على كل الصفحة. */
+/** يحفظ اللغة في الكوكي + التخزين المحلي ويعيد التحميل لتطبيقها على كل الصفحة.
+ *  نضبط كوكي على المضيف نفسه (مضمون دائمًا) + كوكي على النطاق الأب عند إمكانه
+ *  (للمشاركة بين النطاقات الفرعية مثل admin.* و<slug>.*). */
 export function persistLocale(next: Locale) {
   try {
-    const domain = baseDomain();
-    const domainPart = domain ? `; domain=${domain}` : '';
-    document.cookie = `${LOCALE_COOKIE}=${next}; path=/${domainPart}; max-age=31536000; samesite=lax`;
+    const opts = `path=/; max-age=31536000; samesite=lax`;
+    document.cookie = `${LOCALE_COOKIE}=${next}; ${opts}`; // host-only (يعمل دائمًا)
+    const domain = shareableDomain();
+    if (domain) document.cookie = `${LOCALE_COOKIE}=${next}; ${opts}; domain=${domain}`;
     localStorage.setItem(LOCALE_COOKIE, next);
   } catch {
     /* تجاهل */

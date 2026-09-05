@@ -22,9 +22,18 @@ export default function LangGate({ hasChosen }: { hasChosen: boolean }) {
     window.location.reload();
   }
 
+  // إغلاق دون اختيار: اعتماد العربية افتراضيًا (بلا إعادة تحميل — الصفحة عربية أصلًا)
+  function dismiss() {
+    persistLocale('ar');
+    setOpen(false);
+  }
+
   return (
-    <div className="lang-gate-scrim" role="dialog" aria-modal="true" aria-label="Language / اللغة">
-      <div className="lang-gate">
+    <div className="lang-gate-scrim" role="dialog" aria-modal="true" aria-label="Language / اللغة" onClick={dismiss}>
+      <div className="lang-gate" onClick={(e) => e.stopPropagation()}>
+        <button className="lang-gate-x" onClick={dismiss} aria-label="إغلاق / Close">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M5 5l10 10M15 5L5 15" /></svg>
+        </button>
         <div className="lang-gate-logo">مِداد · Midad</div>
         <h2>{translate('ar', 'lang.title')}</h2>
         <p className="lang-gate-en">{translate('en', 'lang.title')}</p>
