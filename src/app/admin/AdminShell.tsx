@@ -145,8 +145,13 @@ export default function AdminShell({ children, session, avatarUrl, inbox }: Prop
             storageKey="midad_admin"
           />
           <div className="org-topbar-profile">
-            <button className="org-topbar-ava" onClick={() => setProfileOpen((v) => !v)} aria-expanded={profileOpen} aria-label={t('shell.profile')}>
-              <Avatar url={avatarUrl} />
+            <button className="tbar-user" onClick={() => setProfileOpen((v) => !v)} aria-expanded={profileOpen} aria-label={t('shell.profile')}>
+              <span className="tbar-user-ava"><Avatar url={avatarUrl} /></span>
+              <span className="tbar-user-tx">
+                <span className="tbar-user-name">{session.name}</span>
+                <span className="tbar-user-role">{t('anav.owner')}</span>
+              </span>
+              <svg className="tbar-user-chev" width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8l4 4 4-4" /></svg>
             </button>
             {profileOpen && (
               <>
@@ -168,6 +173,9 @@ export default function AdminShell({ children, session, avatarUrl, inbox }: Prop
               </>
             )}
           </div>
+          <button className="tbar-logout" onClick={() => setConfirmLogout(true)} aria-label={t('shell.logout')} title={t('shell.logout')}>
+            <Icon name="logout" />
+          </button>
         </header>
 
         <main className="admin-content">{children}</main>

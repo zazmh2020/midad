@@ -90,7 +90,7 @@ export default async function OrgLayout({
   return (
     <OrgShell
       org={{ name: org.name, slug: org.slug, brandColor: org.brandColor, logoUrl: org.logoUrl }}
-      user={{ name: user.name, role: user.role, email: user.email, avatarUrl: user.avatarUrl }}
+      user={{ name: user.name, role: user.role, email: user.email, avatarUrl: user.avatarUrl, jobTitle: user.jobTitle }}
       nav={nav}
       inbox={inbox}
     >

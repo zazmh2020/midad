@@ -323,3 +323,44 @@ svg {
   position: absolute; top: calc(100% + 0.5rem); inset-inline-end: 0; inset-inline-start: auto;
   min-width: 220px; z-index: 30;
 }
+
+/* ---------- الشريط العلوي: بروفايل أسطواني + خروج مباشر + أيقونات موحّدة ---------- */
+/* توحيد أحجام أيقونات الأدوات (بحث/رسائل/جرس/لغة/ثيم) */
+.org-topbar .tbt, .admin-topbar .tbt { gap: 0.55rem; }
+.org-topbar .theme-toggle, .admin-topbar .theme-toggle,
+.org-topbar .lang-toggle, .admin-topbar .lang-toggle { width: 38px; height: 38px; }
+.org-topbar .theme-toggle svg, .admin-topbar .theme-toggle svg { width: 18px; height: 18px; }
+/* بحث أصغر */
+.org-topbar .tbt-search, .admin-topbar .tbt-search { width: clamp(150px, 20vw, 300px); }
+
+/* بروفايل أسطواني (أفاتار + اسم/مسمى + سهم) */
+.tbar-user {
+  display: inline-flex; align-items: center; gap: 0.55rem; flex-shrink: 0;
+  padding: 0.28rem 0.7rem 0.28rem 0.35rem; border-radius: 100px;
+  border: 1px solid var(--line, #e6e3ee); background: var(--gray-100, #f3f0f8); cursor: pointer;
+  transition: border-color 0.18s, background 0.18s;
+}
+.tbar-user:hover { border-color: var(--purple-300, #8873af); }
+.tbar-user-ava {
+  width: 34px; height: 34px; border-radius: 50%; overflow: hidden; flex-shrink: 0;
+  background: var(--purple-500, #6b57a0); color: #fff; display: grid; place-items: center;
+}
+.tbar-user-ava img { width: 100%; height: 100%; object-fit: cover; }
+.tbar-user-tx { display: flex; flex-direction: column; line-height: 1.25; text-align: start; }
+.tbar-user-name { font-family: var(--font-display); font-weight: 700; font-size: 0.82rem; color: var(--purple-900, #2b1a4e); max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tbar-user-role { font-size: 0.68rem; color: var(--gray-500, #7c7788); max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tbar-user-chev { color: var(--gray-500, #7c7788); flex-shrink: 0; }
+
+/* زر تسجيل خروج مباشر */
+.tbar-logout {
+  width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center;
+  border: 1px solid var(--line, #e6e3ee); background: #fff; color: #c0392b; cursor: pointer;
+  transition: background 0.18s, border-color 0.18s;
+}
+.tbar-logout:hover { background: #fdecec; border-color: #f2c4c4; }
+.tbar-logout .app-icon { width: 18px; height: 18px; }
+
+@media (max-width: 640px) {
+  .tbar-user-tx { display: none; }
+  .tbar-user { padding: 0.25rem; }
+}

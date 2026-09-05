@@ -43,7 +43,7 @@ export type NavEntry =
 interface Props {
   children: ReactNode;
   org: { name: string; slug: string; brandColor?: string | null; logoUrl?: string | null };
-  user: { name: string; role: string; email?: string; avatarUrl?: string | null };
+  user: { name: string; role: string; email?: string; avatarUrl?: string | null; jobTitle?: string | null };
   nav: NavEntry[];
   inbox: OrgInbox;
 }
@@ -208,8 +208,13 @@ export default function OrgShell({ children, org, user, nav, inbox }: Props) {
             storageKey={`midad_org_${org.slug}`}
           />
           <div className="org-topbar-profile">
-            <button className="org-topbar-ava" onClick={() => setProfileOpen((v) => !v)} aria-expanded={profileOpen} aria-label={t('shell.profile')}>
-              <Avatar url={user.avatarUrl} />
+            <button className="tbar-user" onClick={() => setProfileOpen((v) => !v)} aria-expanded={profileOpen} aria-label={t('shell.profile')}>
+              <span className="tbar-user-ava"><Avatar url={user.avatarUrl} /></span>
+              <span className="tbar-user-tx">
+                <span className="tbar-user-name">{user.name}</span>
+                <span className="tbar-user-role">{user.jobTitle || t(`role.${user.role}`)}</span>
+              </span>
+              <svg className="tbar-user-chev" width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8l4 4 4-4" /></svg>
             </button>
             {profileOpen && (
               <>
@@ -217,7 +222,7 @@ export default function OrgShell({ children, org, user, nav, inbox }: Props) {
                 <div className="org-profile-menu org-profile-menu-top">
                   <div className="org-profile-head">
                     <span className="org-profile-name">{user.name}</span>
-                    <span className="org-profile-role">{t(`role.${user.role}`)}</span>
+                    <span className="org-profile-role">{user.jobTitle || t(`role.${user.role}`)}</span>
                   </div>
                   <Link href={`${base}/settings`} className="org-profile-link" onClick={() => setProfileOpen(false)}>
                     <Icon name="settings" />
@@ -231,6 +236,9 @@ export default function OrgShell({ children, org, user, nav, inbox }: Props) {
               </>
             )}
           </div>
+          <button className="tbar-logout" onClick={() => setConfirmLogout(true)} aria-label={t('shell.logout')} title={t('shell.logout')}>
+            <Icon name="logout" />
+          </button>
         </header>
         <main className="org-content">{children}</main>
       </div>
