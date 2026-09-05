@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { requireOrgAccess } from '@/lib/org';
 import { prisma } from '@/lib/prisma';
-import { canViewProjects, canViewPrograms, canViewCampaigns, canViewDonations } from '@/lib/permissions';
+import { canViewProjects, canViewPrograms, canViewCampaigns, canViewDonations, canViewTasks } from '@/lib/permissions';
 import SectionHub, { type HubItem } from '@/components/SectionHub';
 import { getT } from '@/lib/i18n/server';
 
@@ -17,11 +17,12 @@ export default async function OperationsHub({ params }: { params: Promise<{ slug
   const base = `/org/${org.slug}`;
   const w = { organizationId: org.id };
 
-  const [projects, programs, campaigns, donations] = await Promise.all([
+  const [projects, programs, campaigns, donations, tasks] = await Promise.all([
     prisma.project.count({ where: w }),
     prisma.program.count({ where: w }),
     prisma.campaign.count({ where: w }),
     prisma.donation.count({ where: w }),
+    prisma.task.count({ where: w }),
   ]);
 
   const items: HubItem[] = [
@@ -37,7 +38,9 @@ export default async function OperationsHub({ params }: { params: Promise<{ slug
     ...(canViewDonations(r)
       ? [{ title: t('hub.ops.donations'), desc: t('hub.ops.donations.d'), href: `${base}/donations`, count: donations }]
       : []),
-    { title: t('hub.ops.tasks'), desc: t('hub.ops.tasks.d') },
+    ...(canViewTasks(r)
+      ? [{ title: t('hub.ops.tasks'), desc: t('hub.ops.tasks.d'), href: `${base}/tasks`, count: tasks }]
+      : []),
     { title: t('hub.ops.workflow'), desc: t('hub.ops.workflow.d') },
   ];
 

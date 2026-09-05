@@ -71,10 +71,16 @@
 :root[data-theme="dark"] .plan-card,
 :root[data-theme="dark"] .about-block,
 :root[data-theme="dark"] .value-strip,
-:root[data-theme="dark"] .stats-band {
+:root[data-theme="dark"] .stats-band,
+:root[data-theme="dark"] .org-task,
+:root[data-theme="dark"] .org-board-count {
   background: #221a35 !important;
   border-color: rgba(255, 255, 255, 0.1) !important;
   color: var(--text);
+}
+:root[data-theme="dark"] .org-board-col {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
 }
 :root[data-theme="dark"] .org-app,
 :root[data-theme="dark"] .admin-app { background: transparent !important; }

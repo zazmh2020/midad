@@ -9,6 +9,28 @@ type Dict = Record<string, string>;
 
 const ar: Dict = {
   // ---- Page headings ----
+  'task.new': '+ مهمة جديدة',
+  'task.title': 'عنوان المهمة',
+  'task.desc': 'الوصف',
+  'task.priority': 'الأولوية',
+  'task.due': 'تاريخ الاستحقاق',
+  'task.assignee': 'المسؤول',
+  'task.noAssignee': '— بلا مسؤول',
+  'task.creating': 'جارٍ الإنشاء…',
+  'task.create': 'إنشاء المهمة',
+  'task.none': 'لا توجد مهام بعد.',
+  'task.count': '{n} مهمة في {org}.',
+  'task.deleteConfirm': 'حذف هذه المهمة؟',
+  'task.unassigned': 'غير مُسنَدة',
+  'status.task.TODO': 'قيد الانتظار',
+  'status.task.IN_PROGRESS': 'جارٍ التنفيذ',
+  'status.task.BLOCKED': 'معطّلة',
+  'status.task.DONE': 'منجزة',
+  'priority.LOW': 'منخفضة',
+  'priority.MEDIUM': 'متوسطة',
+  'priority.HIGH': 'عالية',
+  'priority.URGENT': 'عاجلة',
+  // ---- Page headings ----
   'atype.ASSOCIATION': 'جمعية / مؤسسة',
   'atype.MOSQUE': 'مسجد / مركز قرآني',
   'atype.SCHOOL': 'مركز تعليمي',
@@ -951,6 +973,28 @@ const ar: Dict = {
 };
 
 const en: Dict = {
+  // ---- Page headings ----
+  'task.new': '+ New task',
+  'task.title': 'Task title',
+  'task.desc': 'Description',
+  'task.priority': 'Priority',
+  'task.due': 'Due date',
+  'task.assignee': 'Assignee',
+  'task.noAssignee': '— No assignee',
+  'task.creating': 'Creating…',
+  'task.create': 'Create task',
+  'task.none': 'No tasks yet.',
+  'task.count': '{n} tasks in {org}.',
+  'task.deleteConfirm': 'Delete this task?',
+  'task.unassigned': 'Unassigned',
+  'status.task.TODO': 'To do',
+  'status.task.IN_PROGRESS': 'In progress',
+  'status.task.BLOCKED': 'Blocked',
+  'status.task.DONE': 'Done',
+  'priority.LOW': 'Low',
+  'priority.MEDIUM': 'Medium',
+  'priority.HIGH': 'High',
+  'priority.URGENT': 'Urgent',
   // ---- Page headings ----
   'atype.ASSOCIATION': 'Association / nonprofit',
   'atype.MOSQUE': 'Mosque / Quran center',

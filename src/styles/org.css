@@ -880,6 +880,53 @@ a.org-module:hover {
 }
 .org-report-grid .org-panel { margin-bottom: 0; }
 
+/* ---------- لوحة المهام (Kanban) ---------- */
+.org-board {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 0.9rem;
+  align-items: start;
+}
+.org-board-col {
+  background: var(--gray-100, #f3f0f8);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 0.7rem;
+  min-height: 90px;
+}
+.org-board-head {
+  display: flex; align-items: center; justify-content: space-between;
+  font-weight: 700; font-size: 0.86rem; color: var(--purple-900);
+  padding: 0.2rem 0.35rem 0.6rem;
+}
+.org-board-count {
+  min-width: 22px; height: 22px; padding: 0 6px; border-radius: 100px;
+  background: #fff; border: 1px solid var(--line); color: var(--gray-700);
+  display: inline-grid; place-items: center; font-size: 0.75rem;
+}
+.org-board-body { display: flex; flex-direction: column; gap: 0.55rem; }
+.tk-col-done { opacity: 0.92; }
+
+.org-task {
+  background: #fff; border: 1px solid var(--line); border-radius: 12px;
+  padding: 0.7rem 0.75rem; box-shadow: 0 6px 18px -14px rgba(43, 26, 78, 0.4);
+}
+.org-task-top { display: flex; align-items: center; justify-content: space-between; gap: 0.4rem; margin-bottom: 0.4rem; }
+.org-task h4 { font-size: 0.9rem; font-weight: 700; color: var(--dark, #2b1a4e); margin: 0; line-height: 1.4; }
+.org-task-desc { font-size: 0.78rem; color: var(--muted, #6c6780); margin: 0.3rem 0 0; line-height: 1.6; }
+.org-task-due { font-size: 0.72rem; color: var(--muted, #7c7788); }
+.org-task-foot { margin-top: 0.55rem; }
+.org-task-assignee { font-size: 0.75rem; color: var(--purple-700, #6b57a0); font-weight: 600; }
+.org-task-actions { display: flex; gap: 0.4rem; margin-top: 0.6rem; align-items: center; }
+.org-task-actions .org-inline-select { flex: 1; }
+
+/* شارات الأولوية */
+.org-prio { font-size: 0.68rem; font-weight: 800; padding: 0.12rem 0.5rem; border-radius: 100px; }
+.org-prio-low { background: #eef2f7; color: #5b6b7c; }
+.org-prio-medium { background: #eef0fb; color: #5647a0; }
+.org-prio-high { background: #fdf0e6; color: #b4610a; }
+.org-prio-urgent { background: #fdeaea; color: #c0392b; }
+
 /* عناوين أقسام التقرير */
 .org-section-title {
   font-family: var(--font-display); font-weight: 700; font-size: 1rem;

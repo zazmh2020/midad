@@ -16,6 +16,8 @@ import type {
   MemorizationRating,
   EmployeeStatus,
   VolunteerStatus,
+  TaskStatus,
+  TaskPriority,
 } from '@/generated/prisma/client';
 
 /* ============================================================
@@ -83,6 +85,28 @@ export function canViewProjects(role: string): boolean {
 
 /** من ينشئ ويعدّل ويحذف المشاريع */
 export function canManageProjects(role: string): boolean {
+  return role === 'ORG_ADMIN' || role === 'STAFF';
+}
+
+/* ---------- المهام ---------- */
+
+export const TASK_STATUSES = ['TODO', 'IN_PROGRESS', 'BLOCKED', 'DONE'] as TaskStatus[];
+export const TASK_PRIORITIES = ['LOW', 'MEDIUM', 'HIGH', 'URGENT'] as TaskPriority[];
+
+export function isTaskStatus(value: string): value is TaskStatus {
+  return (TASK_STATUSES as string[]).includes(value);
+}
+export function isTaskPriority(value: string): value is TaskPriority {
+  return (TASK_PRIORITIES as string[]).includes(value);
+}
+
+/** من يطّلع على مهام المؤسسة — جميع أعضائها */
+export function canViewTasks(role: string): boolean {
+  return role === 'ORG_ADMIN' || role === 'STAFF' || role === 'MEMBER';
+}
+
+/** من ينشئ ويعدّل ويحذف المهام */
+export function canManageTasks(role: string): boolean {
   return role === 'ORG_ADMIN' || role === 'STAFF';
 }
 
