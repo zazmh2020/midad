@@ -38,7 +38,8 @@
   direction: inherit;
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  /* clip يقصّ الفائض الأفقي دون إنشاء حاوية تمرير تعطّل روابط التنقّل (#قسم) */
+  overflow-x: clip;
 }
 /* في الوضع الداكن نُخفي خلفية الخطوط الفاتحة */
 :root[data-theme="dark"] .mdl { background-image: none; }

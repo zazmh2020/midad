@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { PLANS, yearlyPrice } from '@/lib/plans';
 import { useLocale } from '@/lib/i18n/LocaleProvider';
 import { useCurrency } from '@/components/CurrencyProvider';
-import CurrencyToggle from '@/components/CurrencyToggle';
 import { convertRounded, currencySymbol, formatAmount } from '@/lib/currency';
 
 export default function PricingPlans() {
@@ -39,11 +38,6 @@ export default function PricingPlans() {
             {t('plan.billing.yearly')}
             <span className="billing-save">{t('plan.billing.save')}</span>
           </button>
-        </div>
-        {/* أيقونة تبديل العملة */}
-        <div className="pricing-cur">
-          <span className="pricing-cur-label">{t('plan.currencyLabel')}</span>
-          <CurrencyToggle />
         </div>
       </div>
 

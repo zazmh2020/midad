@@ -17,9 +17,10 @@ html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
   scroll-padding-top: 62px;
-  overflow-x: hidden;
+  /* clip بدل hidden: يمنع التمرير الأفقي دون تحويل html/body لحاويتَي تمرير تكسر روابط #القسم */
+  overflow-x: clip;
 }
-body { overflow-x: hidden; }
+body { overflow-x: clip; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
