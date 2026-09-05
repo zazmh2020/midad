@@ -43,6 +43,7 @@ model Organization {
   volunteers    Volunteer[]
   teams         Team[]
   tasks         Task[]
+  quranRecords  QuranDailyRecord[]
 
   @@map("organizations")
 }
@@ -164,6 +165,7 @@ model Student {
 
   attendance   AttendanceRecord[]
   memorization MemorizationEntry[]
+  quranRecords QuranDailyRecord[]
 
   @@index([organizationId])
   @@index([halaqaId])
@@ -194,10 +196,50 @@ model Halaqa {
 
   students   Student[]
   attendance AttendanceRecord[]
+  quranRecords QuranDailyRecord[]
 
   @@index([organizationId])
   @@index([teacherId])
   @@map("halaqat")
+}
+
+/// السجل اليومي القرآني — صف يوم واحد لطالب ضمن «الدليل الشهري»
+model QuranDailyRecord {
+  id         String           @id @default(cuid())
+  date       DateTime         @db.Date
+  attendance AttendanceStatus @default(PRESENT)
+
+  newFrom    Int?    // الدرس الجديد: من صفحة
+  newTo      Int?    // إلى صفحة
+  newNote    String? // الشرح/السورة
+  reviewFrom Int?    // المراجعة اليومية: من
+  reviewTo   Int?    // إلى
+  last5From  Int?    // آخر ٥ صفحات: من
+  last5To    Int?    // إلى
+  listener   String? // اسم المستمع
+  pages      Float?  // عدد الصفحات
+  errors     Int?    // الأخطاء
+  alerts     Int?    // التنبيهات
+  reviewScore  Int?  // درجة المراجعة اليومية
+  conductScore Int?  // درجة السلوك والأخرى
+  notes      String? // ملاحظات المعلم
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  halaqaId String?
+  halaqa   Halaqa? @relation(fields: [halaqaId], references: [id], onDelete: SetNull)
+
+  @@unique([studentId, date])
+  @@index([organizationId])
+  @@index([studentId])
+  @@map("quran_daily_records")
 }
 
 enum HalaqaType {

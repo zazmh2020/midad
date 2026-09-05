@@ -83,6 +83,12 @@
   background: rgba(255, 255, 255, 0.03) !important;
   border-color: rgba(255, 255, 255, 0.08) !important;
 }
+:root[data-theme="dark"] .qm-wrap { background: #221a35 !important; border-color: rgba(255,255,255,0.1) !important; }
+:root[data-theme="dark"] .qm-subhead th { background: #1d1630 !important; }
+:root[data-theme="dark"] .qm-tool select,
+:root[data-theme="dark"] .qm-tool input { background: #221a35 !important; border-color: rgba(255,255,255,0.12) !important; }
+:root[data-theme="dark"] .qm-absent { background: rgba(192,57,43,0.18) !important; }
+
 :root[data-theme="dark"] .org-app,
 :root[data-theme="dark"] .admin-app { background: transparent !important; }
 

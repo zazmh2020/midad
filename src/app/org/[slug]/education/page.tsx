@@ -25,6 +25,7 @@ export default async function EducationHub({ params }: { params: Promise<{ slug:
   ]);
 
   const items: HubItem[] = [
+    ...(quran ? [{ title: t('qm.title'), desc: t('qm.hubDesc'), href: `${base}/monthly` }] : []),
     { title: t('hub.edu.students'), desc: t('hub.edu.students.d'), href: `${base}/students`, count: students },
     { title: t('hub.edu.teachers'), desc: t('hub.edu.teachers.d'), href: `${base}/teachers`, count: teachers },
     { title: quran ? t('hub.edu.halaqat') : t('hub.edu.classes'), desc: quran ? t('hub.edu.halaqat.d') : t('hub.edu.classes.d'), href: `${base}/halaqat`, count: halaqat },

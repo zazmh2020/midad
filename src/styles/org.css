@@ -880,6 +880,56 @@ a.org-module:hover {
 }
 .org-report-grid .org-panel { margin-bottom: 0; }
 
+/* ---------- الدليل الشهري (شبكة يومية) ---------- */
+.qm-toolbar {
+  display: flex; flex-wrap: wrap; align-items: flex-end; gap: 1rem;
+  margin-bottom: 0.8rem;
+}
+.qm-tool { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.78rem; color: var(--muted, #6c6780); }
+.qm-tool select, .qm-tool input {
+  padding: 0.5rem 0.7rem; border: 1px solid var(--line); border-radius: 10px;
+  background: #fff; color: var(--text); font-size: 0.86rem; min-width: 180px;
+}
+.qm-summary { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-inline-start: auto; }
+.qm-summary span {
+  background: var(--p-08, rgba(107,87,160,0.08)); color: var(--purple-700, #6b57a0);
+  font-weight: 700; font-size: 0.78rem; padding: 0.4rem 0.75rem; border-radius: 100px;
+}
+.qm-meta { font-size: 0.9rem; color: var(--dark, #2b1a4e); margin-bottom: 0.6rem; }
+
+.qm-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; background: #fff; }
+.qm-table { border-collapse: collapse; width: 100%; font-size: 0.8rem; white-space: nowrap; }
+.qm-table th, .qm-table td { border: 1px solid var(--line); padding: 0.25rem 0.35rem; text-align: center; }
+.qm-table thead th {
+  background: var(--gray-100, #f3f0f8); color: var(--purple-900, #2b1a4e);
+  font-weight: 700; font-size: 0.74rem; position: sticky; top: 0; z-index: 1;
+}
+.qm-subhead th { font-weight: 600; color: var(--muted, #6c6780); font-size: 0.68rem; background: #fbfafe; }
+.qm-date { font-weight: 700; color: var(--purple-900, #2b1a4e); }
+.qm-wd { color: var(--muted, #6c6780); }
+.qm-total { font-weight: 800; color: var(--purple-700, #6b57a0); }
+.qm-absent { background: #fdecec; }
+.qm-absent .qm-date, .qm-absent .qm-wd { color: #c0392b; }
+
+.qm-in { border: 1px solid transparent; background: transparent; font-size: 0.8rem; color: var(--text); padding: 0.25rem; border-radius: 6px; }
+.qm-in:focus { outline: none; border-color: var(--purple-300, #8873af); background: #fff; }
+.qm-num { width: 46px; text-align: center; }
+.qm-txt { width: 120px; text-align: start; }
+.qm-att { width: 78px; }
+.qm-in:disabled { color: var(--muted, #6c6780); }
+
+.qm-status { width: 20px; }
+.qm-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; }
+.qm-dot-saving { background: #d9a531; animation: qmpulse 1s infinite; }
+.qm-dot-ok { background: #2f9e7e; }
+.qm-dot-err { background: #c0392b; }
+@keyframes qmpulse { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
+.qm-hint { margin-top: 0.6rem; font-size: 0.78rem; color: var(--muted, #6c6780); }
+
+/* إخفاء أسهم مدخلات الأرقام لإبقاء الشبكة نظيفة */
+.qm-num::-webkit-outer-spin-button, .qm-num::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.qm-num { -moz-appearance: textfield; appearance: textfield; }
+
 /* ---------- تفعيل الوحدات ---------- */
 .org-modules { display: flex; flex-direction: column; gap: 0.7rem; max-width: 640px; }
 .org-module-row {
