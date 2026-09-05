@@ -578,7 +578,9 @@
   .mdl-menu-btn { display: inline-flex; order: -1; }
   /* ترتيب الجوال (يمين→يسار): ٣ خطوط ← الشعار ← الأيقونات ← تسجيل الدخول */
   /* توزيع متوازن: الخطوط عند الطرف، الشعار في الوسط، الأدوات عند الطرف الآخر */
-  .mdl-navbar { gap: 0.4rem; padding: 0.5rem 0.9rem; justify-content: space-between; }
+  /* شريط علوي متوسّط بهوامش متساوية على الجوال */
+  .mdl-header { padding-inline: 0.8rem; }
+  .mdl-navbar { gap: 0.4rem; padding: 0.5rem 0.8rem; justify-content: space-between; width: 100%; }
   .mdl-nav-actions { gap: 0.35rem; }
   .mdl-nav-actions .mdl-login { display: none; }
   .mdl-navbar .mdl-btn { padding: 0.5rem 0.9rem; font-size: 0.82rem; }
@@ -602,7 +604,10 @@
 @media (max-width: 560px) {
   .mdl-feats, .mdl-orgs, .mdl-sec-list, .mdl-footer-grid, .mdl-steps-grid { grid-template-columns: 1fr; }
   .mdl-hero-trust { gap: 0.9rem; }
-  .mdl-asst { bottom: 1rem; inset-inline-end: 1rem; }
+  /* المساعد الذكي: يمتدّ بعرض الشاشة بهوامش ثابتة حتى لا تبرز نافذته وتُحدث إزاحة أفقية */
+  .mdl-asst { inset-inline: 1rem; bottom: 1rem; }
+  .mdl-asst-fab { margin-inline-start: auto; }
+  .mdl-asst-panel { width: 100%; max-width: 100%; }
 }
 
 /* ============================================================
