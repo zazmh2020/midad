@@ -6,6 +6,7 @@ import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
 import { LogoMark } from '@/components/Logo';
 import TopbarTools, { type SearchItem } from '@/components/TopbarTools';
 import WelcomeBack from '@/components/WelcomeBack';
+import PageTransition from '@/components/PageTransition';
 import { useT } from '@/lib/i18n/LocaleProvider';
 import type { OrgInbox } from '@/lib/inbox';
 import '@/styles/welcome.css';
@@ -267,7 +268,7 @@ export default function OrgShell({ children, org, user, nav, inbox }: Props) {
             )}
           </div>
         </header>
-        <main className="org-content">{children}</main>
+        <main className="org-content"><PageTransition>{children}</PageTransition></main>
       </div>
     </div>
   );

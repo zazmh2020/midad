@@ -7,6 +7,7 @@ import type { SessionData } from '@/lib/session';
 import { LogoMark } from '@/components/Logo';
 import TopbarTools, { type SearchItem } from '@/components/TopbarTools';
 import WelcomeBack from '@/components/WelcomeBack';
+import PageTransition from '@/components/PageTransition';
 import { useT } from '@/lib/i18n/LocaleProvider';
 import type { OrgInbox } from '@/lib/inbox';
 import '@/styles/welcome.css';
@@ -178,7 +179,7 @@ export default function AdminShell({ children, session, avatarUrl, inbox }: Prop
           </div>
         </header>
 
-        <main className="admin-content">{children}</main>
+        <main className="admin-content"><PageTransition>{children}</PageTransition></main>
       </div>
     </div>
   );
