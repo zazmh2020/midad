@@ -17,6 +17,9 @@ model Organization {
   isActive    Boolean  @default(true)
   plan        OrgPlan  @default(STARTER)
   planRenewsAt DateTime?
+  stripeCustomerId     String?  @unique // معرّف العميل في Stripe
+  stripeSubscriptionId String?         // معرّف الاشتراك النشط
+  subscriptionStatus   String?         // active / trialing / past_due / canceled …
   brandColor  String?  // لون الهوية الأساسي للجهة (hex)
   logoUrl     String?  // شعار الجهة (رابط)
   disabledModules String[] @default([]) // وحدات معطّلة لهذه المؤسسة (المفعّلة = الباقي)

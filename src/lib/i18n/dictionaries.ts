@@ -9,6 +9,28 @@ type Dict = Record<string, string>;
 
 const ar: Dict = {
   // ---- Page headings ----
+  'onav.billing': 'الاشتراك والفوترة',
+  'bill.title': 'الاشتراك والفوترة',
+  'bill.sub': 'باقة مؤسستك وإدارة الاشتراك والدفع.',
+  'bill.current': 'باقتك الحالية',
+  'bill.yourPlan': 'باقتك الحالية',
+  'bill.subscribe': 'اشترك',
+  'bill.manage': 'إدارة الاشتراك والفواتير',
+  'bill.contactUs': 'تواصل معنا',
+  'bill.renews': 'يتجدّد في {d}',
+  'bill.thanks': 'شكرًا لك! تم تفعيل اشتراكك.',
+  'bill.canceled': 'أُلغيت عملية الدفع، لم يتم أي خصم.',
+  'bill.failed': 'تعذّرت العملية، حاول لاحقًا.',
+  'bill.noSub': 'لا يوجد اشتراك نشط لإدارته.',
+  'bill.notConfigured': 'الدفع غير مُهيّأ بعد — يلزم ربط Stripe (STRIPE_SECRET_KEY وأسعار الباقات).',
+  'plan.perMonthShort': 'شهر',
+  'bill.status.active': 'نشط',
+  'bill.status.trialing': 'تجريبي',
+  'bill.status.past_due': 'متأخّر السداد',
+  'bill.status.canceled': 'ملغى',
+  'bill.status.unpaid': 'غير مدفوع',
+  'bill.status.incomplete': 'غير مكتمل',
+  // ---- Page headings ----
   'onav.audit': 'سجل النشاط',
   'audit.title': 'سجل النشاط',
   'audit.sub': 'آخر الإجراءات المهمّة في المؤسسة.',
@@ -1193,6 +1215,28 @@ const ar: Dict = {
 };
 
 const en: Dict = {
+  // ---- Page headings ----
+  'onav.billing': 'Subscription & billing',
+  'bill.title': 'Subscription & billing',
+  'bill.sub': 'Your organization plan, subscription and payment management.',
+  'bill.current': 'Your current plan',
+  'bill.yourPlan': 'Your current plan',
+  'bill.subscribe': 'Subscribe',
+  'bill.manage': 'Manage subscription & invoices',
+  'bill.contactUs': 'Contact us',
+  'bill.renews': 'Renews on {d}',
+  'bill.thanks': 'Thank you! Your subscription is active.',
+  'bill.canceled': 'Payment canceled — you were not charged.',
+  'bill.failed': 'Something went wrong, try again later.',
+  'bill.noSub': 'No active subscription to manage.',
+  'bill.notConfigured': 'Payments not set up yet — connect Stripe (STRIPE_SECRET_KEY and plan prices).',
+  'plan.perMonthShort': 'mo',
+  'bill.status.active': 'Active',
+  'bill.status.trialing': 'Trial',
+  'bill.status.past_due': 'Past due',
+  'bill.status.canceled': 'Canceled',
+  'bill.status.unpaid': 'Unpaid',
+  'bill.status.incomplete': 'Incomplete',
   // ---- Page headings ----
   'onav.audit': 'Activity log',
   'audit.title': 'Activity log',

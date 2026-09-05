@@ -932,6 +932,16 @@ a.org-module:hover {
   .ev-card { flex-wrap: wrap; }
 }
 
+/* ---------- الاشتراك والفوترة ---------- */
+.bill-plans { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem; }
+.bill-plan { display: flex; flex-direction: column; gap: 0.6rem; text-align: center; }
+.bill-plan.is-current { border-color: var(--purple-300, #8873af); box-shadow: 0 0 0 2px var(--p-08, rgba(107,87,160,0.12)); }
+.bill-plan h3 { margin: 0; font-size: 1.05rem; color: var(--text-strong); }
+.bill-price { font-family: var(--font-display); font-weight: 800; font-size: 1.6rem; color: var(--purple-700, #6b57a0); }
+.bill-price small { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); }
+.bill-current-tag { font-size: 0.82rem; color: var(--text-muted); font-weight: 600; padding: 0.5rem 0; }
+.bill-plan .org-btn { margin-top: auto; }
+
 /* ---------- إجراءات سريعة في اللوحة ---------- */
 .dash-quick { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.7rem; margin: 0.4rem 0 1.4rem; }
 .dash-quick-tile {
