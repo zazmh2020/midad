@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ASSIGNABLE_ROLES, roleLabel } from '@/lib/permissions';
+import { ASSIGNABLE_ROLES } from '@/lib/permissions';
+import { useLocale } from '@/lib/i18n/LocaleProvider';
 
 type Row = {
   id: string;
@@ -16,8 +17,6 @@ type Row = {
 
 type Department = { id: string; name: string };
 
-const dateFmt = new Intl.DateTimeFormat('ar-u-nu-latn', { year: 'numeric', month: 'short', day: 'numeric' });
-
 export default function OrgUsersTable({
   users,
   departments,
@@ -29,6 +28,8 @@ export default function OrgUsersTable({
   currentUserId: string;
   canManage: boolean;
 }) {
+  const { t, locale } = useLocale();
+  const dateFmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar-u-nu-latn', { year: 'numeric', month: 'short', day: 'numeric' });
   const deptName = (id: string | null) =>
     id ? departments.find((d) => d.id === id)?.name ?? '—' : '—';
   const router = useRouter();
@@ -46,19 +47,19 @@ export default function OrgUsersTable({
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setError(data.error ?? 'تعذّر الحفظ.');
+        setError(data.error ?? t('ousers.saveErr'));
       } else {
         router.refresh();
       }
     } catch {
-      setError('تعذّر الاتصال بالخادم.');
+      setError(t('ousers.netErr'));
     } finally {
       setBusyId(null);
     }
   }
 
   if (users.length === 0) {
-    return <div className="org-empty">لا يوجد مستخدمون بعد.</div>;
+    return <div className="org-empty">{t('ousers.none')}</div>;
   }
 
   return (
@@ -68,11 +69,11 @@ export default function OrgUsersTable({
         <table className="org-table">
           <thead>
             <tr>
-              <th>المستخدم</th>
-              <th>الدور</th>
-              <th>الوحدة</th>
-              <th>آخر دخول</th>
-              <th>الحالة</th>
+              <th>{t('ousers.th.user')}</th>
+              <th>{t('ousers.th.role')}</th>
+              <th>{t('ousers.th.unit')}</th>
+              <th>{t('ousers.th.lastLogin')}</th>
+              <th>{t('ousers.th.status')}</th>
               {canManage && <th></th>}
             </tr>
           </thead>
@@ -84,7 +85,7 @@ export default function OrgUsersTable({
                 <tr key={u.id} className={u.isActive ? '' : 'is-inactive'}>
                   <td>
                     <strong>{u.name}</strong>
-                    {isSelf && <span className="org-tag-self">أنت</span>}
+                    {isSelf && <span className="org-tag-self">{t('ousers.you')}</span>}
                     <small dir="ltr">{u.email}</small>
                   </td>
                   <td>
@@ -96,11 +97,11 @@ export default function OrgUsersTable({
                         onChange={(e) => patch(u.id, { role: e.target.value })}
                       >
                         {ASSIGNABLE_ROLES.map((r) => (
-                          <option key={r} value={r}>{roleLabel(r)}</option>
+                          <option key={r} value={r}>{t(`role.${r}`)}</option>
                         ))}
                       </select>
                     ) : (
-                      roleLabel(u.role)
+                      t(`role.${u.role}`)
                     )}
                   </td>
                   <td>
@@ -111,7 +112,7 @@ export default function OrgUsersTable({
                         disabled={busy}
                         onChange={(e) => patch(u.id, { departmentId: e.target.value || null })}
                       >
-                        <option value="">— بلا وحدة</option>
+                        <option value="">{t('ousers.noUnit')}</option>
                         {departments.map((d) => (
                           <option key={d.id} value={d.id}>{d.name}</option>
                         ))}
@@ -125,7 +126,7 @@ export default function OrgUsersTable({
                   </td>
                   <td>
                     <span className={`org-badge ${u.isActive ? 'is-on' : ''}`}>
-                      {u.isActive ? 'نشط' : 'موقوف'}
+                      {u.isActive ? t('ousers.active') : t('ousers.suspended')}
                     </span>
                   </td>
                   {canManage && (
@@ -136,7 +137,7 @@ export default function OrgUsersTable({
                           disabled={busy}
                           onClick={() => patch(u.id, { isActive: !u.isActive })}
                         >
-                          {busy ? '…' : u.isActive ? 'إيقاف' : 'تفعيل'}
+                          {busy ? '…' : u.isActive ? t('ousers.disable') : t('ousers.enable')}
                         </button>
                       )}
                     </td>

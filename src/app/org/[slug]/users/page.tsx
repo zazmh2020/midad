@@ -4,6 +4,7 @@ import { requireOrgAccess } from '@/lib/org';
 import { prisma } from '@/lib/prisma';
 import { canViewUsers, canManageUsers } from '@/lib/permissions';
 import OrgUsersTable from '@/components/OrgUsersTable';
+import { getT } from '@/lib/i18n/server';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,6 +15,7 @@ export default async function OrgUsersPage({
 }) {
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
+  const { t } = await getT();
 
   if (!canViewUsers(user.role)) redirect(`/org/${org.slug}`);
   const canManage = canManageUsers(user.role);
@@ -43,13 +45,13 @@ export default async function OrgUsersPage({
     <div className="org-page">
       <div className="org-page-head">
         <div>
-          <span className="org-eyebrow">إدارة الوصول</span>
-          <h1>المستخدمون</h1>
-          <p>{users.length} حساب في {org.name}.</p>
+          <span className="org-eyebrow">{t('ousers.eyebrow')}</span>
+          <h1>{t('od.users')}</h1>
+          <p>{t('ousers.count', { n: users.length, org: org.name })}</p>
         </div>
         {canManage && (
           <Link href={`/org/${org.slug}/users/new`} className="org-btn org-btn-primary">
-            + إضافة مستخدم
+            + {t('od.addUser')}
           </Link>
         )}
       </div>

@@ -6,16 +6,17 @@ import ProfileForm from '@/components/ProfileForm';
 import OrgSettingsForm from '@/components/OrgSettingsForm';
 import BrandingForm from '@/components/BrandingForm';
 import LogoutButton from '@/components/LogoutButton';
+import { getT } from '@/lib/i18n/server';
 
 export const dynamic = 'force-dynamic';
 
 const numFmt = new Intl.NumberFormat('en-US');
 
-const TYPE_LABELS: Record<string, string> = {
-  ASSOCIATION: 'جمعية / مؤسسة',
-  MOSQUE: 'مسجد / مركز قرآني',
-  SCHOOL: 'مركز تعليمي',
-  PROJECT: 'مشروع خاص',
+const TYPE_KEYS: Record<string, string> = {
+  ASSOCIATION: 'type.association',
+  MOSQUE: 'type.mosque',
+  SCHOOL: 'type.school',
+  PROJECT: 'type.project',
 };
 
 export default async function OrgSettingsPage({
@@ -25,79 +26,76 @@ export default async function OrgSettingsPage({
 }) {
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
+  const { t, locale } = await getT();
   const isAdmin = canManageSettings(user.role);
+  const plan = PLAN_BY_ID[org.plan];
+  const planName = plan ? (locale === 'en' ? plan.en : plan.name) : org.plan;
 
   return (
     <div className="org-page org-page-narrow">
       <div className="org-page-head">
         <div>
-          <span className="org-eyebrow">النظام</span>
-          <h1>الإعدادات</h1>
-          <p>ملفّك الشخصي وتفضيلاتك{isAdmin ? ' وبيانات المؤسسة' : ''}.</p>
+          <span className="org-eyebrow">{t('onav.div.system')}</span>
+          <h1>{t('onav.settings')}</h1>
+          <p>{isAdmin ? t('oset.subAdmin') : t('oset.subMe')}</p>
         </div>
       </div>
 
-      <h2 className="org-settings-h2">الملف الشخصي</h2>
+      <h2 className="org-settings-h2">{t('oset.profile')}</h2>
       <ProfileForm name={user.name} email={user.email} role={user.role} avatarUrl={user.avatarUrl} />
 
-      <h2 className="org-settings-h2">التفضيلات</h2>
+      <h2 className="org-settings-h2">{t('oset.prefs')}</h2>
       <div className="org-panel">
         <div className="org-kv">
-          <span>اللغة</span>
-          <strong>العربية</strong>
+          <span>{t('oset.language')}</span>
+          <strong>{locale === 'en' ? t('lang.en') : t('lang.ar')}</strong>
         </div>
         <div className="org-kv">
-          <span>المظهر</span>
-          <span className="org-badge">قريبًا</span>
-        </div>
-        <div className="org-kv">
-          <span>الإشعارات</span>
-          <span className="org-badge">قريبًا</span>
+          <span>{t('oset.notifications')}</span>
+          <span className="org-badge">{t('oset.soon')}</span>
         </div>
       </div>
 
       {isAdmin && (
         <>
-          <h2 className="org-settings-h2">الباقة</h2>
+          <h2 className="org-settings-h2">{t('oset.plan')}</h2>
           <div className="org-panel">
             <div className="org-kv">
-              <span>الباقة الحالية</span>
-              <strong>{PLAN_BY_ID[org.plan]?.name ?? org.plan}</strong>
+              <span>{t('oset.currentPlan')}</span>
+              <strong>{planName}</strong>
             </div>
             <div className="org-kv">
-              <span>حدّ المستخدمين</span>
+              <span>{t('oset.userLimit')}</span>
               <strong>
-                {PLAN_BY_ID[org.plan]?.maxUsers == null
-                  ? 'بلا حدّ'
-                  : numFmt.format(PLAN_BY_ID[org.plan]!.maxUsers!)}
+                {plan?.maxUsers == null ? t('oset.unlimited') : numFmt.format(plan.maxUsers)}
               </strong>
             </div>
             <p className="org-panel-sub">
-              لترقية باقتك تواصل مع مِداد أو راجع <Link href="/pricing" className="org-link">صفحة الأسعار</Link>.
+              {t('oset.upgradeHint')} <Link href="/pricing" className="org-link">{t('oset.pricingPage')}</Link>.
             </p>
           </div>
 
-          <h2 className="org-settings-h2">إعدادات المؤسسة</h2>
+          <h2 className="org-settings-h2">{t('oset.orgSettings')}</h2>
           <div className="org-panel">
             <div className="org-kv">
-              <span>النوع</span>
-              <strong>{TYPE_LABELS[org.type] ?? org.type}</strong>
+              <span>{t('oset.type')}</span>
+              <strong>{TYPE_KEYS[org.type] ? t(TYPE_KEYS[org.type]) : org.type}</strong>
             </div>
             <div className="org-kv">
-              <span>الرابط الفرعي</span>
+              <span>{t('oset.subdomain')}</span>
               <code dir="ltr">{org.slug}.midad.localhost:3000</code>
             </div>
-            <p className="org-panel-sub">النوع والرابط الفرعي يُداران من قِبل مالك المنصة.</p>
+            <p className="org-panel-sub">{t('oset.managedByOwner')}</p>
           </div>
           <OrgSettingsForm name={org.name} />
 
-          <h2 className="org-settings-h2">الهوية البصرية</h2>
-          <p className="org-panel-sub" style={{ marginBottom: '0.8rem' }}>خصّص لون هوية جهتك وشعارها — ينعكس على مساحة العمل بالكامل.</p>
+          <h2 className="org-settings-h2">{t('oset.branding')}</h2>
+          <p className="org-panel-sub" style={{ marginBottom: '0.8rem' }}>{t('oset.brandingSub')}</p>
           <BrandingForm brandColor={org.brandColor} logoUrl={org.logoUrl} />
         </>
       )}
 
-      <h2 className="org-settings-h2">الحساب</h2>
+      <h2 className="org-settings-h2">{t('oset.account')}</h2>
       <LogoutButton redirectTo="/login" />
     </div>
   );

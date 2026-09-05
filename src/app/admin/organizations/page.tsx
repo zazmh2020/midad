@@ -1,16 +1,19 @@
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
+import { getT } from '@/lib/i18n/server';
 
 export const dynamic = 'force-dynamic';
 
-const typeLabels: Record<string, string> = {
-  ASSOCIATION: 'جمعية / مؤسسة',
-  MOSQUE: 'مسجد / مركز قرآني',
-  SCHOOL: 'مركز تعليمي',
-  PROJECT: 'مشروع خاص',
+const TYPE_KEYS: Record<string, string> = {
+  ASSOCIATION: 'type.association',
+  MOSQUE: 'type.mosque',
+  SCHOOL: 'type.school',
+  PROJECT: 'type.project',
 };
 
 export default async function OrganizationsPage() {
+  const { t, locale } = await getT();
+  const dateFmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar-u-nu-latn', { year: 'numeric', month: 'short', day: 'numeric' });
   const orgs = await prisma.organization.findMany({
     orderBy: { createdAt: 'desc' },
     include: { _count: { select: { users: true } } },
@@ -20,29 +23,29 @@ export default async function OrganizationsPage() {
     <div>
       <div className="admin-page-header">
         <div>
-          <h1>المؤسسات</h1>
-          <p>{orgs.length === 0 ? 'لا توجد مؤسسات بعد.' : `${orgs.length} مؤسسة مسجّلة.`}</p>
+          <h1>{t('adm.orgs')}</h1>
+          <p>{orgs.length === 0 ? t('aorg.none') : t('aorg.count', { n: orgs.length })}</p>
         </div>
         <Link href="/admin/organizations/new" className="btn-admin-primary">
-          + إنشاء مؤسسة
+          + {t('adm.create')}
         </Link>
       </div>
 
       {orgs.length === 0 ? (
         <div className="empty-state">
-          <p>ابدأ بإنشاء أول مؤسسة.</p>
+          <p>{t('aorg.startFirst')}</p>
         </div>
       ) : (
         <div className="table-wrap">
           <table className="admin-table">
             <thead>
               <tr>
-                <th>الاسم</th>
-                <th>النوع</th>
-                <th>الرابط الفرعي</th>
-                <th>المستخدمون</th>
-                <th>الحالة</th>
-                <th>تاريخ الإنشاء</th>
+                <th>{t('adm.th.name')}</th>
+                <th>{t('adm.th.type')}</th>
+                <th>{t('aorg.th.subdomain')}</th>
+                <th>{t('adm.th.users')}</th>
+                <th>{t('adm.th.status')}</th>
+                <th>{t('aorg.th.created')}</th>
                 <th></th>
               </tr>
             </thead>
@@ -52,26 +55,20 @@ export default async function OrganizationsPage() {
                   <td>
                     <strong>{org.name}</strong>
                   </td>
-                  <td>{typeLabels[org.type]}</td>
+                  <td>{TYPE_KEYS[org.type] ? t(TYPE_KEYS[org.type]) : org.type}</td>
                   <td>
                     <code dir="ltr">{org.slug}.midad.localhost:3000</code>
                   </td>
                   <td>{org._count.users}</td>
                   <td>
                     <span className={`badge ${org.isActive ? 'badge-success' : 'badge-muted'}`}>
-                      {org.isActive ? 'نشطة' : 'معطّلة'}
+                      {org.isActive ? t('adm.status.active') : t('adm.status.inactive')}
                     </span>
                   </td>
-                  <td>
-                    {new Intl.DateTimeFormat('ar-u-nu-latn', {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                    }).format(org.createdAt)}
-                  </td>
+                  <td>{dateFmt.format(org.createdAt)}</td>
                   <td>
                     <Link href={`/admin/organizations/${org.slug}`} className="link-quiet">
-                      إدارة ←
+                      {t('aorg.manage')} ←
                     </Link>
                   </td>
                 </tr>
