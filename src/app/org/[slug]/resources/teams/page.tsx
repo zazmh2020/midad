@@ -3,12 +3,14 @@ import { requireOrgAccess } from '@/lib/org';
 import { prisma } from '@/lib/prisma';
 import { canViewHR } from '@/lib/permissions';
 import TeamsView from '@/components/resources/TeamsView';
+import { getT } from '@/lib/i18n/server';
 
 export const dynamic = 'force-dynamic';
 
 export default async function TeamsPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
+  const { t } = await getT();
   if (!canViewHR(user.role)) redirect(`/org/${org.slug}`);
 
   const [teams, departments] = await Promise.all([
@@ -24,9 +26,9 @@ export default async function TeamsPage({ params }: { params: Promise<{ slug: st
     <div className="org-page">
       <div className="org-page-head">
         <div>
-          <span className="org-eyebrow">الموارد</span>
-          <h1>الفرق</h1>
-          <p>{teams.length} فريق في {org.name}.</p>
+          <span className="org-eyebrow">{t('pg.eyeRes')}</span>
+          <h1>{t('pg.teams.title')}</h1>
+          <p>{t('pg.teams.sub', { n: teams.length, org: org.name })}</p>
         </div>
       </div>
       <TeamsView

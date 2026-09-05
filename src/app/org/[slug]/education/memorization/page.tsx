@@ -3,12 +3,14 @@ import { requireOrgAccess } from '@/lib/org';
 import { prisma } from '@/lib/prisma';
 import { canViewEducation } from '@/lib/permissions';
 import MemorizationView from '@/components/education/MemorizationView';
+import { getT } from '@/lib/i18n/server';
 
 export const dynamic = 'force-dynamic';
 
 export default async function MemorizationPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
+  const { t } = await getT();
   if (!canViewEducation(user.role)) redirect(`/org/${org.slug}`);
 
   const [entries, students] = await Promise.all([
@@ -28,9 +30,9 @@ export default async function MemorizationPage({ params }: { params: Promise<{ s
     <div className="org-page">
       <div className="org-page-head">
         <div>
-          <span className="org-eyebrow">التعليم</span>
-          <h1>الحفظ والتسميع</h1>
-          <p>{entries.length} سجل تسميع في {org.name}.</p>
+          <span className="org-eyebrow">{t('pg.eyeEdu')}</span>
+          <h1>{t('pg.memorization.title')}</h1>
+          <p>{t('pg.memorization.sub', { n: entries.length, org: org.name })}</p>
         </div>
       </div>
       <MemorizationView

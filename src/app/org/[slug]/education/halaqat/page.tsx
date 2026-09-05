@@ -3,12 +3,14 @@ import { requireOrgAccess } from '@/lib/org';
 import { prisma } from '@/lib/prisma';
 import { canViewEducation } from '@/lib/permissions';
 import HalaqatView from '@/components/education/HalaqatView';
+import { getT } from '@/lib/i18n/server';
 
 export const dynamic = 'force-dynamic';
 
 export default async function HalaqatPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
+  const { t } = await getT();
   if (!canViewEducation(user.role)) redirect(`/org/${org.slug}`);
 
   const [halaqat, teachers] = await Promise.all([
@@ -27,9 +29,9 @@ export default async function HalaqatPage({ params }: { params: Promise<{ slug: 
     <div className="org-page">
       <div className="org-page-head">
         <div>
-          <span className="org-eyebrow">التعليم</span>
-          <h1>الحلقات</h1>
-          <p>{halaqat.length} حلقة في {org.name}.</p>
+          <span className="org-eyebrow">{t('pg.eyeEdu')}</span>
+          <h1>{t('pg.halaqat.title')}</h1>
+          <p>{t('pg.halaqat.sub', { n: halaqat.length, org: org.name })}</p>
         </div>
       </div>
       <HalaqatView

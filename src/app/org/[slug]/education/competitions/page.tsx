@@ -4,12 +4,14 @@ import { prisma } from '@/lib/prisma';
 import CompetitionsView from '@/components/CompetitionsView';
 import '@/styles/statistics.css';
 import '@/styles/modules.css';
+import { getT } from '@/lib/i18n/server';
 
 export const dynamic = 'force-dynamic';
 
 export default async function CompetitionsPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const { org } = await requireOrgAccess(slug);
+  const { t } = await getT();
   const base = `/org/${org.slug}`;
 
   const rows = await prisma.competition.findMany({
@@ -28,9 +30,9 @@ export default async function CompetitionsPage({ params }: { params: Promise<{ s
       </nav>
       <div className="org-page-head">
         <div>
-          <span className="org-eyebrow">التعليم القرآني</span>
-          <h1>المسابقات</h1>
-          <p>نظّم مسابقات الحفظ والتجويد وتابع حالتها.</p>
+          <span className="org-eyebrow">{t('pg.eyeQuran')}</span>
+          <h1>{t('pg.competitions.title')}</h1>
+          <p>{t('pg.competitions.sub')}</p>
         </div>
       </div>
       <CompetitionsView competitions={competitions} />

@@ -3,12 +3,14 @@ import { requireOrgAccess } from '@/lib/org';
 import { canUseAssistant } from '@/lib/permissions';
 import { isAssistantConfigured } from '@/lib/anthropic';
 import AssistantChat from '@/components/AssistantChat';
+import { getT } from '@/lib/i18n/server';
 
 export const dynamic = 'force-dynamic';
 
 export default async function OrgAssistantPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
+  const { t } = await getT();
 
   if (!canUseAssistant(user.role)) redirect(`/org/${org.slug}`);
 
@@ -16,9 +18,9 @@ export default async function OrgAssistantPage({ params }: { params: Promise<{ s
     <div className="org-page org-page-narrow">
       <div className="org-page-head">
         <div>
-          <span className="org-eyebrow">مِداد</span>
-          <h1>المساعد الذكي</h1>
-          <p>اسأل عن بيانات {org.name}؛ يجيب ضمن حدود ما يحقّ لك الاطّلاع عليه.</p>
+          <span className="org-eyebrow">{t('brand')}</span>
+          <h1>{t('pg.assistant.title')}</h1>
+          <p>{t('pg.assistant.sub', { org: org.name })}</p>
         </div>
       </div>
 

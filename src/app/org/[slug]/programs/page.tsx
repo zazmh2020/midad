@@ -3,6 +3,7 @@ import { requireOrgAccess } from '@/lib/org';
 import { prisma } from '@/lib/prisma';
 import { canViewPrograms, canManagePrograms } from '@/lib/permissions';
 import ProgramsView from '@/components/ProgramsView';
+import { getT } from '@/lib/i18n/server';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,6 +14,7 @@ export default async function OrgProgramsPage({
 }) {
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
+  const { t } = await getT();
 
   if (!canViewPrograms(user.role)) redirect(`/org/${org.slug}`);
   const canManage = canManagePrograms(user.role);
@@ -42,9 +44,9 @@ export default async function OrgProgramsPage({
     <div className="org-page">
       <div className="org-page-head">
         <div>
-          <span className="org-eyebrow">الوحدات</span>
-          <h1>البرامج</h1>
-          <p>{programs.length} برنامج في {org.name}.</p>
+          <span className="org-eyebrow">{t('pg.eyeUnits')}</span>
+          <h1>{t('pg.programs.title')}</h1>
+          <p>{t('pg.programs.sub', { n: programs.length, org: org.name })}</p>
         </div>
       </div>
 

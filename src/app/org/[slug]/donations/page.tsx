@@ -3,12 +3,14 @@ import { requireOrgAccess } from '@/lib/org';
 import { prisma } from '@/lib/prisma';
 import { canViewDonations, canManageDonations } from '@/lib/permissions';
 import DonationsView from '@/components/DonationsView';
+import { getT } from '@/lib/i18n/server';
 
 export const dynamic = 'force-dynamic';
 
 export default async function OrgDonationsPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
+  const { t } = await getT();
 
   if (!canViewDonations(user.role)) redirect(`/org/${org.slug}`);
   const canManage = canManageDonations(user.role);
@@ -32,9 +34,9 @@ export default async function OrgDonationsPage({ params }: { params: Promise<{ s
     <div className="org-page">
       <div className="org-page-head">
         <div>
-          <span className="org-eyebrow">الوحدات</span>
-          <h1>التبرعات</h1>
-          <p>{donations.length} عملية في {org.name}.</p>
+          <span className="org-eyebrow">{t('pg.eyeUnits')}</span>
+          <h1>{t('pg.donations.title')}</h1>
+          <p>{t('pg.donations.sub', { n: donations.length, org: org.name })}</p>
         </div>
       </div>
 

@@ -4,6 +4,7 @@ import Icon from '@/components/Icon';
 import HubBrowser, { type HubItem } from '@/components/HubBrowser';
 import '@/styles/statistics.css';
 import '@/styles/modules.css';
+import { getT } from '@/lib/i18n/server';
 
 export const dynamic = 'force-dynamic';
 
@@ -69,6 +70,7 @@ const PLANS: Plan[] = [
 export default async function PlansPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const { org } = await requireOrgAccess(slug);
+  const { t } = await getT();
   const base = `/org/${org.slug}`;
 
   const items: HubItem[] = PLANS.map((p) => ({
@@ -111,9 +113,9 @@ export default async function PlansPage({ params }: { params: Promise<{ slug: st
       </nav>
       <div className="org-page-head">
         <div>
-          <span className="org-eyebrow">التعليم القرآني</span>
-          <h1>الخطط والمقرّرات</h1>
-          <p>اختر خطة لعرض مراحلها ومقرّراتها — فعّلها لأي حلقة أو طالب.</p>
+          <span className="org-eyebrow">{t('pg.eyeQuran')}</span>
+          <h1>{t('pg.plans.title')}</h1>
+          <p>{t('pg.plans.sub')}</p>
         </div>
       </div>
       <HubBrowser items={items} />

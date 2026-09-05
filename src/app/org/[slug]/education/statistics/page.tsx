@@ -3,6 +3,7 @@ import { requireOrgAccess } from '@/lib/org';
 import { prisma } from '@/lib/prisma';
 import StatisticsView from '@/components/StatisticsView';
 import '@/styles/statistics.css';
+import { getT } from '@/lib/i18n/server';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,6 +14,7 @@ export default async function StatisticsPage({
 }) {
   const { slug } = await params;
   const { org } = await requireOrgAccess(slug);
+  const { t } = await getT();
   const base = `/org/${org.slug}`;
 
   const [halaqat, students] = await Promise.all([
@@ -32,9 +34,9 @@ export default async function StatisticsPage({
 
       <div className="org-page-head">
         <div>
-          <span className="org-eyebrow">التقارير والمعرفة</span>
-          <h1>الإحصاءات — تطوّر الإنجاز</h1>
-          <p>تابع جلسات الحفظ والمراجعة عبر الزمن، بفلاتر حسب الحلقة والطالب والفترة.</p>
+          <span className="org-eyebrow">{t('pg.eyeReports')}</span>
+          <h1>{t('pg.statistics.title')}</h1>
+          <p>{t('pg.statistics.sub')}</p>
         </div>
       </div>
 

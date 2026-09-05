@@ -3,12 +3,14 @@ import { requireOrgAccess } from '@/lib/org';
 import { prisma } from '@/lib/prisma';
 import { canViewBeneficiaries, canManageBeneficiaries } from '@/lib/permissions';
 import BeneficiariesView from '@/components/BeneficiariesView';
+import { getT } from '@/lib/i18n/server';
 
 export const dynamic = 'force-dynamic';
 
 export default async function OrgBeneficiariesPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
+  const { t } = await getT();
 
   if (!canViewBeneficiaries(user.role)) redirect(`/org/${org.slug}`);
   const canManage = canManageBeneficiaries(user.role);
@@ -30,9 +32,9 @@ export default async function OrgBeneficiariesPage({ params }: { params: Promise
     <div className="org-page">
       <div className="org-page-head">
         <div>
-          <span className="org-eyebrow">الوحدات</span>
-          <h1>المستفيدون</h1>
-          <p>{beneficiaries.length} ملف في {org.name}.</p>
+          <span className="org-eyebrow">{t('pg.eyeUnits')}</span>
+          <h1>{t('pg.beneficiaries.title')}</h1>
+          <p>{t('pg.beneficiaries.sub', { n: beneficiaries.length, org: org.name })}</p>
         </div>
       </div>
 
