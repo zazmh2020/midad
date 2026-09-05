@@ -17,11 +17,12 @@ export default async function EducationHub({ params }: { params: Promise<{ slug:
   const w = { organizationId: org.id };
   const quran = org.type === 'MOSQUE';
 
-  const [teachers, students, halaqat, memos] = await Promise.all([
+  const [teachers, students, halaqat, memos, assessments] = await Promise.all([
     prisma.teacher.count({ where: w }),
     prisma.student.count({ where: w }),
     prisma.halaqa.count({ where: w }),
     prisma.memorizationEntry.count({ where: w }),
+    prisma.assessment.count({ where: w }),
   ]);
 
   const items: HubItem[] = [
@@ -31,7 +32,7 @@ export default async function EducationHub({ params }: { params: Promise<{ slug:
     { title: quran ? t('hub.edu.halaqat') : t('hub.edu.classes'), desc: quran ? t('hub.edu.halaqat.d') : t('hub.edu.classes.d'), href: `${base}/halaqat`, count: halaqat },
     { title: t('hub.edu.attendance'), desc: t('hub.edu.attendance.d'), href: `${base}/attendance` },
     { title: quran ? t('hub.edu.memo') : t('hub.edu.homework'), desc: quran ? t('hub.edu.memo.d') : t('hub.edu.homework.d'), href: `${base}/memorization`, count: memos },
-    { title: t('hub.edu.assessment'), desc: t('hub.edu.assessment.d') },
+    { title: t('hub.edu.assessment'), desc: t('hub.edu.assessment.d'), href: `${base}/assessment`, count: assessments },
   ];
 
   return (

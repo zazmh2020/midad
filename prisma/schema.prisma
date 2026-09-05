@@ -59,6 +59,7 @@ model Organization {
   competitionEntrants CompetitionParticipant[]
   branches            Branch[]
   approvals           Approval[]
+  assessments         Assessment[]
 
   @@map("organizations")
 }
@@ -192,6 +193,7 @@ model Student {
   memorization MemorizationEntry[]
   quranRecords QuranDailyRecord[]
   fees         StudentFee[]
+  assessments  Assessment[]
 
   @@index([organizationId])
   @@index([halaqaId])
@@ -383,6 +385,44 @@ model MemorizationEntry {
 enum MemorizationKind {
   NEW // حفظ جديد
   REVIEW // مراجعة
+}
+
+/// تقييم / اختبار لطالب — درجة ونتيجة
+model Assessment {
+  id        String           @id @default(cuid())
+  title     String
+  kind      AssessmentKind   @default(MEMORIZATION_TEST)
+  score     Float? // الدرجة المحصّلة
+  maxScore  Float            @default(100) // الدرجة القصوى
+  result    AssessmentResult @default(PENDING)
+  date      DateTime         @default(now())
+  notes     String?
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([studentId])
+  @@map("assessments")
+}
+
+enum AssessmentKind {
+  MEMORIZATION_TEST // اختبار حفظ
+  TAJWEED_TEST // اختبار تجويد
+  RECITATION_TEST // اختبار تلاوة
+  LEVEL_EXAM // اختبار مستوى
+  OTHER // أخرى
+}
+
+enum AssessmentResult {
+  PASS // ناجح
+  FAIL // راسب
+  PENDING // قيد التقييم
 }
 
 /// إعلان / خبر ضمن إدارة المحتوى

@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { requireOrgAccess } from '@/lib/org';
 import { prisma } from '@/lib/prisma';
-import { canViewStructure, canViewUsers, canManageSettings } from '@/lib/permissions';
+import { canViewStructure, canViewUsers, canManageSettings, canViewBranches } from '@/lib/permissions';
 import SectionHub, { type HubItem } from '@/components/SectionHub';
 import { getT } from '@/lib/i18n/server';
 
@@ -16,9 +16,10 @@ export default async function OrganizationHub({ params }: { params: Promise<{ sl
   if (!(canViewStructure(r) || canViewUsers(r) || canManageSettings(r))) redirect(`/org/${org.slug}`);
   const base = `/org/${org.slug}`;
 
-  const [deptCount, userCount] = await Promise.all([
+  const [deptCount, userCount, branchCount] = await Promise.all([
     prisma.department.count({ where: { organizationId: org.id } }),
     prisma.user.count({ where: { organizationId: org.id } }),
+    prisma.branch.count({ where: { organizationId: org.id } }),
   ]);
 
   const items: HubItem[] = [
@@ -31,7 +32,9 @@ export default async function OrganizationHub({ params }: { params: Promise<{ sl
     ...(canViewUsers(r)
       ? [{ title: t('hub.org.users'), desc: t('hub.org.users.d'), href: `${base}/users`, count: userCount }]
       : []),
-    { title: t('hub.org.branches'), desc: t('hub.org.branches.d') },
+    ...(canViewBranches(r)
+      ? [{ title: t('hub.org.branches'), desc: t('hub.org.branches.d'), href: `${base}/branches`, count: branchCount }]
+      : []),
   ];
 
   return (

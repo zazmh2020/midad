@@ -24,6 +24,8 @@ import type {
   RequestStatus,
   ApprovalCategory,
   ApprovalStatus,
+  AssessmentKind,
+  AssessmentResult,
 } from '@/generated/prisma/client';
 
 /* ============================================================
@@ -409,6 +411,22 @@ export const MEMO_RATING_LABELS: Record<MemorizationRating, string> = {
 export const MEMO_RATINGS = Object.keys(MEMO_RATING_LABELS) as MemorizationRating[];
 export const memoRatingLabel = (v: string) => MEMO_RATING_LABELS[v as MemorizationRating] ?? v;
 export const isMemoRating = (v: string): v is MemorizationRating => (MEMO_RATINGS as string[]).includes(v);
+
+export const ASSESSMENT_KIND_LABELS: Record<AssessmentKind, string> = {
+  MEMORIZATION_TEST: 'اختبار حفظ', TAJWEED_TEST: 'اختبار تجويد',
+  RECITATION_TEST: 'اختبار تلاوة', LEVEL_EXAM: 'اختبار مستوى', OTHER: 'أخرى',
+};
+export const ASSESSMENT_KINDS = Object.keys(ASSESSMENT_KIND_LABELS) as AssessmentKind[];
+export const assessmentKindLabel = (v: string) => ASSESSMENT_KIND_LABELS[v as AssessmentKind] ?? v;
+export const isAssessmentKind = (v: string): v is AssessmentKind => (ASSESSMENT_KINDS as string[]).includes(v);
+
+export const ASSESSMENT_RESULTS = ['PASS', 'FAIL', 'PENDING'] as AssessmentResult[];
+export const isAssessmentResult = (v: string): v is AssessmentResult => (ASSESSMENT_RESULTS as string[]).includes(v);
+/** يحسب النتيجة تلقائيًا من الدرجة (النجاح ≥ 50٪). */
+export function computeAssessmentResult(score: number | null, maxScore: number): AssessmentResult {
+  if (score === null) return 'PENDING';
+  return score >= maxScore * 0.5 ? 'PASS' : 'FAIL';
+}
 
 /** يطّلع على التعليم: الإدارة والموظفون */
 export function canViewEducation(role: string): boolean {
