@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useLocale } from '@/lib/i18n/LocaleProvider';
 
 interface Halaqa { id: string; name: string; }
 interface Student { id: string; name: string; halaqaId: string | null; }
@@ -26,6 +27,7 @@ const todayIso = new Date().toISOString().slice(0, 10);
 
 /* ---- SVG line/area chart (سلسلتان) ---- */
 function Chart({ labels, a, b }: { labels: string[]; a: number[]; b: number[] }) {
+  const { t } = useLocale();
   const W = 720, H = 240, padX = 34, top = 18, bottom = 40;
   const max = Math.max(1, ...a, ...b);
   const n = labels.length;
@@ -37,7 +39,7 @@ function Chart({ labels, a, b }: { labels: string[]; a: number[]; b: number[] })
   const grid = [top + 4, top + usableH / 2, H - bottom];
 
   return (
-    <svg className="stat-chart" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" role="img" aria-label="تطوّر الجلسات">
+    <svg className="stat-chart" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" role="img" aria-label={t('stat.chartAria')}>
       <defs>
         <linearGradient id="statArea" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor={NEW_C} stopOpacity="0.22" />
@@ -57,6 +59,7 @@ function Chart({ labels, a, b }: { labels: string[]; a: number[]; b: number[] })
 }
 
 export default function StatisticsView({ halaqat, students }: { halaqat: Halaqa[]; students: Student[] }) {
+  const { t } = useLocale();
   const [halaqaId, setHalaqaId] = useState('');
   const [studentId, setStudentId] = useState('');
   const [from, setFrom] = useState(isoDaysAgo(180));
@@ -94,25 +97,25 @@ export default function StatisticsView({ halaqat, students }: { halaqat: Halaqa[
       {/* الفلاتر */}
       <div className="stat-filters">
         <div className="stat-field">
-          <label>الحلقة</label>
+          <label>{t('stat.halaqa')}</label>
           <select value={halaqaId} onChange={(e) => { setHalaqaId(e.target.value); setStudentId(''); }}>
-            <option value="">كل الحلقات</option>
+            <option value="">{t('stat.allHalaqat')}</option>
             {halaqat.map((h) => <option key={h.id} value={h.id}>{h.name}</option>)}
           </select>
         </div>
         <div className="stat-field">
-          <label>الطالب</label>
+          <label>{t('stat.student')}</label>
           <select value={studentId} onChange={(e) => setStudentId(e.target.value)}>
-            <option value="">كل الطلاب</option>
+            <option value="">{t('stat.allStudents')}</option>
             {shownStudents.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
           </select>
         </div>
         <div className="stat-field">
-          <label>من</label>
+          <label>{t('stat.from')}</label>
           <input type="date" value={from} max={to} onChange={(e) => setFrom(e.target.value)} />
         </div>
         <div className="stat-field">
-          <label>إلى</label>
+          <label>{t('stat.to')}</label>
           <input type="date" value={to} min={from} max={todayIso} onChange={(e) => setTo(e.target.value)} />
         </div>
       </div>
@@ -120,11 +123,11 @@ export default function StatisticsView({ halaqat, students }: { halaqat: Halaqa[
       {/* KPIs */}
       <div className="stat-kpis">
         {[
-          { k: 'إجمالي الجلسات', v: kpis?.sessions, accent: true },
-          { k: 'حفظ جديد', v: kpis?.newCount },
-          { k: 'مراجعة', v: kpis?.reviewCount },
-          { k: 'طلاب نشطون', v: kpis?.students },
-          { k: 'نسبة الممتاز', v: kpis ? `${kpis.excellentPct}%` : undefined },
+          { k: t('stat.kpiSessions'), v: kpis?.sessions, accent: true },
+          { k: t('status.memoKind.NEW'), v: kpis?.newCount },
+          { k: t('status.memoKind.REVIEW'), v: kpis?.reviewCount },
+          { k: t('stat.kpiActiveStudents'), v: kpis?.students },
+          { k: t('stat.kpiExcellentPct'), v: kpis ? `${kpis.excellentPct}%` : undefined },
         ].map((it) => (
           <div key={it.k} className={`stat-kpi ${it.accent ? 'is-accent' : ''}`}>
             <div className="stat-kpi-k">{it.k}</div>
@@ -145,10 +148,10 @@ export default function StatisticsView({ halaqat, students }: { halaqat: Halaqa[
       {/* الرسم */}
       <div className="stat-chart-card">
         <div className="stat-card-hd">
-          <h3>تطوّر الإنجاز</h3>
+          <h3>{t('stat.progressTitle')}</h3>
           <div className="stat-legend">
-            <span><i style={{ background: NEW_C }} />حفظ جديد</span>
-            <span><i style={{ background: REV_C }} />مراجعة</span>
+            <span><i style={{ background: NEW_C }} />{t('status.memoKind.NEW')}</span>
+            <span><i style={{ background: REV_C }} />{t('status.memoKind.REVIEW')}</span>
           </div>
         </div>
         {data && (kpis?.sessions ?? 0) > 0 ? (
@@ -156,24 +159,24 @@ export default function StatisticsView({ halaqat, students }: { halaqat: Halaqa[
             <Chart labels={data.labels} a={data.series.new} b={data.series.review} />
           </motion.div>
         ) : (
-          <p className="stat-empty">{loading ? 'جارٍ التحميل…' : 'لا توجد جلسات ضمن هذا النطاق.'}</p>
+          <p className="stat-empty">{loading ? t('stat.loading') : t('stat.noSessions')}</p>
         )}
       </div>
 
       {/* توزيع التقييم */}
       <div className="stat-chart-card">
-        <div className="stat-card-hd"><h3>توزيع التقييم</h3></div>
+        <div className="stat-card-hd"><h3>{t('stat.ratingDist')}</h3></div>
         {ratingTotal > 0 ? (
           <div className="stat-ratings">
-            {([['EXCELLENT', 'ممتاز', '#2E7D57'], ['GOOD', 'جيد', '#6B57A0'], ['NEEDS_REPEAT', 'يحتاج إعادة', '#A9711F']] as const).map(([k, lbl, c]) => (
+            {([['EXCELLENT', '#2E7D57'], ['GOOD', '#6B57A0'], ['NEEDS_REPEAT', '#A9711F']] as const).map(([k, c]) => (
               <div key={k} className="stat-rating">
-                <div className="stat-rating-hd"><span>{lbl}</span><strong>{numFmt.format(ratings![k])}</strong></div>
+                <div className="stat-rating-hd"><span>{t('status.memoRating.' + k)}</span><strong>{numFmt.format(ratings![k])}</strong></div>
                 <div className="stat-rating-track"><i style={{ width: `${(ratings![k] / ratingTotal) * 100}%`, background: c }} /></div>
               </div>
             ))}
           </div>
         ) : (
-          <p className="stat-empty">لا بيانات.</p>
+          <p className="stat-empty">{t('stat.noData')}</p>
         )}
       </div>
     </div>

@@ -2,12 +2,8 @@
 
 import { useMemo, useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  PROGRAM_CATEGORIES,
-  PROGRAM_STATUSES,
-  programCategoryLabel,
-  programStatusLabel,
-} from '@/lib/permissions';
+import { PROGRAM_CATEGORIES, PROGRAM_STATUSES } from '@/lib/permissions';
+import { useLocale } from '@/lib/i18n/LocaleProvider';
 
 type Program = {
   id: string;
@@ -30,6 +26,7 @@ export default function ProgramsView({
   departments: Department[];
   canManage: boolean;
 }) {
+  const { t } = useLocale();
   const router = useRouter();
   const [creating, setCreating] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -71,10 +68,10 @@ export default function ProgramsView({
         }),
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) setError(data.error ?? 'تعذّر الإنشاء.');
+      if (!res.ok) setError(data.error ?? t('form.createErr'));
       else { resetForm(); setCreating(false); router.refresh(); }
     } catch {
-      setError('تعذّر الاتصال بالخادم.');
+      setError(t('form.netErr'));
     } finally {
       setBusyId(null);
     }
@@ -90,26 +87,26 @@ export default function ProgramsView({
         body: JSON.stringify(body),
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) setError(data.error ?? 'تعذّر الحفظ.');
+      if (!res.ok) setError(data.error ?? t('form.saveErr'));
       else router.refresh();
     } catch {
-      setError('تعذّر الاتصال بالخادم.');
+      setError(t('form.netErr'));
     } finally {
       setBusyId(null);
     }
   }
 
   async function remove(id: string) {
-    if (!confirm('حذف هذا البرنامج نهائياً؟')) return;
+    if (!confirm(t('prog.deleteConfirm'))) return;
     setError('');
     setBusyId(id);
     try {
       const res = await fetch(`/api/org/programs/${id}`, { method: 'DELETE' });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) setError(data.error ?? 'تعذّر الحذف.');
+      if (!res.ok) setError(data.error ?? t('form.deleteErr'));
       else router.refresh();
     } catch {
-      setError('تعذّر الاتصال بالخادم.');
+      setError(t('form.netErr'));
     } finally {
       setBusyId(null);
     }
@@ -122,11 +119,11 @@ export default function ProgramsView({
           className="org-inline-select"
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          aria-label="تصفية حسب التصنيف"
+          aria-label={t('prog.filterByCategory')}
         >
-          <option value="ALL">كل التصنيفات</option>
+          <option value="ALL">{t('prog.allCategories')}</option>
           {PROGRAM_CATEGORIES.map((c) => (
-            <option key={c} value={c}>{programCategoryLabel(c)}</option>
+            <option key={c} value={c}>{t(`pcat.${c}`)}</option>
           ))}
         </select>
         <span className="org-toolbar-spacer" />
@@ -135,7 +132,7 @@ export default function ProgramsView({
             className="org-btn org-btn-primary"
             onClick={() => { setCreating((v) => !v); setError(''); }}
           >
-            {creating ? 'إلغاء' : '+ برنامج جديد'}
+            {creating ? t('shell.cancel') : t('prog.new')}
           </button>
         )}
       </div>
@@ -145,40 +142,40 @@ export default function ProgramsView({
       {creating && (
         <form className="org-form" onSubmit={handleCreate}>
           <div className="org-field">
-            <label htmlFor="pr-name">اسم البرنامج</label>
+            <label htmlFor="pr-name">{t('prog.name')}</label>
             <input id="pr-name" value={name} onChange={(e) => setName(e.target.value)} required />
           </div>
           <div className="org-field">
-            <label htmlFor="pr-desc">الوصف <span className="org-hint">اختياري</span></label>
+            <label htmlFor="pr-desc">{t('prog.desc')} <span className="org-hint">{t('view.optional')}</span></label>
             <textarea id="pr-desc" rows={3} value={description} onChange={(e) => setDescription(e.target.value)} />
           </div>
           <div className="org-field-row">
             <div className="org-field">
-              <label htmlFor="pr-cat">التصنيف</label>
+              <label htmlFor="pr-cat">{t('prog.category')}</label>
               <select id="pr-cat" value={category} onChange={(e) => setCategory(e.target.value)}>
                 {PROGRAM_CATEGORIES.map((c) => (
-                  <option key={c} value={c}>{programCategoryLabel(c)}</option>
+                  <option key={c} value={c}>{t(`pcat.${c}`)}</option>
                 ))}
               </select>
             </div>
             <div className="org-field">
-              <label htmlFor="pr-status">الحالة</label>
+              <label htmlFor="pr-status">{t('view.status')}</label>
               <select id="pr-status" value={status} onChange={(e) => setStatus(e.target.value)}>
                 {PROGRAM_STATUSES.map((s) => (
-                  <option key={s} value={s}>{programStatusLabel(s)}</option>
+                  <option key={s} value={s}>{t(`status.program.${s}`)}</option>
                 ))}
               </select>
             </div>
           </div>
           <div className="org-field-row">
             <div className="org-field">
-              <label htmlFor="pr-cap">السعة المستهدفة <span className="org-hint">اختياري</span></label>
+              <label htmlFor="pr-cap">{t('prog.capacityTarget')} <span className="org-hint">{t('view.optional')}</span></label>
               <input id="pr-cap" type="number" min={0} value={capacity} onChange={(e) => setCapacity(e.target.value)} />
             </div>
             <div className="org-field">
-              <label htmlFor="pr-dept">الوحدة التنظيمية</label>
+              <label htmlFor="pr-dept">{t('view.unit')}</label>
               <select id="pr-dept" value={departmentId} onChange={(e) => setDepartmentId(e.target.value)}>
-                <option value="">— بلا وحدة</option>
+                <option value="">{t('view.noUnit')}</option>
                 {departments.map((d) => (
                   <option key={d.id} value={d.id}>{d.name}</option>
                 ))}
@@ -187,7 +184,7 @@ export default function ProgramsView({
           </div>
           <div className="org-form-actions">
             <button type="submit" className="org-btn org-btn-primary" disabled={busyId === '__new'}>
-              {busyId === '__new' ? 'جارٍ الإنشاء…' : 'إنشاء البرنامج'}
+              {busyId === '__new' ? t('prog.creating') : t('prog.create')}
             </button>
           </div>
         </form>
@@ -195,7 +192,7 @@ export default function ProgramsView({
 
       {shown.length === 0 ? (
         <div className="org-empty">
-          {programs.length === 0 ? 'لا توجد برامج بعد.' : 'لا برامج في هذا التصنيف.'}
+          {programs.length === 0 ? t('prog.none') : t('prog.noneInCategory')}
         </div>
       ) : (
         <div className="org-cards">
@@ -204,18 +201,18 @@ export default function ProgramsView({
               <div className="org-card-head">
                 <h3>{p.name}</h3>
                 <span className={`org-status org-pstatus-${p.status.toLowerCase()}`}>
-                  {programStatusLabel(p.status)}
+                  {t(`status.program.${p.status}`)}
                 </span>
               </div>
               <div className="org-card-tags">
-                <span className="org-chip">{programCategoryLabel(p.category)}</span>
+                <span className="org-chip">{t(`pcat.${p.category}`)}</span>
                 {deptName(p.departmentId) && (
                   <span className="org-card-tag">{deptName(p.departmentId)}</span>
                 )}
               </div>
               {p.description && <p className="org-card-desc">{p.description}</p>}
               <div className="org-card-meta">
-                <span>السعة: {p.capacity ?? '—'}</span>
+                <span>{t('prog.capacityLabel', { v: p.capacity ?? '—' })}</span>
               </div>
               {canManage && (
                 <div className="org-card-actions">
@@ -226,7 +223,7 @@ export default function ProgramsView({
                     onChange={(e) => patch(p.id, { status: e.target.value })}
                   >
                     {PROGRAM_STATUSES.map((s) => (
-                      <option key={s} value={s}>{programStatusLabel(s)}</option>
+                      <option key={s} value={s}>{t(`status.program.${s}`)}</option>
                     ))}
                   </select>
                   {departments.length > 0 && (
@@ -235,9 +232,9 @@ export default function ProgramsView({
                       value={p.departmentId ?? ''}
                       disabled={busyId === p.id}
                       onChange={(e) => patch(p.id, { departmentId: e.target.value || null })}
-                      aria-label="الوحدة"
+                      aria-label={t('view.unitShort')}
                     >
-                      <option value="">— بلا وحدة</option>
+                      <option value="">{t('view.noUnit')}</option>
                       {departments.map((d) => (
                         <option key={d.id} value={d.id}>{d.name}</option>
                       ))}
@@ -248,7 +245,7 @@ export default function ProgramsView({
                     disabled={busyId === p.id}
                     onClick={() => remove(p.id)}
                   >
-                    حذف
+                    {t('view.delete')}
                   </button>
                 </div>
               )}

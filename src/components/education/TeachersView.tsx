@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
+import { useLocale } from '@/lib/i18n/LocaleProvider';
 
 type Teacher = {
   id: string; name: string; phone: string | null; specialization: string | null;
@@ -9,6 +10,7 @@ type Teacher = {
 };
 
 export default function TeachersView({ teachers }: { teachers: Teacher[] }) {
+  const { t } = useLocale();
   const router = useRouter();
   const [creating, setCreating] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -26,9 +28,9 @@ export default function TeachersView({ teachers }: { teachers: Teacher[] }) {
         body: JSON.stringify({ name, phone, specialization }),
       });
       const d = await res.json().catch(() => ({}));
-      if (!res.ok) setError(d.error ?? 'تعذّر الإنشاء.');
+      if (!res.ok) setError(d.error ?? t('form.createErr'));
       else { setName(''); setPhone(''); setSpecialization(''); setCreating(false); router.refresh(); }
-    } catch { setError('تعذّر الاتصال بالخادم.'); }
+    } catch { setError(t('form.netErr')); }
     finally { setBusyId(null); }
   }
 
@@ -39,18 +41,18 @@ export default function TeachersView({ teachers }: { teachers: Teacher[] }) {
         method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
       });
       const d = await res.json().catch(() => ({}));
-      if (!res.ok) setError(d.error ?? 'تعذّر الحفظ.'); else router.refresh();
-    } catch { setError('تعذّر الاتصال بالخادم.'); } finally { setBusyId(null); }
+      if (!res.ok) setError(d.error ?? t('form.saveErr')); else router.refresh();
+    } catch { setError(t('form.netErr')); } finally { setBusyId(null); }
   }
 
   async function remove(id: string) {
-    if (!confirm('حذف هذا المعلّم؟')) return;
+    if (!confirm(t('edu.tc.deleteConfirm'))) return;
     setError(''); setBusyId(id);
     try {
       const res = await fetch(`/api/org/education/teachers/${id}`, { method: 'DELETE' });
       const d = await res.json().catch(() => ({}));
-      if (!res.ok) setError(d.error ?? 'تعذّر الحذف.'); else router.refresh();
-    } catch { setError('تعذّر الاتصال بالخادم.'); } finally { setBusyId(null); }
+      if (!res.ok) setError(d.error ?? t('form.deleteErr')); else router.refresh();
+    } catch { setError(t('form.netErr')); } finally { setBusyId(null); }
   }
 
   return (
@@ -58,7 +60,7 @@ export default function TeachersView({ teachers }: { teachers: Teacher[] }) {
       <div className="org-toolbar">
         <span className="org-toolbar-spacer" />
         <button className="org-btn org-btn-primary" onClick={() => { setCreating((v) => !v); setError(''); }}>
-          {creating ? 'إلغاء' : '+ معلّم جديد'}
+          {creating ? t('shell.cancel') : t('edu.tc.new')}
         </button>
       </div>
 
@@ -68,46 +70,46 @@ export default function TeachersView({ teachers }: { teachers: Teacher[] }) {
         <form className="org-form" onSubmit={create}>
           <div className="org-field-row">
             <div className="org-field">
-              <label htmlFor="t-name">الاسم</label>
+              <label htmlFor="t-name">{t('edu.tc.name')}</label>
               <input id="t-name" value={name} onChange={(e) => setName(e.target.value)} required />
             </div>
             <div className="org-field">
-              <label htmlFor="t-phone">الهاتف <span className="org-hint">اختياري</span></label>
+              <label htmlFor="t-phone">{t('edu.tc.phone')} <span className="org-hint">{t('view.optional')}</span></label>
               <input id="t-phone" dir="ltr" value={phone} onChange={(e) => setPhone(e.target.value)} />
             </div>
             <div className="org-field">
-              <label htmlFor="t-spec">التخصص <span className="org-hint">تحفيظ، تجويد…</span></label>
+              <label htmlFor="t-spec">{t('edu.tc.spec')} <span className="org-hint">{t('edu.tc.specHint')}</span></label>
               <input id="t-spec" value={specialization} onChange={(e) => setSpecialization(e.target.value)} />
             </div>
           </div>
           <div className="org-form-actions">
             <button type="submit" className="org-btn org-btn-primary" disabled={busyId === '__new'}>
-              {busyId === '__new' ? 'جارٍ الحفظ…' : 'إضافة المعلّم'}
+              {busyId === '__new' ? t('form.saving') : t('edu.tc.add')}
             </button>
           </div>
         </form>
       )}
 
       {teachers.length === 0 ? (
-        <div className="org-empty">لا يوجد معلمون بعد.</div>
+        <div className="org-empty">{t('edu.tc.none')}</div>
       ) : (
         <div className="org-table-wrap">
           <table className="org-table">
             <thead>
-              <tr><th>المعلّم</th><th>التخصص</th><th>الحلقات</th><th>الحالة</th><th></th></tr>
+              <tr><th>{t('edu.tc.thTeacher')}</th><th>{t('edu.tc.spec')}</th><th>{t('edu.tc.thHalaqat')}</th><th>{t('view.status')}</th><th></th></tr>
             </thead>
             <tbody>
-              {teachers.map((t) => (
-                <tr key={t.id} className={t.isActive ? '' : 'is-inactive'}>
-                  <td><strong>{t.name}</strong>{t.phone && <small dir="ltr">{t.phone}</small>}</td>
-                  <td>{t.specialization ?? '—'}</td>
-                  <td>{t.halaqatCount}</td>
-                  <td><span className={`org-badge ${t.isActive ? 'is-on' : ''}`}>{t.isActive ? 'نشط' : 'موقوف'}</span></td>
+              {teachers.map((tc) => (
+                <tr key={tc.id} className={tc.isActive ? '' : 'is-inactive'}>
+                  <td><strong>{tc.name}</strong>{tc.phone && <small dir="ltr">{tc.phone}</small>}</td>
+                  <td>{tc.specialization ?? '—'}</td>
+                  <td>{tc.halaqatCount}</td>
+                  <td><span className={`org-badge ${tc.isActive ? 'is-on' : ''}`}>{tc.isActive ? t('status.teacher.active') : t('status.teacher.inactive')}</span></td>
                   <td className="org-row-actions">
-                    <button className="org-btn org-btn-quiet" disabled={busyId === t.id} onClick={() => patch(t.id, { isActive: !t.isActive })}>
-                      {t.isActive ? 'إيقاف' : 'تفعيل'}
+                    <button className="org-btn org-btn-quiet" disabled={busyId === tc.id} onClick={() => patch(tc.id, { isActive: !tc.isActive })}>
+                      {tc.isActive ? t('edu.tc.deactivate') : t('edu.tc.activate')}
                     </button>
-                    <button className="org-btn org-btn-danger" disabled={busyId === t.id} onClick={() => remove(t.id)}>حذف</button>
+                    <button className="org-btn org-btn-danger" disabled={busyId === tc.id} onClick={() => remove(tc.id)}>{t('view.delete')}</button>
                   </td>
                 </tr>
               ))}

@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
+import { useLocale } from '@/lib/i18n/LocaleProvider';
 
 type Team = {
   id: string; name: string; description: string | null; lead: string | null;
@@ -10,6 +11,7 @@ type Team = {
 type Ref = { id: string; name: string };
 
 export default function TeamsView({ teams, departments }: { teams: Team[]; departments: Ref[] }) {
+  const { t } = useLocale();
   const router = useRouter();
   const [creating, setCreating] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -28,19 +30,19 @@ export default function TeamsView({ teams, departments }: { teams: Team[]; depar
         body: JSON.stringify({ name, lead, description, departmentId: departmentId || null }),
       });
       const d = await res.json().catch(() => ({}));
-      if (!res.ok) setError(d.error ?? 'تعذّر الإنشاء.');
+      if (!res.ok) setError(d.error ?? t('form.createErr'));
       else { setName(''); setLead(''); setDescription(''); setDepartmentId(''); setCreating(false); router.refresh(); }
-    } catch { setError('تعذّر الاتصال بالخادم.'); } finally { setBusyId(null); }
+    } catch { setError(t('form.netErr')); } finally { setBusyId(null); }
   }
 
   async function remove(id: string) {
-    if (!confirm('حذف هذا الفريق؟')) return;
+    if (!confirm(t('res.team.deleteConfirm'))) return;
     setError(''); setBusyId(id);
     try {
       const res = await fetch(`/api/org/resources/teams/${id}`, { method: 'DELETE' });
       const d = await res.json().catch(() => ({}));
-      if (!res.ok) setError(d.error ?? 'تعذّر الحذف.'); else router.refresh();
-    } catch { setError('تعذّر الاتصال بالخادم.'); } finally { setBusyId(null); }
+      if (!res.ok) setError(d.error ?? t('form.deleteErr')); else router.refresh();
+    } catch { setError(t('form.netErr')); } finally { setBusyId(null); }
   }
 
   return (
@@ -48,7 +50,7 @@ export default function TeamsView({ teams, departments }: { teams: Team[]; depar
       <div className="org-toolbar">
         <span className="org-toolbar-spacer" />
         <button className="org-btn org-btn-primary" onClick={() => { setCreating((v) => !v); setError(''); }}>
-          {creating ? 'إلغاء' : '+ فريق جديد'}
+          {creating ? t('shell.cancel') : t('res.team.new')}
         </button>
       </div>
 
@@ -57,41 +59,41 @@ export default function TeamsView({ teams, departments }: { teams: Team[]; depar
       {creating && (
         <form className="org-form" onSubmit={create}>
           <div className="org-field-row">
-            <div className="org-field"><label htmlFor="tm-name">اسم الفريق</label>
+            <div className="org-field"><label htmlFor="tm-name">{t('res.team.name')}</label>
               <input id="tm-name" value={name} onChange={(e) => setName(e.target.value)} required /></div>
-            <div className="org-field"><label htmlFor="tm-lead">قائد الفريق <span className="org-hint">اختياري</span></label>
+            <div className="org-field"><label htmlFor="tm-lead">{t('res.team.lead')} <span className="org-hint">{t('view.optional')}</span></label>
               <input id="tm-lead" value={lead} onChange={(e) => setLead(e.target.value)} /></div>
-            <div className="org-field"><label htmlFor="tm-dept">الوحدة</label>
+            <div className="org-field"><label htmlFor="tm-dept">{t('view.unitShort')}</label>
               <select id="tm-dept" value={departmentId} onChange={(e) => setDepartmentId(e.target.value)}>
-                <option value="">— بلا وحدة</option>
+                <option value="">{t('view.noUnit')}</option>
                 {departments.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
               </select></div>
           </div>
-          <div className="org-field"><label htmlFor="tm-desc">الوصف <span className="org-hint">اختياري</span></label>
+          <div className="org-field"><label htmlFor="tm-desc">{t('res.team.desc')} <span className="org-hint">{t('view.optional')}</span></label>
             <textarea id="tm-desc" rows={2} value={description} onChange={(e) => setDescription(e.target.value)} /></div>
           <div className="org-form-actions">
             <button type="submit" className="org-btn org-btn-primary" disabled={busyId === '__new'}>
-              {busyId === '__new' ? 'جارٍ الحفظ…' : 'إنشاء الفريق'}
+              {busyId === '__new' ? t('form.saving') : t('res.team.create')}
             </button>
           </div>
         </form>
       )}
 
       {teams.length === 0 ? (
-        <div className="org-empty">لا توجد فرق بعد.</div>
+        <div className="org-empty">{t('res.team.none')}</div>
       ) : (
         <div className="org-cards">
-          {teams.map((t) => (
-            <article key={t.id} className="org-card">
+          {teams.map((tm) => (
+            <article key={tm.id} className="org-card">
               <div className="org-card-head">
-                <h3>{t.name}</h3>
-                {t.departmentName && <span className="org-chip">{t.departmentName}</span>}
+                <h3>{tm.name}</h3>
+                {tm.departmentName && <span className="org-chip">{tm.departmentName}</span>}
               </div>
-              {t.lead && <span className="org-card-tag">القائد: {t.lead}</span>}
-              {t.description && <p className="org-card-desc">{t.description}</p>}
+              {tm.lead && <span className="org-card-tag">{t('res.team.leadLabel', { v: tm.lead })}</span>}
+              {tm.description && <p className="org-card-desc">{tm.description}</p>}
               <div className="org-card-actions">
                 <span className="org-toolbar-spacer" />
-                <button className="org-btn org-btn-danger" disabled={busyId === t.id} onClick={() => remove(t.id)}>حذف</button>
+                <button className="org-btn org-btn-danger" disabled={busyId === tm.id} onClick={() => remove(tm.id)}>{t('view.delete')}</button>
               </div>
             </article>
           ))}

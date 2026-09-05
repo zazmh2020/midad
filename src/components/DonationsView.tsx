@@ -2,9 +2,8 @@
 
 import { useMemo, useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  DONATION_METHODS, DONATION_STATUSES, donationMethodLabel, donationStatusLabel,
-} from '@/lib/permissions';
+import { DONATION_METHODS, DONATION_STATUSES } from '@/lib/permissions';
+import { useLocale } from '@/lib/i18n/LocaleProvider';
 
 type Donation = {
   id: string; donorName: string; amount: number; method: string; status: string;
@@ -12,12 +11,15 @@ type Donation = {
 };
 type Ref = { id: string; name: string };
 
-const dateFmt = new Intl.DateTimeFormat('ar-u-nu-latn', { year: 'numeric', month: 'short', day: 'numeric' });
 const numFmt = new Intl.NumberFormat('en-US');
 
 export default function DonationsView({
   donations, campaigns, totalReceived, canManage,
 }: { donations: Donation[]; campaigns: Ref[]; totalReceived: number; canManage: boolean }) {
+  const { t, locale } = useLocale();
+  const dateFmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar-u-nu-latn', { year: 'numeric', month: 'short', day: 'numeric' });
+  const methodLabel = (v: string) => t(`don.method.${v}`);
+  const statusLabel = (v: string) => t(`status.donation.${v}`);
   const router = useRouter();
   const [creating, setCreating] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -52,9 +54,9 @@ export default function DonationsView({
         body: JSON.stringify({ donorName, amount, method, status, note, donatedAt, campaignId: campaignId || null }),
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) setError(data.error ?? 'تعذّر التسجيل.');
+      if (!res.ok) setError(data.error ?? t('don.createErr'));
       else { resetForm(); setCreating(false); router.refresh(); }
-    } catch { setError('تعذّر الاتصال بالخادم.'); }
+    } catch { setError(t('form.netErr')); }
     finally { setBusyId(null); }
   }
 
@@ -65,21 +67,21 @@ export default function DonationsView({
         method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) setError(data.error ?? 'تعذّر الحفظ.');
+      if (!res.ok) setError(data.error ?? t('form.saveErr'));
       else router.refresh();
-    } catch { setError('تعذّر الاتصال بالخادم.'); }
+    } catch { setError(t('form.netErr')); }
     finally { setBusyId(null); }
   }
 
   async function remove(id: string) {
-    if (!confirm('حذف هذا التبرع نهائياً؟')) return;
+    if (!confirm(t('don.deleteConfirm'))) return;
     setError(''); setBusyId(id);
     try {
       const res = await fetch(`/api/org/donations/${id}`, { method: 'DELETE' });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) setError(data.error ?? 'تعذّر الحذف.');
+      if (!res.ok) setError(data.error ?? t('form.deleteErr'));
       else router.refresh();
-    } catch { setError('تعذّر الاتصال بالخادم.'); }
+    } catch { setError(t('form.netErr')); }
     finally { setBusyId(null); }
   }
 
@@ -87,24 +89,24 @@ export default function DonationsView({
     <>
       <div className="org-stats">
         <div className="org-stat">
-          <div className="org-stat-label">إجمالي المستلَم</div>
+          <div className="org-stat-label">{t('don.totalReceived')}</div>
           <div className="org-stat-value">{numFmt.format(totalReceived)}</div>
         </div>
         <div className="org-stat">
-          <div className="org-stat-label">عدد العمليات</div>
+          <div className="org-stat-label">{t('don.count')}</div>
           <div className="org-stat-value">{donations.length}</div>
         </div>
       </div>
 
       <div className="org-toolbar">
-        <select className="org-inline-select" value={filter} onChange={(e) => setFilter(e.target.value)} aria-label="تصفية حسب الحالة">
-          <option value="ALL">كل الحالات</option>
-          {DONATION_STATUSES.map((s) => <option key={s} value={s}>{donationStatusLabel(s)}</option>)}
+        <select className="org-inline-select" value={filter} onChange={(e) => setFilter(e.target.value)} aria-label={t('don.filterByStatus')}>
+          <option value="ALL">{t('don.allStatuses')}</option>
+          {DONATION_STATUSES.map((s) => <option key={s} value={s}>{statusLabel(s)}</option>)}
         </select>
         <span className="org-toolbar-spacer" />
         {canManage && (
           <button className="org-btn org-btn-primary" onClick={() => { setCreating((v) => !v); setError(''); }}>
-            {creating ? 'إلغاء' : '+ تسجيل تبرع'}
+            {creating ? t('shell.cancel') : t('don.new')}
           </button>
         )}
       </div>
@@ -115,64 +117,64 @@ export default function DonationsView({
         <form className="org-form" onSubmit={handleCreate}>
           <div className="org-field-row">
             <div className="org-field">
-              <label htmlFor="d-donor">اسم المتبرع</label>
+              <label htmlFor="d-donor">{t('don.donorName')}</label>
               <input id="d-donor" value={donorName} onChange={(e) => setDonorName(e.target.value)} required />
             </div>
             <div className="org-field">
-              <label htmlFor="d-amount">المبلغ</label>
+              <label htmlFor="d-amount">{t('don.amount')}</label>
               <input id="d-amount" type="number" min={1} value={amount} onChange={(e) => setAmount(e.target.value)} required />
             </div>
             <div className="org-field">
-              <label htmlFor="d-date">التاريخ <span className="org-hint">افتراضيًا اليوم</span></label>
+              <label htmlFor="d-date">{t('don.date')} <span className="org-hint">{t('don.dateHint')}</span></label>
               <input id="d-date" type="date" value={donatedAt} onChange={(e) => setDonatedAt(e.target.value)} />
             </div>
           </div>
           <div className="org-field-row">
             <div className="org-field">
-              <label htmlFor="d-method">طريقة الدفع</label>
+              <label htmlFor="d-method">{t('don.payMethod')}</label>
               <select id="d-method" value={method} onChange={(e) => setMethod(e.target.value)}>
-                {DONATION_METHODS.map((m) => <option key={m} value={m}>{donationMethodLabel(m)}</option>)}
+                {DONATION_METHODS.map((m) => <option key={m} value={m}>{methodLabel(m)}</option>)}
               </select>
             </div>
             <div className="org-field">
-              <label htmlFor="d-status">الحالة</label>
+              <label htmlFor="d-status">{t('view.status')}</label>
               <select id="d-status" value={status} onChange={(e) => setStatus(e.target.value)}>
-                {DONATION_STATUSES.map((s) => <option key={s} value={s}>{donationStatusLabel(s)}</option>)}
+                {DONATION_STATUSES.map((s) => <option key={s} value={s}>{statusLabel(s)}</option>)}
               </select>
             </div>
             <div className="org-field">
-              <label htmlFor="d-camp">الحملة</label>
+              <label htmlFor="d-camp">{t('don.campaign')}</label>
               <select id="d-camp" value={campaignId} onChange={(e) => setCampaignId(e.target.value)}>
-                <option value="">— بلا حملة</option>
+                <option value="">{t('don.noCampaign')}</option>
                 {campaigns.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
             </div>
           </div>
           <div className="org-field">
-            <label htmlFor="d-note">ملاحظة <span className="org-hint">اختياري</span></label>
+            <label htmlFor="d-note">{t('don.note')} <span className="org-hint">{t('view.optional')}</span></label>
             <input id="d-note" value={note} onChange={(e) => setNote(e.target.value)} />
           </div>
           <div className="org-form-actions">
             <button type="submit" className="org-btn org-btn-primary" disabled={busyId === '__new'}>
-              {busyId === '__new' ? 'جارٍ التسجيل…' : 'تسجيل التبرع'}
+              {busyId === '__new' ? t('don.registering') : t('don.submit')}
             </button>
           </div>
         </form>
       )}
 
       {shown.length === 0 ? (
-        <div className="org-empty">{donations.length === 0 ? 'لا توجد تبرعات بعد.' : 'لا تبرعات بهذه الحالة.'}</div>
+        <div className="org-empty">{donations.length === 0 ? t('don.none') : t('don.noneInStatus')}</div>
       ) : (
         <div className="org-table-wrap">
           <table className="org-table">
             <thead>
               <tr>
-                <th>المتبرع</th>
-                <th>المبلغ</th>
-                <th>الطريقة</th>
-                <th>الحالة</th>
-                <th>الحملة</th>
-                <th>التاريخ</th>
+                <th>{t('don.colDonor')}</th>
+                <th>{t('don.amount')}</th>
+                <th>{t('don.methodShort')}</th>
+                <th>{t('view.status')}</th>
+                <th>{t('don.campaign')}</th>
+                <th>{t('don.dateCol')}</th>
                 {canManage && <th></th>}
               </tr>
             </thead>
@@ -184,22 +186,22 @@ export default function DonationsView({
                     {d.note && <small>{d.note}</small>}
                   </td>
                   <td>{numFmt.format(d.amount)}</td>
-                  <td>{donationMethodLabel(d.method)}</td>
+                  <td>{methodLabel(d.method)}</td>
                   <td>
                     {canManage ? (
                       <select className="org-inline-select" value={d.status} disabled={busyId === d.id}
                         onChange={(e) => patch(d.id, { status: e.target.value })}>
-                        {DONATION_STATUSES.map((s) => <option key={s} value={s}>{donationStatusLabel(s)}</option>)}
+                        {DONATION_STATUSES.map((s) => <option key={s} value={s}>{statusLabel(s)}</option>)}
                       </select>
                     ) : (
-                      <span className={`org-badge ${d.status === 'RECEIVED' ? 'is-on' : ''}`}>{donationStatusLabel(d.status)}</span>
+                      <span className={`org-badge ${d.status === 'RECEIVED' ? 'is-on' : ''}`}>{statusLabel(d.status)}</span>
                     )}
                   </td>
                   <td>{campName(d.campaignId)}</td>
                   <td>{dateFmt.format(new Date(d.donatedAt))}</td>
                   {canManage && (
                     <td className="org-row-actions">
-                      <button className="org-btn org-btn-danger" disabled={busyId === d.id} onClick={() => remove(d.id)}>حذف</button>
+                      <button className="org-btn org-btn-danger" disabled={busyId === d.id} onClick={() => remove(d.id)}>{t('view.delete')}</button>
                     </td>
                   )}
                 </tr>

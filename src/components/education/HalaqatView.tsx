@@ -2,7 +2,8 @@
 
 import { useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
-import { HALAQA_TYPES, halaqaTypeLabel } from '@/lib/permissions';
+import { HALAQA_TYPES } from '@/lib/permissions';
+import { useLocale } from '@/lib/i18n/LocaleProvider';
 
 type Halaqa = {
   id: string; name: string; type: string; schedule: string | null;
@@ -11,6 +12,8 @@ type Halaqa = {
 type Ref = { id: string; name: string };
 
 export default function HalaqatView({ halaqat, teachers }: { halaqat: Halaqa[]; teachers: Ref[] }) {
+  const { t } = useLocale();
+  const typeLabel = (v: string) => t(`status.halaqa.${v}`);
   const router = useRouter();
   const [creating, setCreating] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -29,9 +32,9 @@ export default function HalaqatView({ halaqat, teachers }: { halaqat: Halaqa[]; 
         body: JSON.stringify({ name, type, schedule, teacherId: teacherId || null }),
       });
       const d = await res.json().catch(() => ({}));
-      if (!res.ok) setError(d.error ?? 'تعذّر الإنشاء.');
+      if (!res.ok) setError(d.error ?? t('form.createErr'));
       else { setName(''); setSchedule(''); setTeacherId(''); setType('MEMORIZATION'); setCreating(false); router.refresh(); }
-    } catch { setError('تعذّر الاتصال بالخادم.'); } finally { setBusyId(null); }
+    } catch { setError(t('form.netErr')); } finally { setBusyId(null); }
   }
 
   async function patch(id: string, body: Record<string, unknown>) {
@@ -41,18 +44,18 @@ export default function HalaqatView({ halaqat, teachers }: { halaqat: Halaqa[]; 
         method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
       });
       const d = await res.json().catch(() => ({}));
-      if (!res.ok) setError(d.error ?? 'تعذّر الحفظ.'); else router.refresh();
-    } catch { setError('تعذّر الاتصال بالخادم.'); } finally { setBusyId(null); }
+      if (!res.ok) setError(d.error ?? t('form.saveErr')); else router.refresh();
+    } catch { setError(t('form.netErr')); } finally { setBusyId(null); }
   }
 
   async function remove(id: string) {
-    if (!confirm('حذف هذه الحلقة؟ سيُفصل طلابها عنها.')) return;
+    if (!confirm(t('edu.hq.deleteConfirm'))) return;
     setError(''); setBusyId(id);
     try {
       const res = await fetch(`/api/org/education/halaqat/${id}`, { method: 'DELETE' });
       const d = await res.json().catch(() => ({}));
-      if (!res.ok) setError(d.error ?? 'تعذّر الحذف.'); else router.refresh();
-    } catch { setError('تعذّر الاتصال بالخادم.'); } finally { setBusyId(null); }
+      if (!res.ok) setError(d.error ?? t('form.deleteErr')); else router.refresh();
+    } catch { setError(t('form.netErr')); } finally { setBusyId(null); }
   }
 
   return (
@@ -60,7 +63,7 @@ export default function HalaqatView({ halaqat, teachers }: { halaqat: Halaqa[]; 
       <div className="org-toolbar">
         <span className="org-toolbar-spacer" />
         <button className="org-btn org-btn-primary" onClick={() => { setCreating((v) => !v); setError(''); }}>
-          {creating ? 'إلغاء' : '+ حلقة جديدة'}
+          {creating ? t('shell.cancel') : t('edu.hq.new')}
         </button>
       </div>
 
@@ -69,58 +72,58 @@ export default function HalaqatView({ halaqat, teachers }: { halaqat: Halaqa[]; 
       {creating && (
         <form className="org-form" onSubmit={create}>
           <div className="org-field">
-            <label htmlFor="h-name">اسم الحلقة</label>
+            <label htmlFor="h-name">{t('edu.hq.name')}</label>
             <input id="h-name" value={name} onChange={(e) => setName(e.target.value)} required />
           </div>
           <div className="org-field-row">
             <div className="org-field">
-              <label htmlFor="h-type">النوع</label>
+              <label htmlFor="h-type">{t('edu.hq.type')}</label>
               <select id="h-type" value={type} onChange={(e) => setType(e.target.value)}>
-                {HALAQA_TYPES.map((t) => <option key={t} value={t}>{halaqaTypeLabel(t)}</option>)}
+                {HALAQA_TYPES.map((ht) => <option key={ht} value={ht}>{typeLabel(ht)}</option>)}
               </select>
             </div>
             <div className="org-field">
-              <label htmlFor="h-teacher">المعلّم</label>
+              <label htmlFor="h-teacher">{t('edu.hq.teacher')}</label>
               <select id="h-teacher" value={teacherId} onChange={(e) => setTeacherId(e.target.value)}>
-                <option value="">— بلا معلّم</option>
-                {teachers.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
+                <option value="">{t('edu.hq.noTeacher')}</option>
+                {teachers.map((tc) => <option key={tc.id} value={tc.id}>{tc.name}</option>)}
               </select>
             </div>
             <div className="org-field">
-              <label htmlFor="h-sched">المواعيد <span className="org-hint">اختياري</span></label>
-              <input id="h-sched" value={schedule} onChange={(e) => setSchedule(e.target.value)} placeholder="السبت والثلاثاء 5م" />
+              <label htmlFor="h-sched">{t('edu.hq.schedule')} <span className="org-hint">{t('view.optional')}</span></label>
+              <input id="h-sched" value={schedule} onChange={(e) => setSchedule(e.target.value)} placeholder={t('edu.hq.scheduleHint')} />
             </div>
           </div>
           <div className="org-form-actions">
             <button type="submit" className="org-btn org-btn-primary" disabled={busyId === '__new'}>
-              {busyId === '__new' ? 'جارٍ الحفظ…' : 'إنشاء الحلقة'}
+              {busyId === '__new' ? t('form.saving') : t('edu.hq.create')}
             </button>
           </div>
         </form>
       )}
 
       {halaqat.length === 0 ? (
-        <div className="org-empty">لا توجد حلقات بعد.</div>
+        <div className="org-empty">{t('edu.hq.none')}</div>
       ) : (
         <div className="org-cards">
           {halaqat.map((h) => (
             <article key={h.id} className="org-card">
               <div className="org-card-head">
                 <h3>{h.name}</h3>
-                <span className="org-chip">{halaqaTypeLabel(h.type)}</span>
+                <span className="org-chip">{typeLabel(h.type)}</span>
               </div>
               <div className="org-card-meta">
-                <span>المعلّم: {h.teacherName ?? '—'}</span>
-                <span>الطلاب: {h.studentCount}</span>
+                <span>{t('edu.hq.teacherLabel', { v: h.teacherName ?? '—' })}</span>
+                <span>{t('edu.hq.studentsLabel', { n: h.studentCount })}</span>
               </div>
               {h.schedule && <p className="org-card-desc">{h.schedule}</p>}
               <div className="org-card-actions">
                 <select className="org-inline-select" value={h.teacherId ?? ''} disabled={busyId === h.id}
-                  onChange={(e) => patch(h.id, { teacherId: e.target.value || null })} aria-label="المعلّم">
-                  <option value="">— بلا معلّم</option>
-                  {teachers.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
+                  onChange={(e) => patch(h.id, { teacherId: e.target.value || null })} aria-label={t('edu.hq.teacher')}>
+                  <option value="">{t('edu.hq.noTeacher')}</option>
+                  {teachers.map((tc) => <option key={tc.id} value={tc.id}>{tc.name}</option>)}
                 </select>
-                <button className="org-btn org-btn-danger" disabled={busyId === h.id} onClick={() => remove(h.id)}>حذف</button>
+                <button className="org-btn org-btn-danger" disabled={busyId === h.id} onClick={() => remove(h.id)}>{t('view.delete')}</button>
               </div>
             </article>
           ))}
