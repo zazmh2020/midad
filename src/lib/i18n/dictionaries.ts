@@ -9,6 +9,14 @@ type Dict = Record<string, string>;
 
 const ar: Dict = {
   // ---- Page headings ----
+  'content.infoTitle': 'معلومات الموقع العام',
+  'content.about': 'نبذة عن المؤسسة',
+  'content.cEmail': 'البريد للتواصل',
+  'content.cPhone': 'هاتف التواصل',
+  'content.address': 'العنوان',
+  'psite.about': 'عن المؤسسة',
+  'psite.contact': 'تواصل معنا',
+  // ---- Page headings ----
   'onav.events': 'الفعاليات',
   'ev.pageTitle': 'الفعاليات والتقويم',
   'ev.pageSub': 'فعاليات وأحداث {org} القادمة والسابقة.',
@@ -1115,6 +1123,14 @@ const ar: Dict = {
 };
 
 const en: Dict = {
+  // ---- Page headings ----
+  'content.infoTitle': 'Public site info',
+  'content.about': 'About the organization',
+  'content.cEmail': 'Contact email',
+  'content.cPhone': 'Contact phone',
+  'content.address': 'Address',
+  'psite.about': 'About us',
+  'psite.contact': 'Contact us',
   // ---- Page headings ----
   'onav.events': 'Events',
   'ev.pageTitle': 'Events & calendar',

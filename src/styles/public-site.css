@@ -30,6 +30,16 @@
 .ps-hero h1 { font-family: var(--font-display, 'Qomra'); font-size: clamp(1.8rem, 4vw, 2.6rem); margin: 0; }
 .ps-type { opacity: 0.85; margin: 0.5rem 0 0; font-size: 1rem; }
 
+.ps-about, .ps-contact { max-width: 1040px; margin: 0 auto; padding: 2.4rem 1.5rem 0; }
+.ps-about h2, .ps-contact h2 { font-family: var(--font-display, 'Qomra'); font-size: 1.3rem; margin: 0 0 1rem; }
+.ps-about p { color: #4c4760; line-height: 1.9; font-size: 1rem; max-width: 70ch; white-space: pre-line; }
+.ps-contact-grid { display: flex; flex-wrap: wrap; gap: 1rem; }
+.ps-contact-item {
+  display: inline-flex; align-items: center; gap: 0.5rem; background: #fff; border: 1px solid #ece9f4;
+  border-radius: 12px; padding: 0.7rem 1rem; font-size: 0.9rem; color: #4c4760;
+}
+.ps-contact-item a { color: var(--ps-brand); font-weight: 600; }
+
 .ps-news { max-width: 1040px; margin: 0 auto; padding: 3rem 1.5rem; }
 .ps-news h2 { font-family: var(--font-display, 'Qomra'); font-size: 1.4rem; margin: 0 0 1.4rem; }
 .ps-none { color: #6c6780; }

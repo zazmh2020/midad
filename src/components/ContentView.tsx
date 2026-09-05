@@ -7,7 +7,9 @@ import { useLocale } from '@/lib/i18n/LocaleProvider';
 
 interface Announcement { id: string; title: string; body: string; createdAt: string; }
 
-export default function ContentView({ announcements, slug, sitePublished }: { announcements: Announcement[]; slug: string; sitePublished: boolean }) {
+interface SiteInfo { aboutText: string; contactEmail: string; contactPhone: string; address: string; }
+
+export default function ContentView({ announcements, slug, sitePublished, info }: { announcements: Announcement[]; slug: string; sitePublished: boolean; info: SiteInfo }) {
   const { t, locale } = useLocale();
   const dateFmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar-u-nu-latn', { year: 'numeric', month: 'short', day: 'numeric' });
   const router = useRouter();
@@ -17,6 +19,23 @@ export default function ContentView({ announcements, slug, sitePublished }: { an
   const [err, setErr] = useState('');
   const [published, setPublished] = useState(sitePublished);
   const [pubBusy, setPubBusy] = useState(false);
+  const [about, setAbout] = useState(info.aboutText);
+  const [cEmail, setCEmail] = useState(info.contactEmail);
+  const [cPhone, setCPhone] = useState(info.contactPhone);
+  const [addr, setAddr] = useState(info.address);
+  const [infoBusy, setInfoBusy] = useState(false);
+  const [infoSaved, setInfoSaved] = useState(false);
+
+  async function saveInfo(e: FormEvent) {
+    e.preventDefault(); setInfoBusy(true); setInfoSaved(false);
+    try {
+      const res = await fetch('/api/org/site', {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ aboutText: about, contactEmail: cEmail, contactPhone: cPhone, address: addr }),
+      });
+      if (res.ok) { setInfoSaved(true); router.refresh(); }
+    } finally { setInfoBusy(false); }
+  }
 
   async function togglePublish() {
     setPubBusy(true);
@@ -88,6 +107,21 @@ export default function ContentView({ announcements, slug, sitePublished }: { an
             <a className="site-link" href={`/site/${slug}`} target="_blank" rel="noreferrer">{t('content.siteView')} ↗</a>
           )}
         </div>
+
+        <form className="site-card site-info" onSubmit={saveInfo}>
+          <h3>{t('content.infoTitle')}</h3>
+          <label className="site-in"><span>{t('content.about')}</span>
+            <textarea rows={3} value={about} onChange={(e) => setAbout(e.target.value)} /></label>
+          <label className="site-in"><span>{t('content.cEmail')}</span>
+            <input type="email" dir="ltr" value={cEmail} onChange={(e) => setCEmail(e.target.value)} /></label>
+          <label className="site-in"><span>{t('content.cPhone')}</span>
+            <input dir="ltr" value={cPhone} onChange={(e) => setCPhone(e.target.value)} /></label>
+          <label className="site-in"><span>{t('content.address')}</span>
+            <input value={addr} onChange={(e) => setAddr(e.target.value)} /></label>
+          <button type="submit" className="org-btn org-btn-white site-save" disabled={infoBusy}>
+            {infoBusy ? t('form.saving') : infoSaved ? t('form.saved') : t('form.save')}
+          </button>
+        </form>
         <div className="ann-card">
           <div className="ann-card-hd"><strong>{t('content.tipTitle')}</strong></div>
           <p>{t('content.tipDesc')}</p>

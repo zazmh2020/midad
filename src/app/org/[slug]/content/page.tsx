@@ -43,7 +43,8 @@ export default async function ContentPage({ params }: { params: Promise<{ slug: 
           <p>{t('pg.content.sub')}</p>
         </div>
       </div>
-      <ContentView announcements={announcements} slug={org.slug} sitePublished={org.sitePublished} />
+      <ContentView announcements={announcements} slug={org.slug} sitePublished={org.sitePublished}
+        info={{ aboutText: org.aboutText ?? '', contactEmail: org.contactEmail ?? '', contactPhone: org.contactPhone ?? '', address: org.address ?? '' }} />
     </div>
   );
 }

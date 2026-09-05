@@ -15,7 +15,10 @@ export default async function PublicSitePage({ params }: { params: Promise<{ slu
 
   const org = await prisma.organization.findUnique({
     where: { slug },
-    select: { name: true, type: true, brandColor: true, logoUrl: true, sitePublished: true, isActive: true },
+    select: {
+      name: true, type: true, brandColor: true, logoUrl: true, sitePublished: true, isActive: true,
+      aboutText: true, contactEmail: true, contactPhone: true, address: true,
+    },
   });
 
   if (!org || !org.isActive || !org.sitePublished) {
@@ -52,6 +55,24 @@ export default async function PublicSitePage({ params }: { params: Promise<{ slu
           <p className="ps-type">{t(TYPE_KEY[org.type] ?? 'atype.ASSOCIATION')}</p>
         </div>
       </header>
+
+      {org.aboutText && (
+        <section className="ps-about">
+          <h2>{t('psite.about')}</h2>
+          <p>{org.aboutText}</p>
+        </section>
+      )}
+
+      {(org.contactEmail || org.contactPhone || org.address) && (
+        <section className="ps-contact">
+          <h2>{t('psite.contact')}</h2>
+          <div className="ps-contact-grid">
+            {org.contactPhone && <div className="ps-contact-item"><span>📞</span><a href={`tel:${org.contactPhone}`} dir="ltr">{org.contactPhone}</a></div>}
+            {org.contactEmail && <div className="ps-contact-item"><span>✉️</span><a href={`mailto:${org.contactEmail}`} dir="ltr">{org.contactEmail}</a></div>}
+            {org.address && <div className="ps-contact-item"><span>📍</span><span>{org.address}</span></div>}
+          </div>
+        </section>
+      )}
 
       <section className="ps-news">
         <h2>{t('psite.news')}</h2>
