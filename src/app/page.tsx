@@ -317,7 +317,7 @@ export default async function HomePage() {
             </div>
             <div>
               <h5>{t('footer.col.support')}</h5>
-              <ul><li><Link href="/login">{t('nav.login')}</Link></li><li><a href="#about">{t('footer.contact')}</a></li><li><a href="#about">{t('footer.privacy')}</a></li></ul>
+              <ul><li><Link href="/login">{t('nav.login')}</Link></li><li><a href="#about">{t('footer.contact')}</a></li><li><Link href="/privacy">{t('footer.privacy')}</Link></li><li><Link href="/terms">{t('footer.terms')}</Link></li></ul>
             </div>
           </div>
           <div className="mdl-footer-bottom">{t('footer.rights')}</div>

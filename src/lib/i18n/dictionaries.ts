@@ -672,6 +672,7 @@ const ar: Dict = {
   'footer.overview': 'نظرة عامة',
   'footer.contact': 'تواصل معنا',
   'footer.privacy': 'سياسة الخصوصية',
+  'footer.terms': 'الشروط والأحكام',
   'footer.rights': 'مِداد © 2026 — جميع الحقوق محفوظة',
   // نافذة اختيار اللغة
   'lang.title': 'اختر لغة العرض',
@@ -1874,6 +1875,7 @@ const en: Dict = {
   'footer.overview': 'Overview',
   'footer.contact': 'Contact us',
   'footer.privacy': 'Privacy policy',
+  'footer.terms': 'Terms of service',
   'footer.rights': 'Midad © 2026 — All rights reserved',
   'lang.title': 'Choose your language',
   'lang.sub': 'You can change it later from the top bar.',
