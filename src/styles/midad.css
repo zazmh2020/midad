@@ -591,7 +591,13 @@
   .mdl-sys-list { grid-template-columns: 1fr; grid-template-rows: auto; grid-auto-flow: row; }
   .mdl-steps-grid { grid-template-columns: repeat(2, 1fr); }
   .mdl-hero { padding-top: 7rem; }
-  .mdl-float-1, .mdl-float-3 { display: none; }
+  /* على الجوال: بطاقة واحدة مستقيمة بلا ميلان حتى لا تبرز من حواف الشاشة */
+  .mdl-float-1, .mdl-float-2, .mdl-float-3 { display: none; }
+  .mdl-fan-card.back-1, .mdl-fan-card.back-2 { display: none; }
+  .mdl-hero-stage:hover .mdl-fan-card.back-1,
+  .mdl-hero-stage:hover .mdl-fan-card.back-2 { display: none; }
+  .mdl-fan-card.front { transform: none; }
+  .mdl-fan { max-width: 100%; }
 }
 @media (max-width: 560px) {
   .mdl-feats, .mdl-orgs, .mdl-sec-list, .mdl-footer-grid, .mdl-steps-grid { grid-template-columns: 1fr; }
