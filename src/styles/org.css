@@ -83,6 +83,31 @@
 .org-nav::-webkit-scrollbar { width: 6px; }
 .org-nav::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 100px; }
 
+/* زر طيّ الشريط الجانبي (سطح المكتب) */
+.org-fold-toggle {
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  width: 34px; height: 34px; border-radius: 9px; border: 1px solid var(--line);
+  background: #fff; color: var(--gray-700); cursor: pointer;
+  transition: color 0.18s, border-color 0.18s, background 0.18s;
+}
+.org-fold-toggle:hover { color: var(--purple-500); border-color: var(--purple-300); background: var(--gray-100); }
+
+/* حالة الطيّ — يظهر الشريط بأيقونات فقط ويتوسّع المحتوى (سطح المكتب فقط) */
+@media (min-width: 961px) {
+  .org-app.is-collapsed .org-sidebar { width: 76px; padding-inline: 0.55rem; }
+  .org-app.is-collapsed .org-nav-item { justify-content: center; padding-inline: 0.5rem; gap: 0; }
+  .org-app.is-collapsed .org-nav-item span { display: none; }
+  .org-app.is-collapsed .org-nav-divider {
+    font-size: 0; padding: 0; margin: 0.5rem 0.4rem; height: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+  }
+  .org-app.is-collapsed .org-user-name,
+  .org-app.is-collapsed .org-user-role,
+  .org-app.is-collapsed .org-user-chev { display: none; }
+  .org-app.is-collapsed .org-user-stacked { padding: 0.4rem 0; }
+  .org-app.is-collapsed .org-user-avatar-lg { width: 42px; height: 42px; font-size: 1.05rem; }
+}
+
 /* ملف مستخدم مكدّس أعلى الشريط (أفاتار كبير موسّط) */
 .org-user-stacked { flex-direction: column; align-items: center; text-align: center; gap: 0.35rem; padding: 0.6rem 0.5rem; }
 .org-user-avatar-lg { width: 60px; height: 60px; font-size: 1.5rem; }
@@ -1272,6 +1297,7 @@ a.org-module:hover {
   }
 
   .org-menu-toggle { display: inline-flex; }
+  .org-fold-toggle { display: none; }
   .org-content { padding: 1.25rem; }
   .org-topbar-name { display: none; }
   .tbt-search { width: auto; flex: 1; min-width: 0; }

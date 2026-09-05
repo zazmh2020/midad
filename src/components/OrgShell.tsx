@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
 import { LogoMark } from '@/components/Logo';
 import TopbarTools, { type SearchItem } from '@/components/TopbarTools';
 import WelcomeBack from '@/components/WelcomeBack';
@@ -112,6 +112,18 @@ export default function OrgShell({ children, org, user, nav, inbox }: Props) {
   const [busy, setBusy] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [confirmLogout, setConfirmLogout] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
+    try { setCollapsed(localStorage.getItem('midad_sidebar_collapsed') === '1'); } catch { /* */ }
+  }, []);
+  function toggleCollapsed() {
+    setCollapsed((v) => {
+      const next = !v;
+      try { localStorage.setItem('midad_sidebar_collapsed', next ? '1' : '0'); } catch { /* */ }
+      return next;
+    });
+  }
 
   const base = `/org/${org.slug}`;
 
@@ -137,7 +149,7 @@ export default function OrgShell({ children, org, user, nav, inbox }: Props) {
   }
 
   return (
-    <div className="org-app" style={brandVars(org.brandColor)}>
+    <div className={`org-app ${collapsed ? 'is-collapsed' : ''}`} style={brandVars(org.brandColor)}>
       <WelcomeBack name={user.name} greeting={t('welcome.greeting')} />
       <aside className={`org-sidebar ${open ? 'is-open' : ''}`}>
         {/* ملف المستخدم أعلى الشريط — للعرض فقط */}
@@ -161,6 +173,7 @@ export default function OrgShell({ children, org, user, nav, inbox }: Props) {
                 href={entry.href}
                 className={`org-nav-item ${isActive(entry.href, entry.match) ? 'is-active' : ''}`}
                 onClick={() => setOpen(false)}
+                title={entry.label}
               >
                 <Icon name={entry.icon} />
                 <span>{entry.label}</span>
@@ -193,6 +206,18 @@ export default function OrgShell({ children, org, user, nav, inbox }: Props) {
           <button className="org-menu-toggle" onClick={() => setOpen(true)} aria-label={t('shell.menu')}>
             <svg width="20" height="14" viewBox="0 0 20 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
               <path d="M1 1h18M1 7h18M1 13h18" />
+            </svg>
+          </button>
+          <button
+            className="org-fold-toggle"
+            onClick={toggleCollapsed}
+            aria-label={t('shell.foldSidebar')}
+            aria-pressed={collapsed}
+            title={t('shell.foldSidebar')}
+          >
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2.5" y="3.5" width="15" height="13" rx="2" />
+              <path d="M12 3.5v13" />
             </svg>
           </button>
           <Link href={base} className="org-topbar-brand" onClick={() => setOpen(false)}>

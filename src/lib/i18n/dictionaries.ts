@@ -637,6 +637,7 @@ const ar: Dict = {
   'shell.cancel': 'إلغاء',
   'shell.loggingOut': 'جارٍ الخروج…',
   'shell.menu': 'القائمة',
+  'shell.foldSidebar': 'طيّ/فرد الشريط الجانبي',
 
   // أنواع الجهات
   'type.association': 'جمعية / مؤسسة',
@@ -1628,6 +1629,7 @@ const en: Dict = {
   'shell.cancel': 'Cancel',
   'shell.loggingOut': 'Signing out…',
   'shell.menu': 'Menu',
+  'shell.foldSidebar': 'Collapse / expand sidebar',
 
   'type.association': 'Association / Organization',
   'type.mosque': 'Mosque / Quran center',
