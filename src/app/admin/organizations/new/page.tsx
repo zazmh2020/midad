@@ -1,12 +1,14 @@
 import NewOrgForm from './NewOrgForm';
+import { getT } from '@/lib/i18n/server';
 
-export default function NewOrganizationPage() {
+export default async function NewOrganizationPage() {
+  const { t } = await getT();
   return (
     <div>
       <div className="admin-page-header">
         <div>
-          <h1>إنشاء مؤسسة جديدة</h1>
-          <p>عرّف المؤسسة، وأنشئ حساب مديرها في نفس الوقت.</p>
+          <h1>{t('aorg.new.title')}</h1>
+          <p>{t('aorg.new.sub')}</p>
         </div>
       </div>
 

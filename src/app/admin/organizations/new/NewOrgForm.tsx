@@ -3,15 +3,17 @@
 import { useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useT } from '@/lib/i18n/LocaleProvider';
 
 const orgTypes = [
-  { value: 'ASSOCIATION', label: 'جمعية / مؤسسة' },
-  { value: 'MOSQUE', label: 'مسجد / مركز قرآني' },
-  { value: 'SCHOOL', label: 'مركز تعليمي' },
-  { value: 'PROJECT', label: 'مشروع خاص' },
+  { value: 'ASSOCIATION' },
+  { value: 'MOSQUE' },
+  { value: 'SCHOOL' },
+  { value: 'PROJECT' },
 ];
 
 export default function NewOrgForm() {
+  const t = useT();
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -63,7 +65,7 @@ export default function NewOrgForm() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error ?? 'فشل الإنشاء.');
+        setError(data.error ?? t('aorg.form.createErr'));
         setBusy(false);
         return;
       }
@@ -71,7 +73,7 @@ export default function NewOrgForm() {
       setResult({ slug: data.slug, adminEmail });
       setBusy(false);
     } catch {
-      setError('تعذّر الاتصال بالخادم.');
+      setError(t('aorg.form.netErr'));
       setBusy(false);
     }
   }
@@ -84,27 +86,27 @@ export default function NewOrgForm() {
             <path d="M20 6L9 17l-5-5" />
           </svg>
         </div>
-        <h2>تم إنشاء المؤسسة بنجاح</h2>
-        <p>يمكن الآن لمديرها الدخول عبر الرابط التالي:</p>
+        <h2>{t('aorg.success.title')}</h2>
+        <p>{t('aorg.success.sub')}</p>
 
         <div className="success-details">
           <div className="detail-row">
-            <span className="detail-label">رابط المؤسسة:</span>
+            <span className="detail-label">{t('aorg.success.orgLink')}</span>
             <code dir="ltr">http://{result.slug}.midad.localhost:3000</code>
           </div>
           <div className="detail-row">
-            <span className="detail-label">صفحة الدخول:</span>
+            <span className="detail-label">{t('aorg.success.loginPage')}</span>
             <code dir="ltr">http://{result.slug}.midad.localhost:3000/login</code>
           </div>
           <div className="detail-row">
-            <span className="detail-label">بريد المدير:</span>
+            <span className="detail-label">{t('aorg.success.adminEmail')}</span>
             <code dir="ltr">{result.adminEmail}</code>
           </div>
         </div>
 
         <div className="success-actions">
           <Link href="/admin/organizations" className="btn-admin-primary">
-            العودة للقائمة
+            {t('aorg.success.backToList')}
           </Link>
           <button
             className="btn-admin-outline"
@@ -113,7 +115,7 @@ export default function NewOrgForm() {
               setOrgName(''); setSlug(''); setAdminName(''); setAdminEmail(''); setAdminPassword('');
             }}
           >
-            إنشاء أخرى
+            {t('aorg.success.createAnother')}
           </button>
         </div>
       </div>
@@ -125,24 +127,24 @@ export default function NewOrgForm() {
       {error && <div className="form-error"><span>⚠</span><span>{error}</span></div>}
 
       <fieldset>
-        <legend>معلومات المؤسسة</legend>
+        <legend>{t('aorg.form.orgInfo')}</legend>
 
         <div className="admin-field">
-          <label htmlFor="orgName">اسم المؤسسة</label>
+          <label htmlFor="orgName">{t('aorg.form.orgName')}</label>
           <input
             id="orgName"
             type="text"
             value={orgName}
             onChange={(e) => handleOrgNameChange(e.target.value)}
-            placeholder="جمعية القرآن الكريم"
+            placeholder={t('aorg.form.orgNamePh')}
             required
           />
         </div>
 
         <div className="admin-field">
           <label htmlFor="slug">
-            الرابط الفرعي (slug)
-            <span className="field-hint">حروف إنجليزية صغيرة وأرقام وشرطات فقط</span>
+            {t('aorg.form.slug')}
+            <span className="field-hint">{t('aorg.form.slugHint')}</span>
           </label>
           <input
             id="slug"
@@ -156,26 +158,26 @@ export default function NewOrgForm() {
           />
           {slug && (
             <div className="field-preview">
-              الرابط: <code dir="ltr">{slug}.midad.localhost:3000</code>
+              {t('aorg.form.slugPreview')} <code dir="ltr">{slug}.midad.localhost:3000</code>
             </div>
           )}
         </div>
 
         <div className="admin-field">
-          <label htmlFor="type">نوع المؤسسة</label>
+          <label htmlFor="type">{t('aorg.form.orgType')}</label>
           <select id="type" value={type} onChange={(e) => setType(e.target.value)}>
-            {orgTypes.map((t) => (
-              <option key={t.value} value={t.value}>{t.label}</option>
+            {orgTypes.map((o) => (
+              <option key={o.value} value={o.value}>{t('atype.' + o.value)}</option>
             ))}
           </select>
         </div>
       </fieldset>
 
       <fieldset>
-        <legend>حساب مدير المؤسسة</legend>
+        <legend>{t('aorg.form.adminAccount')}</legend>
 
         <div className="admin-field">
-          <label htmlFor="adminName">الاسم الكامل</label>
+          <label htmlFor="adminName">{t('aorg.form.fullName')}</label>
           <input
             id="adminName"
             type="text"
@@ -186,7 +188,7 @@ export default function NewOrgForm() {
         </div>
 
         <div className="admin-field">
-          <label htmlFor="adminEmail">البريد الإلكتروني</label>
+          <label htmlFor="adminEmail">{t('aorg.form.email')}</label>
           <input
             id="adminEmail"
             type="email"
@@ -199,8 +201,8 @@ export default function NewOrgForm() {
 
         <div className="admin-field">
           <label htmlFor="adminPassword">
-            كلمة المرور المؤقتة
-            <span className="field-hint">8 محارف على الأقل — سيغيّرها المدير عند أول دخول</span>
+            {t('aorg.form.tempPassword')}
+            <span className="field-hint">{t('aorg.form.tempPasswordHint')}</span>
           </label>
           <input
             id="adminPassword"
@@ -215,9 +217,9 @@ export default function NewOrgForm() {
       </fieldset>
 
       <div className="admin-form-actions">
-        <Link href="/admin/organizations" className="btn-admin-outline">إلغاء</Link>
+        <Link href="/admin/organizations" className="btn-admin-outline">{t('shell.cancel')}</Link>
         <button type="submit" className="btn-admin-primary" disabled={busy}>
-          {busy ? 'جارٍ الإنشاء...' : 'إنشاء المؤسسة'}
+          {busy ? t('aorg.form.creating') : t('aorg.form.submit')}
         </button>
       </div>
     </form>

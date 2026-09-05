@@ -4,16 +4,10 @@ import { prisma } from '@/lib/prisma';
 import { PLAN_BY_ID, CURRENCY } from '@/lib/plans';
 import PlanSelector from './PlanSelector';
 import BrandingForm from '@/components/BrandingForm';
+import { getT, getLocale } from '@/lib/i18n/server';
 import '@/styles/org.css';
 
 const numFmt = new Intl.NumberFormat('en-US');
-
-const typeLabels: Record<string, string> = {
-  ASSOCIATION: 'جمعية / مؤسسة',
-  MOSQUE: 'مسجد / مركز قرآني',
-  SCHOOL: 'مركز تعليمي',
-  PROJECT: 'مشروع خاص',
-};
 
 export const dynamic = 'force-dynamic';
 
@@ -22,6 +16,8 @@ export default async function OrgDetailPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
+  const { t } = await getT();
+  const locale = await getLocale();
   const { slug } = await params;
   const org = await prisma.organization.findUnique({
     where: { slug },
@@ -37,37 +33,37 @@ export default async function OrgDetailPage({
     <div>
       <div className="admin-page-header">
         <div>
-          <Link href="/admin/organizations" className="link-quiet">← المؤسسات</Link>
+          <Link href="/admin/organizations" className="link-quiet">← {t('aorg.detail.back')}</Link>
           <h1>{org.name}</h1>
-          <p>{typeLabels[org.type]}</p>
+          <p>{t('atype.' + org.type)}</p>
         </div>
         <span className={`badge ${org.isActive ? 'badge-success' : 'badge-muted'}`}>
-          {org.isActive ? 'نشطة' : 'معطّلة'}
+          {org.isActive ? t('aorg.detail.active') : t('aorg.detail.inactive')}
         </span>
       </div>
 
       <div className="section-block">
-        <h2>الباقة</h2>
+        <h2>{t('aorg.detail.plan')}</h2>
         <div className="detail-grid">
           <div className="detail-card">
-            <div className="detail-card-label">الباقة الحالية</div>
+            <div className="detail-card-label">{t('aorg.detail.currentPlan')}</div>
             <div className="detail-card-value">{PLAN_BY_ID[org.plan]?.name ?? org.plan}</div>
           </div>
           <div className="detail-card">
-            <div className="detail-card-label">السعر الشهري</div>
+            <div className="detail-card-label">{t('aorg.detail.monthlyPrice')}</div>
             <div className="detail-card-value">
               {(() => {
                 const p = PLAN_BY_ID[org.plan];
-                if (!p || p.price === null) return 'مخصّص';
-                if (p.price === 0) return 'مجانًا';
+                if (!p || p.price === null) return t('plan.custom');
+                if (p.price === 0) return t('plan.free');
                 return `${numFmt.format(p.price)} ${CURRENCY}`;
               })()}
             </div>
           </div>
           <div className="detail-card">
-            <div className="detail-card-label">حدّ المستخدمين</div>
+            <div className="detail-card-label">{t('aorg.detail.userLimit')}</div>
             <div className="detail-card-value">
-              {PLAN_BY_ID[org.plan]?.maxUsers == null ? 'بلا حدّ' : numFmt.format(PLAN_BY_ID[org.plan]!.maxUsers!)}
+              {PLAN_BY_ID[org.plan]?.maxUsers == null ? t('aorg.detail.unlimited') : numFmt.format(PLAN_BY_ID[org.plan]!.maxUsers!)}
             </div>
           </div>
         </div>
@@ -75,8 +71,8 @@ export default async function OrgDetailPage({
       </div>
 
       <div className="section-block">
-        <h2>الهوية البصرية</h2>
-        <p className="link-quiet" style={{ marginBottom: '0.8rem' }}>لون هوية الجهة وشعارها — ينعكس على مساحة عملها بالكامل.</p>
+        <h2>{t('aorg.detail.branding')}</h2>
+        <p className="link-quiet" style={{ marginBottom: '0.8rem' }}>{t('aorg.detail.brandingSub')}</p>
         <div style={{ maxWidth: 560 }}>
           <BrandingForm brandColor={org.brandColor} logoUrl={org.logoUrl} apiBase={`/api/admin/organizations/${org.slug}/branding`} />
         </div>
@@ -84,7 +80,7 @@ export default async function OrgDetailPage({
 
       <div className="detail-grid">
         <div className="detail-card">
-          <div className="detail-card-label">الرابط الفرعي</div>
+          <div className="detail-card-label">{t('aorg.detail.subdomain')}</div>
           <a
             href={`http://${org.slug}.midad.localhost:3000`}
             target="_blank"
@@ -96,13 +92,13 @@ export default async function OrgDetailPage({
           </a>
         </div>
         <div className="detail-card">
-          <div className="detail-card-label">عدد المستخدمين</div>
+          <div className="detail-card-label">{t('aorg.detail.usersCount')}</div>
           <div className="detail-card-value">{org._count.users}</div>
         </div>
         <div className="detail-card">
-          <div className="detail-card-label">تاريخ الإنشاء</div>
+          <div className="detail-card-label">{t('aorg.detail.createdAt')}</div>
           <div className="detail-card-value">
-            {new Intl.DateTimeFormat('ar-u-nu-latn', {
+            {new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar-u-nu-latn', {
               year: 'numeric', month: 'long', day: 'numeric',
             }).format(org.createdAt)}
           </div>
@@ -110,18 +106,18 @@ export default async function OrgDetailPage({
       </div>
 
       <div className="section-block">
-        <h2>مستخدمو المؤسسة</h2>
+        <h2>{t('aorg.detail.orgUsers')}</h2>
         {org.users.length === 0 ? (
-          <p className="empty-hint">لا يوجد مستخدمون بعد.</p>
+          <p className="empty-hint">{t('aorg.detail.noUsers')}</p>
         ) : (
           <div className="table-wrap">
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>الاسم</th>
-                  <th>البريد الإلكتروني</th>
-                  <th>الدور</th>
-                  <th>الحالة</th>
+                  <th>{t('aorg.th.name')}</th>
+                  <th>{t('aorg.th.email')}</th>
+                  <th>{t('aorg.th.role')}</th>
+                  <th>{t('aorg.th.status')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -129,10 +125,10 @@ export default async function OrgDetailPage({
                   <tr key={u.id}>
                     <td>{u.name}</td>
                     <td dir="ltr">{u.email}</td>
-                    <td>{roleLabel(u.role)}</td>
+                    <td>{t('role.' + u.role)}</td>
                     <td>
                       <span className={`badge ${u.isActive ? 'badge-success' : 'badge-muted'}`}>
-                        {u.isActive ? 'نشط' : 'معطّل'}
+                        {u.isActive ? t('aorg.detail.userActive') : t('aorg.detail.userInactive')}
                       </span>
                     </td>
                   </tr>
@@ -144,13 +140,4 @@ export default async function OrgDetailPage({
       </div>
     </div>
   );
-}
-
-function roleLabel(role: string): string {
-  return {
-    PLATFORM_OWNER: 'مالك المنصة',
-    ORG_ADMIN: 'مدير المؤسسة',
-    STAFF: 'موظف',
-    MEMBER: 'مستخدم',
-  }[role] ?? role;
 }
