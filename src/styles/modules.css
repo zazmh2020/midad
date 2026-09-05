@@ -70,8 +70,11 @@
 .site-card { background: linear-gradient(150deg, var(--purple-700), var(--purple-900)); color: #fff; border-radius: 16px; padding: 1.3rem; }
 .site-card h3 { color: #fff; font-family: var(--font-display); font-size: 1.05rem; margin: 0 0 0.4rem; }
 .site-card p { color: rgba(255,255,255,0.82); font-size: 0.82rem; line-height: 1.7; margin: 0 0 1rem; }
-.site-toggle { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; cursor: pointer; }
+.site-toggle { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; cursor: pointer; flex-wrap: wrap; }
 .site-toggle input { width: 16px; height: 16px; accent-color: #fff; }
+.site-badge { font-size: 0.68rem; font-weight: 800; padding: 0.12rem 0.5rem; border-radius: 100px; background: rgba(255,255,255,0.18); color: #fff; }
+.site-badge.is-live { background: #34d399; color: #06331f; }
+.site-link { display: inline-block; margin-top: 0.9rem; font-size: 0.82rem; font-weight: 700; color: #fff; text-decoration: underline; }
 
 /* ---------- الشهادات ---------- */
 .cert-preview {

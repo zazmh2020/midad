@@ -20,6 +20,7 @@ model Organization {
   brandColor  String?  // لون الهوية الأساسي للجهة (hex)
   logoUrl     String?  // شعار الجهة (رابط)
   disabledModules String[] @default([]) // وحدات معطّلة لهذه المؤسسة (المفعّلة = الباقي)
+  sitePublished Boolean @default(false)  // نشر الموقع العام للمؤسسة
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

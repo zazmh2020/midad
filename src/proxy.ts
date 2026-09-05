@@ -41,6 +41,7 @@ export function proxy(request: NextRequest) {
     path.startsWith('/_next') ||
     path.startsWith('/api') ||
     path.startsWith('/fonts') ||
+    path.startsWith('/site') || // الموقع العام للمؤسسات — بلا مصادقة
     path === '/login' ||
     path.includes('.')
   ) {

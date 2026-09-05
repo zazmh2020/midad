@@ -9,6 +9,16 @@ type Dict = Record<string, string>;
 
 const ar: Dict = {
   // ---- Page headings ----
+  'content.siteLive': 'منشور',
+  'content.siteOff': 'غير منشور',
+  'content.siteView': 'زيارة الموقع العام',
+  'psite.unavailableTitle': 'الموقع غير متاح',
+  'psite.unavailableBody': 'لم تنشر هذه المؤسسة موقعها العام بعد.',
+  'psite.news': 'الأخبار والإعلانات',
+  'psite.noNews': 'لا توجد أخبار منشورة بعد.',
+  'psite.pinned': 'مثبّت',
+  'psite.poweredBy': 'مُشغَّل بواسطة مِداد',
+  // ---- Page headings ----
   'onav.requests': 'الطلبات',
   'req.title': 'الطلبات',
   'req.subAdmin': 'راجع واعتمد طلبات أعضاء {org}.',
@@ -1067,6 +1077,16 @@ const ar: Dict = {
 };
 
 const en: Dict = {
+  // ---- Page headings ----
+  'content.siteLive': 'Published',
+  'content.siteOff': 'Unpublished',
+  'content.siteView': 'Visit public site',
+  'psite.unavailableTitle': 'Site unavailable',
+  'psite.unavailableBody': 'This organization has not published its public site yet.',
+  'psite.news': 'News & announcements',
+  'psite.noNews': 'No news published yet.',
+  'psite.pinned': 'Pinned',
+  'psite.poweredBy': 'Powered by Midad',
   // ---- Page headings ----
   'onav.requests': 'Requests',
   'req.title': 'Requests',

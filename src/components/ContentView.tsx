@@ -7,7 +7,7 @@ import { useLocale } from '@/lib/i18n/LocaleProvider';
 
 interface Announcement { id: string; title: string; body: string; createdAt: string; }
 
-export default function ContentView({ announcements }: { announcements: Announcement[] }) {
+export default function ContentView({ announcements, slug, sitePublished }: { announcements: Announcement[]; slug: string; sitePublished: boolean }) {
   const { t, locale } = useLocale();
   const dateFmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar-u-nu-latn', { year: 'numeric', month: 'short', day: 'numeric' });
   const router = useRouter();
@@ -15,6 +15,19 @@ export default function ContentView({ announcements }: { announcements: Announce
   const [body, setBody] = useState('');
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
+  const [published, setPublished] = useState(sitePublished);
+  const [pubBusy, setPubBusy] = useState(false);
+
+  async function togglePublish() {
+    setPubBusy(true);
+    const next = !published;
+    try {
+      const res = await fetch('/api/org/site', {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ published: next }),
+      });
+      if (res.ok) { setPublished(next); router.refresh(); }
+    } finally { setPubBusy(false); }
+  }
 
   async function create(e: FormEvent) {
     e.preventDefault();
@@ -68,8 +81,12 @@ export default function ContentView({ announcements }: { announcements: Announce
           <h3>{t('content.siteTitle')}</h3>
           <p>{t('content.siteDesc')}</p>
           <label className="site-toggle">
-            <input type="checkbox" disabled /> {t('content.sitePublish')} <span style={{ opacity: 0.7 }}>{t('content.soon')}</span>
+            <input type="checkbox" checked={published} disabled={pubBusy} onChange={togglePublish} /> {t('content.sitePublish')}
+            <span className={`site-badge ${published ? 'is-live' : ''}`}>{published ? t('content.siteLive') : t('content.siteOff')}</span>
           </label>
+          {published && (
+            <a className="site-link" href={`/site/${slug}`} target="_blank" rel="noreferrer">{t('content.siteView')} ↗</a>
+          )}
         </div>
         <div className="ann-card">
           <div className="ann-card-hd"><strong>{t('content.tipTitle')}</strong></div>
