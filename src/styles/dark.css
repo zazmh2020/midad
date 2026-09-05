@@ -85,6 +85,13 @@
 }
 :root[data-theme="dark"] .qm-wrap { background: #221a35 !important; border-color: rgba(255,255,255,0.1) !important; }
 :root[data-theme="dark"] .qm-subhead th { background: #1d1630 !important; }
+:root[data-theme="dark"] .qm-table tbody td:first-child,
+:root[data-theme="dark"] .qm-table tbody td:nth-child(2) { background: #221a35 !important; box-shadow: 1px 0 0 rgba(255,255,255,0.1) !important; }
+:root[data-theme="dark"] .qm-table tbody tr:hover td:first-child,
+:root[data-theme="dark"] .qm-table tbody tr:hover td:nth-child(2) { background: #2a2140 !important; }
+:root[data-theme="dark"] .qm-g-new { background: #2c2448 !important; color: #c8bbe8 !important; }
+:root[data-theme="dark"] .qm-g-review { background: #1f3330 !important; color: #9cd6c0 !important; }
+:root[data-theme="dark"] .qm-g-last5 { background: #33291d !important; color: #e0b98a !important; }
 :root[data-theme="dark"] .qm-tool select,
 :root[data-theme="dark"] .qm-tool input { background: #221a35 !important; border-color: rgba(255,255,255,0.12) !important; }
 :root[data-theme="dark"] .qm-absent { background: rgba(192,57,43,0.18) !important; }

@@ -125,9 +125,9 @@ export default function MonthlySheetView({
               <th>{t('qm.col.date')}</th>
               <th>{t('qm.col.day')}</th>
               <th>{t('qm.col.attendance')}</th>
-              <th colSpan={2}>{t('qm.col.newLesson')}</th>
-              <th colSpan={2}>{t('qm.col.review')}</th>
-              <th colSpan={2}>{t('qm.col.last5')}</th>
+              <th colSpan={2} className="qm-g-new">{t('qm.col.newLesson')}</th>
+              <th colSpan={2} className="qm-g-review">{t('qm.col.review')}</th>
+              <th colSpan={2} className="qm-g-last5">{t('qm.col.last5')}</th>
               <th>{t('qm.col.pages')}</th>
               <th>{t('qm.col.errors')}</th>
               <th>{t('qm.col.alerts')}</th>
@@ -140,9 +140,9 @@ export default function MonthlySheetView({
             </tr>
             <tr className="qm-subhead">
               <th /><th /><th />
-              <th>{t('qm.from')}</th><th>{t('qm.to')}</th>
-              <th>{t('qm.from')}</th><th>{t('qm.to')}</th>
-              <th>{t('qm.from')}</th><th>{t('qm.to')}</th>
+              <th className="qm-g-new">{t('qm.from')}</th><th className="qm-g-new">{t('qm.to')}</th>
+              <th className="qm-g-review">{t('qm.from')}</th><th className="qm-g-review">{t('qm.to')}</th>
+              <th className="qm-g-last5">{t('qm.from')}</th><th className="qm-g-last5">{t('qm.to')}</th>
               <th /><th /><th /><th /><th /><th /><th /><th /><th />
             </tr>
           </thead>

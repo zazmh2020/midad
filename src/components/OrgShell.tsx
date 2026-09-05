@@ -152,6 +152,20 @@ export default function OrgShell({ children, org, user, nav, inbox }: Props) {
     <div className={`org-app ${collapsed ? 'is-collapsed' : ''}`} style={brandVars(org.brandColor)}>
       <WelcomeBack name={user.name} greeting={t('welcome.greeting')} />
       <aside className={`org-sidebar ${open ? 'is-open' : ''}`}>
+        {/* زر طيّ/فرد الشريط الجانبي (ضمن القائمة نفسها) */}
+        <button
+          className="org-fold-toggle"
+          onClick={toggleCollapsed}
+          aria-label={t('shell.foldSidebar')}
+          aria-pressed={collapsed}
+          title={t('shell.foldSidebar')}
+        >
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            {collapsed
+              ? <path d="M4 5h12M4 10h12M4 15h12" />
+              : <><rect x="2.5" y="3.5" width="15" height="13" rx="2" /><path d="M12.5 3.5v13" /></>}
+          </svg>
+        </button>
         {/* ملف المستخدم أعلى الشريط — للعرض فقط */}
         <div className="org-side-profile">
           <div className="org-user org-user-stacked">
@@ -206,18 +220,6 @@ export default function OrgShell({ children, org, user, nav, inbox }: Props) {
           <button className="org-menu-toggle" onClick={() => setOpen(true)} aria-label={t('shell.menu')}>
             <svg width="20" height="14" viewBox="0 0 20 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
               <path d="M1 1h18M1 7h18M1 13h18" />
-            </svg>
-          </button>
-          <button
-            className="org-fold-toggle"
-            onClick={toggleCollapsed}
-            aria-label={t('shell.foldSidebar')}
-            aria-pressed={collapsed}
-            title={t('shell.foldSidebar')}
-          >
-            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="2.5" y="3.5" width="15" height="13" rx="2" />
-              <path d="M12 3.5v13" />
             </svg>
           </button>
           <Link href={base} className="org-topbar-brand" onClick={() => setOpen(false)}>
