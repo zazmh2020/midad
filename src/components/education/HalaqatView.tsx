@@ -2,11 +2,11 @@
 
 import { useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
-import { HALAQA_TYPES } from '@/lib/permissions';
+import { HALAQA_TYPES, HALAQA_TRACKS, HALAQA_PERIODS } from '@/lib/permissions';
 import { useLocale } from '@/lib/i18n/LocaleProvider';
 
 type Halaqa = {
-  id: string; name: string; type: string; schedule: string | null;
+  id: string; name: string; type: string; track: string | null; period: string | null; schedule: string | null;
   teacherId: string | null; teacherName: string | null; studentCount: number;
 };
 type Ref = { id: string; name: string };
@@ -14,12 +14,16 @@ type Ref = { id: string; name: string };
 export default function HalaqatView({ halaqat, teachers }: { halaqat: Halaqa[]; teachers: Ref[] }) {
   const { t } = useLocale();
   const typeLabel = (v: string) => t(`status.halaqa.${v}`);
+  const trackLabel = (v: string) => t(`htrack.${v}`);
+  const periodLabel = (v: string) => t(`hperiod.${v}`);
   const router = useRouter();
   const [creating, setCreating] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [error, setError] = useState('');
   const [name, setName] = useState('');
   const [type, setType] = useState('MEMORIZATION');
+  const [track, setTrack] = useState('');
+  const [period, setPeriod] = useState('');
   const [schedule, setSchedule] = useState('');
   const [teacherId, setTeacherId] = useState('');
 
@@ -29,11 +33,11 @@ export default function HalaqatView({ halaqat, teachers }: { halaqat: Halaqa[]; 
     try {
       const res = await fetch('/api/org/education/halaqat', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, type, schedule, teacherId: teacherId || null }),
+        body: JSON.stringify({ name, type, track: track || null, period: period || null, schedule, teacherId: teacherId || null }),
       });
       const d = await res.json().catch(() => ({}));
       if (!res.ok) setError(d.error ?? t('form.createErr'));
-      else { setName(''); setSchedule(''); setTeacherId(''); setType('MEMORIZATION'); setCreating(false); router.refresh(); }
+      else { setName(''); setSchedule(''); setTeacherId(''); setType('MEMORIZATION'); setTrack(''); setPeriod(''); setCreating(false); router.refresh(); }
     } catch { setError(t('form.netErr')); } finally { setBusyId(null); }
   }
 
@@ -83,6 +87,22 @@ export default function HalaqatView({ halaqat, teachers }: { halaqat: Halaqa[]; 
               </select>
             </div>
             <div className="org-field">
+              <label htmlFor="h-track">{t('edu.hq.track')}</label>
+              <select id="h-track" value={track} onChange={(e) => setTrack(e.target.value)}>
+                <option value="">{t('edu.hq.noTrack')}</option>
+                {HALAQA_TRACKS.map((tr) => <option key={tr} value={tr}>{trackLabel(tr)}</option>)}
+              </select>
+            </div>
+          </div>
+          <div className="org-field-row">
+            <div className="org-field">
+              <label htmlFor="h-period">{t('edu.hq.period')}</label>
+              <select id="h-period" value={period} onChange={(e) => setPeriod(e.target.value)}>
+                <option value="">{t('edu.hq.noPeriod')}</option>
+                {HALAQA_PERIODS.map((pr) => <option key={pr} value={pr}>{periodLabel(pr)}</option>)}
+              </select>
+            </div>
+            <div className="org-field">
               <label htmlFor="h-teacher">{t('edu.hq.teacher')}</label>
               <select id="h-teacher" value={teacherId} onChange={(e) => setTeacherId(e.target.value)}>
                 <option value="">{t('edu.hq.noTeacher')}</option>
@@ -112,6 +132,12 @@ export default function HalaqatView({ halaqat, teachers }: { halaqat: Halaqa[]; 
                 <h3>{h.name}</h3>
                 <span className="org-chip">{typeLabel(h.type)}</span>
               </div>
+              {(h.track || h.period) && (
+                <div className="org-card-tags">
+                  {h.track && <span className="org-chip org-chip-track">{trackLabel(h.track)}</span>}
+                  {h.period && <span className="org-chip org-chip-period">{periodLabel(h.period)}</span>}
+                </div>
+              )}
               <div className="org-card-meta">
                 <span>{t('edu.hq.teacherLabel', { v: h.teacherName ?? '—' })}</span>
                 <span>{t('edu.hq.studentsLabel', { n: h.studentCount })}</span>

@@ -796,6 +796,8 @@ a.org-module:hover {
   font-size: 0.7rem;
   font-weight: 600;
 }
+.org-chip-track { background: #efeaf7; color: #5a47a0; }
+.org-chip-period { background: #e7f3ee; color: #1d7a55; }
 
 /* تقدير التسميع */
 .org-rating-excellent    { background: #dcfce7; color: #166534; }

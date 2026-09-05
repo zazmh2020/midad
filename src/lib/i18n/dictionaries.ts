@@ -9,6 +9,16 @@ type Dict = Record<string, string>;
 
 const ar: Dict = {
   // ---- Page headings ----
+  'edu.hq.track': 'المسار',
+  'edu.hq.noTrack': '— بلا مسار',
+  'edu.hq.period': 'الفترة',
+  'edu.hq.noPeriod': '— بلا فترة',
+  'htrack.MEMORIZATION': 'قسم الحفظ',
+  'htrack.RECITATION': 'قسم التلاوة',
+  'hperiod.MORNING': 'الفترة الصباحية',
+  'hperiod.EVENING1': 'الفترة المسائية الأولى',
+  'hperiod.EVENING2': 'الفترة المسائية الثانية',
+  // ---- Page headings ----
   'qm.sendDaily': 'إرسال التقرير اليومي',
   'qm.sendMonthly': 'إرسال التقرير الشهري',
   'qm.sending': 'جارٍ الإرسال…',
@@ -1030,6 +1040,16 @@ const ar: Dict = {
 };
 
 const en: Dict = {
+  // ---- Page headings ----
+  'edu.hq.track': 'Track',
+  'edu.hq.noTrack': '— No track',
+  'edu.hq.period': 'Period',
+  'edu.hq.noPeriod': '— No period',
+  'htrack.MEMORIZATION': 'Memorization',
+  'htrack.RECITATION': 'Recitation',
+  'hperiod.MORNING': 'Morning session',
+  'hperiod.EVENING1': 'First evening session',
+  'hperiod.EVENING2': 'Second evening session',
   // ---- Page headings ----
   'qm.sendDaily': 'Send daily report',
   'qm.sendMonthly': 'Send monthly report',

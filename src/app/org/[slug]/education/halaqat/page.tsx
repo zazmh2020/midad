@@ -18,7 +18,7 @@ export default async function HalaqatPage({ params }: { params: Promise<{ slug: 
       where: { organizationId: org.id },
       orderBy: { createdAt: 'desc' },
       select: {
-        id: true, name: true, type: true, schedule: true, teacherId: true,
+        id: true, name: true, type: true, track: true, period: true, schedule: true, teacherId: true,
         teacher: { select: { name: true } }, _count: { select: { students: true } },
       },
     }),
@@ -37,7 +37,7 @@ export default async function HalaqatPage({ params }: { params: Promise<{ slug: 
       <HalaqatView
         teachers={teachers}
         halaqat={halaqat.map((h) => ({
-          id: h.id, name: h.name, type: h.type, schedule: h.schedule, teacherId: h.teacherId,
+          id: h.id, name: h.name, type: h.type, track: h.track, period: h.period, schedule: h.schedule, teacherId: h.teacherId,
           teacherName: h.teacher?.name ?? null, studentCount: h._count.students,
         }))}
       />

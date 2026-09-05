@@ -181,12 +181,14 @@ enum StudentStatus {
 
 /// الحلقة / الفصل
 model Halaqa {
-  id        String     @id @default(cuid())
+  id        String        @id @default(cuid())
   name      String
-  type      HalaqaType @default(MEMORIZATION)
+  type      HalaqaType    @default(MEMORIZATION)
+  track     HalaqaTrack?  // قسم الحفظ/التلاوة
+  period    HalaqaPeriod? // الفترة الصباحية/المسائية
   schedule  String?
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
 
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
@@ -247,6 +249,19 @@ enum HalaqaType {
   TAJWEED      // تجويد
   REVIEW       // مراجعة
   OTHER        // أخرى
+}
+
+/// مسار الحلقة — قسم الحفظ أو التلاوة
+enum HalaqaTrack {
+  MEMORIZATION // قسم الحفظ
+  RECITATION   // قسم التلاوة
+}
+
+/// فترة الحلقة — الصباحية أو المسائية
+enum HalaqaPeriod {
+  MORNING  // الفترة الصباحية
+  EVENING1 // الفترة المسائية الأولى
+  EVENING2 // الفترة المسائية الثانية
 }
 
 /// سجل حضور — طالب في حلقة بتاريخ محدّد

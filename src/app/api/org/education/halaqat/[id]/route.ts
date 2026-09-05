@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import type { HalaqaType } from '@/generated/prisma/client';
+import type { HalaqaType, HalaqaTrack, HalaqaPeriod } from '@/generated/prisma/client';
 import { prisma } from '@/lib/prisma';
 import { getOrgActor } from '@/lib/org';
-import { canManageEducation, isHalaqaType } from '@/lib/permissions';
+import { canManageEducation, isHalaqaType, isHalaqaTrack, isHalaqaPeriod } from '@/lib/permissions';
 
 async function own(orgId: string, id: string) {
   return prisma.halaqa.findFirst({ where: { id, organizationId: orgId } });
@@ -19,7 +19,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   const body = await request.json().catch(() => null);
   if (!body) return NextResponse.json({ error: 'طلب غير صالح.' }, { status: 400 });
 
-  const data: { name?: string; type?: HalaqaType; schedule?: string | null; teacherId?: string | null } = {};
+  const data: { name?: string; type?: HalaqaType; schedule?: string | null; teacherId?: string | null; track?: HalaqaTrack | null; period?: HalaqaPeriod | null } = {};
   if (body.name !== undefined) {
     const name = String(body.name).trim();
     if (name.length < 2) return NextResponse.json({ error: 'اسم الحلقة قصير جداً.' }, { status: 400 });
@@ -31,6 +31,16 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     data.type = type;
   }
   if (body.schedule !== undefined) data.schedule = String(body.schedule).trim() || null;
+  if (body.track !== undefined) {
+    const track = body.track ? String(body.track) : null;
+    if (track && !isHalaqaTrack(track)) return NextResponse.json({ error: 'المسار غير صالح.' }, { status: 400 });
+    data.track = (track as HalaqaTrack | null);
+  }
+  if (body.period !== undefined) {
+    const period = body.period ? String(body.period) : null;
+    if (period && !isHalaqaPeriod(period)) return NextResponse.json({ error: 'الفترة غير صالحة.' }, { status: 400 });
+    data.period = (period as HalaqaPeriod | null);
+  }
   if (body.teacherId !== undefined) {
     const teacherId = body.teacherId ? String(body.teacherId) : null;
     if (teacherId) {

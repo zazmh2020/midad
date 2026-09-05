@@ -11,6 +11,8 @@ import type {
   DonationStatus,
   StudentStatus,
   HalaqaType,
+  HalaqaTrack,
+  HalaqaPeriod,
   AttendanceStatus,
   MemorizationKind,
   MemorizationRating,
@@ -315,6 +317,11 @@ export const HALAQA_TYPE_LABELS: Record<HalaqaType, string> = {
 export const HALAQA_TYPES = Object.keys(HALAQA_TYPE_LABELS) as HalaqaType[];
 export const halaqaTypeLabel = (v: string) => HALAQA_TYPE_LABELS[v as HalaqaType] ?? v;
 export const isHalaqaType = (v: string): v is HalaqaType => (HALAQA_TYPES as string[]).includes(v);
+
+export const HALAQA_TRACKS = ['MEMORIZATION', 'RECITATION'] as HalaqaTrack[];
+export const HALAQA_PERIODS = ['MORNING', 'EVENING1', 'EVENING2'] as HalaqaPeriod[];
+export const isHalaqaTrack = (v: string): v is HalaqaTrack => (HALAQA_TRACKS as string[]).includes(v);
+export const isHalaqaPeriod = (v: string): v is HalaqaPeriod => (HALAQA_PERIODS as string[]).includes(v);
 
 export const ATTENDANCE_STATUS_LABELS: Record<AttendanceStatus, string> = {
   PRESENT: 'حاضر', ABSENT: 'غائب', LATE: 'متأخّر', EXCUSED: 'بعذر',
