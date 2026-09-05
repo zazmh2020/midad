@@ -75,6 +75,7 @@
 :root[data-theme="dark"] .org-task,
 :root[data-theme="dark"] .org-module-row,
 :root[data-theme="dark"] .notif-row,
+:root[data-theme="dark"] .dash-quick-tile,
 :root[data-theme="dark"] .srch-bar input,
 :root[data-theme="dark"] .ev-card,
 :root[data-theme="dark"] .org-board-count {

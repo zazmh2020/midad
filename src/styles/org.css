@@ -921,6 +921,16 @@ a.org-module:hover {
 }
 .org-report-grid .org-panel { margin-bottom: 0; }
 
+/* ---------- إجراءات سريعة في اللوحة ---------- */
+.dash-quick { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.7rem; margin: 0.4rem 0 1.4rem; }
+.dash-quick-tile {
+  display: flex; align-items: center; gap: 0.6rem; padding: 0.85rem 1rem; border-radius: 14px;
+  background: #fff; border: 1px solid var(--line); color: var(--text-strong); font-weight: 600; font-size: 0.88rem;
+  text-decoration: none; transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+}
+.dash-quick-tile:hover { transform: translateY(-2px); box-shadow: 0 14px 30px -20px rgba(43,26,78,0.5); border-color: var(--purple-300, #8873af); }
+.dash-quick-tile span { font-size: 1.15rem; }
+
 /* ---------- ترتيب المشاركين ---------- */
 .comp-rank { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; font-weight: 800; font-size: 0.8rem; background: var(--gray-100); color: var(--text-strong); }
 .comp-rank-1 { background: #f7d774; color: #6b4e00; }

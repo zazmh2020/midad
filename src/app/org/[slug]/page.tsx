@@ -162,6 +162,16 @@ export default async function OrgDashboard({
           </div>
         )}
 
+        {/* إجراءات سريعة */}
+        <div className="dash-quick">
+          <Link href={`/org/${org.slug}/education/monthly`} className="dash-quick-tile"><span>📖</span>{t('od.q.monthly')}</Link>
+          <Link href={`/org/${org.slug}/tasks`} className="dash-quick-tile"><span>✅</span>{t('od.q.tasks')}</Link>
+          <Link href={`/org/${org.slug}/education/students`} className="dash-quick-tile"><span>🎓</span>{t('od.q.students')}</Link>
+          <Link href={`/org/${org.slug}/events`} className="dash-quick-tile"><span>📅</span>{t('od.q.events')}</Link>
+          <Link href={`/org/${org.slug}/requests`} className="dash-quick-tile"><span>📝</span>{t('od.q.requests')}</Link>
+          <Link href={`/org/${org.slug}/search`} className="dash-quick-tile"><span>🔎</span>{t('od.q.search')}</Link>
+        </div>
+
         {/* الشبكة الرئيسية: رسم + حلقة */}
         {canUsers && (
           <div className="dash-grid-main">

@@ -841,6 +841,12 @@ const ar: Dict = {
   'adm.promo.sub': 'أنشئ مساحة مستقلة لجهة جديدة وحدّد باقتها ومسؤولها.',
 
   // لوحة الجهة (org dashboard)
+  'od.q.monthly': 'الدليل الشهري',
+  'od.q.tasks': 'المهام',
+  'od.q.students': 'الطلاب',
+  'od.q.events': 'الفعاليات',
+  'od.q.requests': 'الطلبات',
+  'od.q.search': 'بحث',
   'od.eyebrow': 'لوحة المؤسسة',
   'od.welcome': 'مرحباً، {name} 👋',
   'od.role': 'دورك:',
@@ -1994,6 +2000,12 @@ const en: Dict = {
   'adm.promo.title': 'Add a new organization',
   'adm.promo.sub': 'Create an independent space for a new organization and set its plan and admin.',
 
+  'od.q.monthly': 'Monthly guide',
+  'od.q.tasks': 'Tasks',
+  'od.q.students': 'Students',
+  'od.q.events': 'Events',
+  'od.q.requests': 'Requests',
+  'od.q.search': 'Search',
   'od.eyebrow': 'Organization dashboard',
   'od.welcome': 'Welcome, {name} 👋',
   'od.role': 'Your role:',
