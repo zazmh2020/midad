@@ -1082,10 +1082,10 @@ a.org-module:hover {
 }
 .qm-in:focus { outline: none; border-color: var(--purple-300, #8873af); background: #fff; box-shadow: 0 0 0 3px rgba(107, 87, 160, 0.12); }
 .qm-num { width: 44px; text-align: center; }
-.qm-txt { width: 128px; text-align: start; }
-.qm-att { width: 84px; font-family: inherit; }
-.qm-surah { width: 118px; font-family: inherit; text-align: start; }
-.qm-seg { width: 92px; font-family: inherit; }
+.qm-txt { width: 128px; text-align: center; }
+.qm-att { width: 84px; font-family: inherit; text-align: center; text-align-last: center; }
+.qm-surah { width: 118px; font-family: inherit; text-align: center; text-align-last: center; }
+.qm-seg { width: 92px; font-family: inherit; text-align: center; text-align-last: center; }
 .qm-in:disabled { color: var(--text-muted); }
 
 .qm-status { width: 20px; }
