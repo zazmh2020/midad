@@ -9,6 +9,28 @@ type Dict = Record<string, string>;
 
 const ar: Dict = {
   // ---- Page headings ----
+  'onav.fees': 'الرسوم',
+  'fee.pageTitle': 'رسوم الطلاب',
+  'fee.pageSub': 'رسوم واشتراكات طلاب {org} ومتابعة سدادها.',
+  'fee.new': '+ رسم جديد',
+  'fee.student': 'الطالب',
+  'fee.title': 'البند',
+  'fee.titlePh': 'اشتراك شهر سبتمبر',
+  'fee.amount': 'المبلغ',
+  'fee.due': 'الاستحقاق',
+  'fee.create': 'إضافة الرسم',
+  'fee.none': 'لا توجد رسوم بعد.',
+  'fee.paid': 'مسدَّد',
+  'fee.unpaid': 'غير مسدَّد',
+  'fee.markPaid': 'تعليم كمسدَّد',
+  'fee.markUnpaid': 'تعليم كغير مسدَّد',
+  'fee.deleteConfirm': 'حذف هذا الرسم؟',
+  'fee.totalPaid': 'إجمالي المسدَّد',
+  'fee.totalDue': 'إجمالي المستحق',
+  'fee.all': 'الكل',
+  'fee.dueOnly': 'المستحقة',
+  'fee.paidOnly': 'المسدَّدة',
+  // ---- Page headings ----
   'content.infoTitle': 'معلومات الموقع العام',
   'content.about': 'نبذة عن المؤسسة',
   'content.cEmail': 'البريد للتواصل',
@@ -1129,6 +1151,28 @@ const ar: Dict = {
 };
 
 const en: Dict = {
+  // ---- Page headings ----
+  'onav.fees': 'Fees',
+  'fee.pageTitle': 'Student fees',
+  'fee.pageSub': 'Fees and subscriptions for {org} students and their payment status.',
+  'fee.new': '+ New fee',
+  'fee.student': 'Student',
+  'fee.title': 'Item',
+  'fee.titlePh': 'September subscription',
+  'fee.amount': 'Amount',
+  'fee.due': 'Due',
+  'fee.create': 'Add fee',
+  'fee.none': 'No fees yet.',
+  'fee.paid': 'Paid',
+  'fee.unpaid': 'Unpaid',
+  'fee.markPaid': 'Mark paid',
+  'fee.markUnpaid': 'Mark unpaid',
+  'fee.deleteConfirm': 'Delete this fee?',
+  'fee.totalPaid': 'Total paid',
+  'fee.totalDue': 'Total due',
+  'fee.all': 'All',
+  'fee.dueOnly': 'Due',
+  'fee.paidOnly': 'Paid',
   // ---- Page headings ----
   'content.infoTitle': 'Public site info',
   'content.about': 'About the organization',

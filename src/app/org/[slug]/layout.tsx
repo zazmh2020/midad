@@ -56,6 +56,7 @@ export default async function OrgLayout({
       ? ([
           { kind: 'link', href: `${base}/education`, label: t('onav.education'), icon: 'education', match: [`${base}/education`] },
           { kind: 'link', href: `${base}/education/my-halaqat`, label: t('onav.myHalaqat'), icon: 'education' },
+          { kind: 'link', href: `${base}/fees`, label: t('onav.fees'), icon: 'operations', match: [`${base}/fees`] },
           { kind: 'link', href: `${base}/education/plans`, label: t('onav.plans'), icon: 'plans' },
           { kind: 'link', href: `${base}/education/competitions`, label: t('onav.competitions'), icon: 'competitions' },
           { kind: 'link', href: `${base}/education/certificates`, label: t('onav.certificates'), icon: 'certificates' },
