@@ -327,14 +327,14 @@ svg {
 }
 
 /* ---------- الشريط العلوي: بروفايل أسطواني + خروج مباشر + أيقونات موحّدة ---------- */
-/* توحيد أحجام أيقونات الأدوات (بحث/رسائل/جرس/لغة/ثيم) */
-/* الأدوات تملأ المسافة بين الشعار والبروفايل فلا يبقى فراغ غير منسّق */
+/* توحيد أحجام أيقونات الأدوات (بحث/رسائل/جرس/لغة/ثيم) — كلها 38px بنفس الارتفاع */
 .org-topbar .tbt, .admin-topbar .tbt { flex: 1 1 auto; margin-inline-start: 0; gap: 0.55rem; }
+.org-topbar .tbt-btn, .admin-topbar .tbt-btn,
 .org-topbar .theme-toggle, .admin-topbar .theme-toggle,
-.org-topbar .lang-toggle, .admin-topbar .lang-toggle { width: 38px; height: 38px; }
+.org-topbar .lang-toggle, .admin-topbar .lang-toggle { width: 38px; height: 38px; flex-shrink: 0; }
 .org-topbar .theme-toggle svg, .admin-topbar .theme-toggle svg { width: 18px; height: 18px; }
-/* البحث يتمدّد ليملأ الوسط (الشعار يمينًا، الأدوات والبروفايل يسارًا) */
-.org-topbar .tbt-search, .admin-topbar .tbt-search { flex: 1 1 auto; width: auto; min-width: 150px; max-width: 440px; }
+/* البحث بعرض ثابت يمينًا، ثم فراغ مرن يدفع الأيقونات لتلتصق بالبروفايل يسارًا */
+.org-topbar .tbt-search, .admin-topbar .tbt-search { flex: 0 1 clamp(160px, 22vw, 340px); width: auto; height: 38px; margin-inline-end: auto; }
 
 /* بروفايل أسطواني (أفاتار + اسم/مسمى + سهم) */
 .tbar-user {
