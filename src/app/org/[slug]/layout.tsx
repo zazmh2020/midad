@@ -3,7 +3,7 @@ import { requireOrgAccess } from '@/lib/org';
 import {
   canViewUsers, canManageSettings, canViewProjects, canViewStructure,
   canViewCampaigns, canViewBeneficiaries, canViewKnowledge, canViewReports,
-  canViewDocuments, canUseAssistant, canManageUsers,
+  canViewDocuments, canUseAssistant, canManageUsers, canViewRequests,
 } from '@/lib/permissions';
 import OrgShell, { type NavEntry } from '@/components/OrgShell';
 import { getOrgInbox } from '@/lib/inbox';
@@ -59,6 +59,10 @@ export default async function OrgLayout({
           { kind: 'link', href: `${base}/education/competitions`, label: t('onav.competitions'), icon: 'competitions' },
           { kind: 'link', href: `${base}/education/certificates`, label: t('onav.certificates'), icon: 'certificates' },
         ] as NavEntry[])
+      : []),
+    ...(canViewRequests(r)
+      ? ([{ kind: 'link', href: `${base}/requests`, label: t('onav.requests'), icon: 'documents',
+          match: [`${base}/requests`] }] as NavEntry[])
       : []),
 
     // الطبقة الثانية — المعرفة والذكاء

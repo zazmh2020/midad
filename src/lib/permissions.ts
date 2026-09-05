@@ -20,6 +20,8 @@ import type {
   VolunteerStatus,
   TaskStatus,
   TaskPriority,
+  RequestType,
+  RequestStatus,
 } from '@/generated/prisma/client';
 
 /* ============================================================
@@ -110,6 +112,22 @@ export function canViewTasks(role: string): boolean {
 /** من ينشئ ويعدّل ويحذف المهام */
 export function canManageTasks(role: string): boolean {
   return role === 'ORG_ADMIN' || role === 'STAFF';
+}
+
+/* ---------- الطلبات ---------- */
+
+export const REQUEST_TYPES = ['EXAM', 'GRADE_EDIT', 'SUPERVISOR_MEETING', 'PERMISSION', 'MAKEUP_CLASS', 'TEACHER_SERVICE', 'DROPOUT_EXAM', 'OTHER'] as RequestType[];
+export const REQUEST_STATUSES = ['PENDING', 'APPROVED', 'REJECTED'] as RequestStatus[];
+export const isRequestType = (v: string): v is RequestType => (REQUEST_TYPES as string[]).includes(v);
+export const isRequestStatus = (v: string): v is RequestStatus => (REQUEST_STATUSES as string[]).includes(v);
+
+/** من يطّلع على طلبات المؤسسة ويقدّمها — جميع الأعضاء */
+export function canViewRequests(role: string): boolean {
+  return role === 'ORG_ADMIN' || role === 'STAFF' || role === 'MEMBER';
+}
+/** من يعتمد/يرفض الطلبات — مدير المؤسسة */
+export function canManageRequests(role: string): boolean {
+  return role === 'ORG_ADMIN';
 }
 
 /* ---------- الهيكل المؤسسي ---------- */

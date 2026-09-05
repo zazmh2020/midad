@@ -44,6 +44,7 @@ model Organization {
   teams         Team[]
   tasks         Task[]
   quranRecords  QuranDailyRecord[]
+  requests      MemberRequest[]
 
   @@map("organizations")
 }
@@ -458,6 +459,7 @@ model User {
   articles  KnowledgeArticle[]
   documents Document[]
   tasks     Task[] @relation("TaskAssignee")
+  requests  MemberRequest[] @relation("RequestRequester")
 
   @@index([organizationId])
   @@index([departmentId])
@@ -654,6 +656,44 @@ enum TaskPriority {
   MEDIUM   // متوسطة
   HIGH     // عالية
   URGENT   // عاجلة
+}
+
+/// طلب داخلي — يقدّمه عضو ويعتمده مدير المؤسسة
+model MemberRequest {
+  id        String        @id @default(cuid())
+  type      RequestType
+  status    RequestStatus @default(PENDING)
+  details   String?
+  reply     String? // ردّ المدير عند الاعتماد/الرفض
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  requesterId String
+  requester   User   @relation("RequestRequester", fields: [requesterId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([requesterId])
+  @@map("member_requests")
+}
+
+enum RequestType {
+  EXAM               // طلب اختبار
+  GRADE_EDIT         // طلب تعديل درجات
+  SUPERVISOR_MEETING // طلب اجتماع مع مراقب
+  PERMISSION         // طلب إذن
+  MAKEUP_CLASS       // طلب فتح فصل تعويض
+  TEACHER_SERVICE    // طلب خدمة للمعلمين
+  DROPOUT_EXAM       // اختبار المنقطعين
+  OTHER              // أخرى
+}
+
+enum RequestStatus {
+  PENDING   // قيد المراجعة
+  APPROVED  // معتمَد
+  REJECTED  // مرفوض
 }
 
 enum ProgramCategory {

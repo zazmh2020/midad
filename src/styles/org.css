@@ -829,6 +829,11 @@ a.org-module:hover {
 .org-pstatus-completed { background: #e0e7ff; color: #4338ca; }
 .org-pstatus-suspended { background: #fef3c7; color: #92400e; }
 
+.org-reqstatus-pending  { background: #fef3c7; color: #92400e; }
+.org-reqstatus-approved { background: #dcfce7; color: #166534; }
+.org-reqstatus-rejected { background: #fee2e2; color: #b91c1c; }
+.org-req-reply { color: var(--purple-700, #6b57a0); font-weight: 600; }
+
 /* حالات الحملات */
 .org-cstatus-planned   { background: #eef2ff; color: #3730a3; }
 .org-cstatus-active    { background: #dcfce7; color: #166534; }
