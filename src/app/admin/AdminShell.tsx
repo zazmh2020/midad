@@ -41,6 +41,19 @@ function Icon({ name }: { name: keyof typeof ICONS }) {
   );
 }
 
+function Avatar({ url }: { url?: string | null }) {
+  if (url) {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={url} alt="" />;
+  }
+  return (
+    <svg className="ava-default" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <circle cx="12" cy="8.5" r="3.8" />
+      <path d="M4.6 20a7.4 7.4 0 0 1 14.8 0z" />
+    </svg>
+  );
+}
+
 export default function AdminShell({ children, session, avatarUrl, inbox }: Props) {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -63,35 +76,13 @@ export default function AdminShell({ children, session, avatarUrl, inbox }: Prop
       {/* Sidebar */}
       <aside className={`admin-sidebar ${sidebarOpen ? 'is-open' : ''}`}>
         <div className="admin-side-profile">
-          <button className="admin-user admin-user-stacked" onClick={() => setProfileOpen((v) => !v)} aria-expanded={profileOpen}>
+          <div className="admin-user admin-user-stacked">
             <span className="admin-user-avatar admin-user-avatar-lg">
-              {avatarUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={avatarUrl} alt="" />
-              ) : (
-                session.name.charAt(0).toUpperCase()
-              )}
+              <Avatar url={avatarUrl} />
             </span>
             <span className="admin-user-name">{session.name}</span>
             <span className="admin-user-role">{t('anav.owner')}</span>
-            <svg className="admin-user-chev" width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8l4 4 4-4" /></svg>
-          </button>
-          {profileOpen && (
-            <div className="admin-profile-menu">
-              <div className="admin-profile-head">
-                <span className="admin-profile-name">{session.name}</span>
-                <span className="admin-profile-email" dir="ltr">{session.email}</span>
-              </div>
-              <Link href="/admin/settings" className="admin-profile-link" onClick={() => setProfileOpen(false)}>
-                <Icon name="settings" />
-                <span>{t('shell.profile')}</span>
-              </Link>
-              <button className="admin-profile-link admin-profile-logout" onClick={() => { setProfileOpen(false); setConfirmLogout(true); }}>
-                <Icon name="logout" />
-                <span>{t('shell.logout')}</span>
-              </button>
-            </div>
-          )}
+          </div>
         </div>
 
         <nav className="admin-nav">
@@ -153,6 +144,30 @@ export default function AdminShell({ children, session, avatarUrl, inbox }: Prop
             notifications={inbox.notifications}
             storageKey="midad_admin"
           />
+          <div className="org-topbar-profile">
+            <button className="org-topbar-ava" onClick={() => setProfileOpen((v) => !v)} aria-expanded={profileOpen} aria-label={t('shell.profile')}>
+              <Avatar url={avatarUrl} />
+            </button>
+            {profileOpen && (
+              <>
+                <div className="org-menu-backdrop" onClick={() => setProfileOpen(false)} />
+                <div className="admin-profile-menu org-profile-menu-top">
+                  <div className="admin-profile-head">
+                    <span className="admin-profile-name">{session.name}</span>
+                    <span className="admin-profile-email" dir="ltr">{session.email}</span>
+                  </div>
+                  <Link href="/admin/settings" className="admin-profile-link" onClick={() => setProfileOpen(false)}>
+                    <Icon name="settings" />
+                    <span>{t('shell.profile')}</span>
+                  </Link>
+                  <button className="admin-profile-link admin-profile-logout" onClick={() => { setProfileOpen(false); setConfirmLogout(true); }}>
+                    <Icon name="logout" />
+                    <span>{t('shell.logout')}</span>
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </header>
 
         <main className="admin-content">{children}</main>

@@ -88,6 +88,20 @@ function Icon({ name }: { name: keyof typeof ICONS }) {
   );
 }
 
+/** صورة المستخدم — صورة مرفوعة أو أيقونة شخص افتراضية. */
+function Avatar({ url }: { url?: string | null }) {
+  if (url) {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={url} alt="" />;
+  }
+  return (
+    <svg className="ava-default" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <circle cx="12" cy="8.5" r="3.8" />
+      <path d="M4.6 20a7.4 7.4 0 0 1 14.8 0z" />
+    </svg>
+  );
+}
+
 export default function OrgShell({ children, org, user, nav, inbox }: Props) {
   const t = useT();
   const pathname = usePathname();
@@ -123,33 +137,15 @@ export default function OrgShell({ children, org, user, nav, inbox }: Props) {
   return (
     <div className="org-app" style={brandVars(org.brandColor)}>
       <aside className={`org-sidebar ${open ? 'is-open' : ''}`}>
-        {/* ملف المستخدم أعلى الشريط */}
+        {/* ملف المستخدم أعلى الشريط — للعرض فقط */}
         <div className="org-side-profile">
-          <button className="org-user org-user-stacked" onClick={() => setProfileOpen((v) => !v)} aria-expanded={profileOpen}>
+          <div className="org-user org-user-stacked">
             <span className="org-user-avatar org-user-avatar-lg">
-              {user.avatarUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={user.avatarUrl} alt="" />
-              ) : (
-                user.name.charAt(0)
-              )}
+              <Avatar url={user.avatarUrl} />
             </span>
             <span className="org-user-name">{user.name}</span>
             <span className="org-user-role">{t(`role.${user.role}`)}</span>
-            <svg className="org-user-chev" width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8l4 4 4-4" /></svg>
-          </button>
-          {profileOpen && (
-            <div className="org-profile-menu">
-              <Link href={`${base}/settings`} className="org-profile-link" onClick={() => { setProfileOpen(false); setOpen(false); }}>
-                <Icon name="settings" />
-                <span>{t('shell.profile')}</span>
-              </Link>
-              <button className="org-profile-link org-profile-logout" onClick={() => { setProfileOpen(false); setConfirmLogout(true); }}>
-                <Icon name="logout" />
-                <span>{t('shell.logout')}</span>
-              </button>
-            </div>
-          )}
+          </div>
         </div>
 
         <nav className="org-nav">
@@ -211,6 +207,30 @@ export default function OrgShell({ children, org, user, nav, inbox }: Props) {
             notifications={inbox.notifications}
             storageKey={`midad_org_${org.slug}`}
           />
+          <div className="org-topbar-profile">
+            <button className="org-topbar-ava" onClick={() => setProfileOpen((v) => !v)} aria-expanded={profileOpen} aria-label={t('shell.profile')}>
+              <Avatar url={user.avatarUrl} />
+            </button>
+            {profileOpen && (
+              <>
+                <div className="org-menu-backdrop" onClick={() => setProfileOpen(false)} />
+                <div className="org-profile-menu org-profile-menu-top">
+                  <div className="org-profile-head">
+                    <span className="org-profile-name">{user.name}</span>
+                    <span className="org-profile-role">{t(`role.${user.role}`)}</span>
+                  </div>
+                  <Link href={`${base}/settings`} className="org-profile-link" onClick={() => setProfileOpen(false)}>
+                    <Icon name="settings" />
+                    <span>{t('shell.profile')}</span>
+                  </Link>
+                  <button className="org-profile-link org-profile-logout" onClick={() => { setProfileOpen(false); setConfirmLogout(true); }}>
+                    <Icon name="logout" />
+                    <span>{t('shell.logout')}</span>
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </header>
         <main className="org-content">{children}</main>
       </div>
