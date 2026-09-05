@@ -1292,3 +1292,13 @@ a.org-module:hover {
 .org-profile-head { padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--line); margin-bottom: 0.3rem; display: flex; flex-direction: column; }
 .org-profile-name { font-weight: 700; font-size: 0.86rem; color: var(--purple-900); }
 .org-profile-role { font-size: 0.72rem; color: var(--gray-500); margin-top: 1px; }
+
+/* حقل الهاتف: مفتاح دولة + رقم */
+.pf-phone-row { display: flex; gap: 0.5rem; align-items: stretch; }
+.pf-phone-row .pf-dial {
+  flex: 0 0 auto; width: 120px; min-width: 0; text-overflow: ellipsis;
+  background: #fff; border: 1.5px solid var(--gray-300); border-radius: 11px;
+  padding: 0.6rem 0.5rem; font-family: var(--font-body); font-size: 0.85rem; color: var(--gray-900);
+}
+.pf-phone-row input { flex: 1; min-width: 0; }
+.pf-phone-row .pf-dial:focus { outline: none; border-color: var(--purple-500); }

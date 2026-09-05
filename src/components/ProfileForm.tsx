@@ -3,6 +3,17 @@
 import { useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { useT } from '@/lib/i18n/LocaleProvider';
+import { COUNTRIES } from '@/lib/countries';
+
+/** يفصل رقمًا مخزّنًا "+966 5xxxx" إلى مفتاح دولة ورقم محلّي. */
+function splitPhone(raw: string): { dial: string; number: string } {
+  const val = (raw ?? '').trim();
+  if (!val) return { dial: '+966', number: '' };
+  const dials = [...COUNTRIES].map((c) => c.dial).sort((a, b) => b.length - a.length);
+  const hit = dials.find((d) => val.startsWith(d));
+  if (hit) return { dial: hit, number: val.slice(hit.length).trim() };
+  return { dial: '+966', number: val };
+}
 
 export default function ProfileForm({
   name: initialName, email, role, avatarUrl: initialAvatar = '',
@@ -14,7 +25,10 @@ export default function ProfileForm({
   const [name, setName] = useState(initialName);
   const [avatarUrl, setAvatarUrl] = useState(initialAvatar ?? '');
   const [jobTitle, setJobTitle] = useState(initialJob ?? '');
-  const [phone, setPhone] = useState(initialPhone ?? '');
+  const initPhone = splitPhone(initialPhone ?? '');
+  const [dial, setDial] = useState(initPhone.dial);
+  const [phoneNum, setPhoneNum] = useState(initPhone.number);
+  const phone = phoneNum.trim() ? `${dial} ${phoneNum.trim()}` : '';
   const [nameStatus, setNameStatus] = useState<{ kind: 'ok' | 'error'; msg: string } | null>(null);
   const [nameBusy, setNameBusy] = useState(false);
 
@@ -94,8 +108,14 @@ export default function ProfileForm({
           </div>
           <div className="org-field">
             <label htmlFor="pf-phone">{t('pf.phone')}</label>
-            <input id="pf-phone" dir="ltr" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder={t('pf.phonePh')} />
-            <span className="org-hint">{t('pf.phoneHint')}</span>
+            <div className="pf-phone-row" dir="ltr">
+              <select className="pf-dial" value={dial} onChange={(e) => setDial(e.target.value)} aria-label={t('pf.phoneHint')}>
+                {COUNTRIES.map((c) => (
+                  <option key={c.code} value={c.dial}>{c.flag} {c.dial} {c.name}</option>
+                ))}
+              </select>
+              <input id="pf-phone" type="tel" value={phoneNum} onChange={(e) => setPhoneNum(e.target.value)} placeholder="5X XXX XXXX" />
+            </div>
           </div>
         </div>
         <div className="org-kv"><span>{t('pf.role')}</span><strong>{t(`role.${role}`)}</strong></div>
