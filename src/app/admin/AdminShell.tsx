@@ -6,8 +6,10 @@ import { useState, type ReactNode } from 'react';
 import type { SessionData } from '@/lib/session';
 import { LogoMark } from '@/components/Logo';
 import TopbarTools, { type SearchItem } from '@/components/TopbarTools';
+import WelcomeBack from '@/components/WelcomeBack';
 import { useT } from '@/lib/i18n/LocaleProvider';
 import type { OrgInbox } from '@/lib/inbox';
+import '@/styles/welcome.css';
 
 interface Props {
   children: ReactNode;
@@ -73,6 +75,7 @@ export default function AdminShell({ children, session, avatarUrl, inbox }: Prop
 
   return (
     <div className="admin-app">
+      <WelcomeBack name={session.name} greeting={t('welcome.greeting')} />
       {/* Sidebar */}
       <aside className={`admin-sidebar ${sidebarOpen ? 'is-open' : ''}`}>
         <div className="admin-side-profile">

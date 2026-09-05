@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
 import { createSession, sessionCookieDomain } from '@/lib/session';
@@ -89,6 +90,10 @@ export async function POST(request: Request) {
     body.remember === true,
     sessionCookieDomain(request.headers.get('host')),
   );
+
+  // علامة ترحيب تظهر مرّة واحدة بعد الدخول
+  const domain = sessionCookieDomain(request.headers.get('host'));
+  (await cookies()).set('midad_welcome', '1', { path: '/', maxAge: 120, ...(domain ? { domain } : {}) });
 
   const redirectTo = destinationFor(request, user.role, user.organization?.slug ?? null);
   return NextResponse.json({ ok: true, redirectTo });

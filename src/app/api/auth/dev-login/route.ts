@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 import { createSession, sessionCookieDomain } from '@/lib/session';
 
@@ -53,6 +54,9 @@ export async function GET(request: Request) {
     true,
     sessionCookieDomain(request.headers.get('host')),
   );
+
+  const domain = sessionCookieDomain(request.headers.get('host'));
+  (await cookies()).set('midad_welcome', '1', { path: '/', maxAge: 120, ...(domain ? { domain } : {}) });
 
   return NextResponse.redirect(destinationFor(request, user.role, user.organization?.slug ?? null));
 }

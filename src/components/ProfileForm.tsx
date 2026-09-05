@@ -81,7 +81,10 @@ export default function ProfileForm({
               // eslint-disable-next-line @next/next/no-img-element
               <img src={avatarUrl} alt="" />
             ) : (
-              (name.trim().charAt(0) || '؟')
+              <svg className="ava-default" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <circle cx="12" cy="8.5" r="3.8" />
+                <path d="M4.6 20a7.4 7.4 0 0 1 14.8 0z" />
+              </svg>
             )}
           </span>
           <div className="org-field" style={{ flex: 1, margin: 0 }}>

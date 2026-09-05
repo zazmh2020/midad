@@ -5,8 +5,10 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useState, type CSSProperties, type ReactNode } from 'react';
 import { LogoMark } from '@/components/Logo';
 import TopbarTools, { type SearchItem } from '@/components/TopbarTools';
+import WelcomeBack from '@/components/WelcomeBack';
 import { useT } from '@/lib/i18n/LocaleProvider';
 import type { OrgInbox } from '@/lib/inbox';
+import '@/styles/welcome.css';
 
 /* اشتقاق تدرّج بنفسجي مخصّص من لون هوية الجهة */
 function hexToRgb(h: string): [number, number, number] {
@@ -136,6 +138,7 @@ export default function OrgShell({ children, org, user, nav, inbox }: Props) {
 
   return (
     <div className="org-app" style={brandVars(org.brandColor)}>
+      <WelcomeBack name={user.name} greeting={t('welcome.greeting')} />
       <aside className={`org-sidebar ${open ? 'is-open' : ''}`}>
         {/* ملف المستخدم أعلى الشريط — للعرض فقط */}
         <div className="org-side-profile">

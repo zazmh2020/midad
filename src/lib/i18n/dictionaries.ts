@@ -550,6 +550,7 @@ const ar: Dict = {
   'plan.cta.contact': 'تواصل معنا',
 
   'form.create': 'إنشاء',
+  'welcome.greeting': 'مرحباً بعودتك',
   'view.close': 'إغلاق النموذج',
   'struct.deleteConfirm': 'حذف هذه الوحدة؟',
   'struct.name': 'اسم الوحدة',
@@ -1096,6 +1097,7 @@ const en: Dict = {
   'plan.cta.contact': 'Contact us',
 
   'form.create': 'Create',
+  'welcome.greeting': 'Welcome back',
   'view.close': 'Close form',
   'struct.deleteConfirm': 'Delete this unit?',
   'struct.name': 'Unit name',

@@ -148,10 +148,12 @@
   font-size: 0.78rem; color: rgba(255, 255, 255, 0.5); z-index: 2;
 }
 
-/* رابط العودة للرئيسية في الزاوية العليا (يمين) — على خلفية داكنة */
+/* رابط العودة للرئيسية — زر مطابق للمبدّلات ومحاذٍ لها */
 .lg-home-top {
-  position: absolute; top: 1.6rem; right: 1.4rem; z-index: 2;
-  font-size: 0.85rem; font-weight: 600; color: rgba(255, 255, 255, 0.78);
-  display: inline-flex; align-items: center; gap: 0.35rem; transition: color 0.2s;
+  position: absolute; top: 1.4rem; right: 1.4rem; z-index: 2; height: 34px;
+  display: inline-flex; align-items: center; gap: 0.4rem; padding: 0 1rem;
+  border-radius: 100px; border: 1px solid rgba(255, 255, 255, 0.28); background: transparent;
+  font-size: 0.82rem; font-weight: 600; color: rgba(255, 255, 255, 0.85);
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
 }
-.lg-home-top:hover { color: #fff; }
+.lg-home-top:hover { color: #fff; background: rgba(255, 255, 255, 0.14); border-color: rgba(255, 255, 255, 0.5); }

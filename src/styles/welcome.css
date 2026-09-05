@@ -1,0 +1,43 @@
+/* ============================================================
+   مِداد — شاشة ترحيب بعد الدخول (WelcomeBack)
+   ============================================================ */
+.wlc {
+  position: fixed; inset: 0; z-index: 300; display: grid; place-items: center; overflow: hidden;
+  background: radial-gradient(120% 120% at 50% 0%, #3D2879 0%, #2B1A4E 55%, #17122b 100%);
+  opacity: 0; animation: wlcIn 0.5s var(--ease, cubic-bezier(0.22,0.61,0.36,1)) forwards;
+}
+.wlc.is-leaving { animation: wlcOut 0.6s var(--ease, cubic-bezier(0.22,0.61,0.36,1)) forwards; }
+@keyframes wlcIn { to { opacity: 1; } }
+@keyframes wlcOut { to { opacity: 0; visibility: hidden; } }
+
+.wlc-glow { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.5; pointer-events: none; }
+.wlc-glow-1 { width: 460px; height: 460px; background: #6B57A0; top: -140px; inset-inline-end: -100px; animation: wlcFloat 9s ease-in-out infinite; }
+.wlc-glow-2 { width: 380px; height: 380px; background: #8873AF; bottom: -160px; inset-inline-start: -80px; animation: wlcFloat 11s ease-in-out infinite reverse; }
+@keyframes wlcFloat { 0%,100% { transform: translate(0,0); } 50% { transform: translate(20px,26px); } }
+
+.wlc-stage { position: relative; text-align: center; color: #fff; padding: 2rem; }
+.wlc-spark {
+  width: 84px; height: 84px; border-radius: 24px; margin: 0 auto 1.4rem; display: grid; place-items: center;
+  background: linear-gradient(140deg, rgba(255,255,255,0.16), rgba(255,255,255,0.04));
+  border: 1px solid rgba(255,255,255,0.18); color: #fff;
+  box-shadow: 0 20px 50px -20px rgba(0,0,0,0.6);
+  animation: wlcPop 0.7s var(--ease, cubic-bezier(0.22,0.61,0.36,1)) both, wlcSpin 6s linear 0.7s infinite;
+}
+@keyframes wlcPop { from { opacity: 0; transform: scale(0.6) rotate(-12deg); } to { opacity: 1; transform: none; } }
+@keyframes wlcSpin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
+
+.wlc-greeting { font-size: 1rem; color: rgba(255,255,255,0.72); letter-spacing: 0.02em; opacity: 0; animation: wlcRise 0.6s var(--ease, cubic-bezier(0.22,0.61,0.36,1)) 0.25s both; }
+.wlc-name {
+  font-family: var(--font-display, 'Qomra', system-ui, sans-serif); font-weight: 900;
+  font-size: clamp(2rem, 6vw, 3.4rem); color: #fff; margin: 0.3rem 0 0.9rem;
+  opacity: 0; animation: wlcRise 0.7s var(--ease, cubic-bezier(0.22,0.61,0.36,1)) 0.4s both;
+}
+.wlc-line { display: block; width: 0; height: 2px; margin: 0 auto 1rem; border-radius: 2px; background: linear-gradient(90deg, transparent, #C4B3D9, transparent); animation: wlcLine 0.9s var(--ease, cubic-bezier(0.22,0.61,0.36,1)) 0.7s both; }
+@keyframes wlcLine { to { width: 180px; } }
+.wlc-brand { font-family: var(--font-display, system-ui); font-weight: 700; font-size: 0.85rem; color: rgba(255,255,255,0.55); letter-spacing: 0.08em; opacity: 0; animation: wlcRise 0.6s ease 0.9s both; }
+@keyframes wlcRise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .wlc-spark, .wlc-greeting, .wlc-name, .wlc-line, .wlc-brand, .wlc-glow { animation: none; opacity: 1; }
+  .wlc-line { width: 180px; }
+}
