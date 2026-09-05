@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 import { useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { HALAQA_TYPES, HALAQA_TRACKS, HALAQA_PERIODS } from '@/lib/permissions';
@@ -11,7 +13,7 @@ type Halaqa = {
 };
 type Ref = { id: string; name: string };
 
-export default function HalaqatView({ halaqat, teachers }: { halaqat: Halaqa[]; teachers: Ref[] }) {
+export default function HalaqatView({ halaqat, teachers, basePath }: { halaqat: Halaqa[]; teachers: Ref[]; basePath: string }) {
   const { t } = useLocale();
   const typeLabel = (v: string) => t(`status.halaqa.${v}`);
   const trackLabel = (v: string) => t(`htrack.${v}`);
@@ -129,7 +131,7 @@ export default function HalaqatView({ halaqat, teachers }: { halaqat: Halaqa[]; 
           {halaqat.map((h) => (
             <article key={h.id} className="org-card">
               <div className="org-card-head">
-                <h3>{h.name}</h3>
+                <h3><Link href={`${basePath}/${h.id}`} className="org-link">{h.name}</Link></h3>
                 <span className="org-chip">{typeLabel(h.type)}</span>
               </div>
               {(h.track || h.period) && (

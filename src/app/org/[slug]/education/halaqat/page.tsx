@@ -34,7 +34,7 @@ export default async function HalaqatPage({ params }: { params: Promise<{ slug: 
           <p>{t('pg.halaqat.sub', { n: halaqat.length, org: org.name })}</p>
         </div>
       </div>
-      <HalaqatView
+      <HalaqatView basePath={`/org/${org.slug}/education/halaqat`}
         teachers={teachers}
         halaqat={halaqat.map((h) => ({
           id: h.id, name: h.name, type: h.type, track: h.track, period: h.period, schedule: h.schedule, teacherId: h.teacherId,

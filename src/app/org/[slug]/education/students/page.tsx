@@ -34,7 +34,7 @@ export default async function StudentsPage({ params }: { params: Promise<{ slug:
           <p>{t('pg.students.sub', { n: students.length, org: org.name })}</p>
         </div>
       </div>
-      <StudentsView students={students} halaqat={halaqat} />
+      <StudentsView students={students} halaqat={halaqat} basePath={`/org/${org.slug}/education/students`} />
     </div>
   );
 }

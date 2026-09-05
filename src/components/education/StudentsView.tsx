@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 import { useMemo, useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { STUDENT_STATUSES } from '@/lib/permissions';
@@ -12,7 +14,7 @@ type Student = {
 };
 type Ref = { id: string; name: string };
 
-export default function StudentsView({ students, halaqat }: { students: Student[]; halaqat: Ref[] }) {
+export default function StudentsView({ students, halaqat, basePath }: { students: Student[]; halaqat: Ref[]; basePath: string }) {
   const { t } = useLocale();
   const statusLabel = (v: string) => t(`status.student.${v}`);
   const router = useRouter();
@@ -153,7 +155,7 @@ export default function StudentsView({ students, halaqat }: { students: Student[
             <tbody>
               {shown.map((s) => (
                 <tr key={s.id}>
-                  <td><strong>{s.name}</strong>{s.phone && <small dir="ltr">{s.phone}</small>}</td>
+                  <td><Link href={`${basePath}/${s.id}`} className="org-link"><strong>{s.name}</strong></Link>{s.phone && <small dir="ltr">{s.phone}</small>}</td>
                   <td>{s.guardianName ?? '—'}{s.guardianPhone && <small dir="ltr">{s.guardianPhone}</small>}</td>
                   <td>
                     <select className="org-inline-select" value={s.status} disabled={busyId === s.id}

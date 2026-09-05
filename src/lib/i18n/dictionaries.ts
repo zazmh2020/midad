@@ -135,6 +135,10 @@ const ar: Dict = {
   'qm.sendFailed': 'تعذّر إرسال التقرير، حاول لاحقًا.',
   'qm.emailNotConfigured': 'إرسال البريد غير مُهيّأ بعد — يلزم ربط مزوّد بريد (Resend) عبر المفتاح RESEND_API_KEY.',
   // ---- Page headings ----
+  'stu.info': 'المعلومات',
+  'stu.presentDays': 'أيام الحضور',
+  'stu.openSheet': 'فتح الدليل الشهري',
+  'stu.recentRecords': 'آخر السجلات',
   'qm.title': 'الدليل الشهري',
   'qm.hubDesc': 'متابعة يومية شهرية لكل طالب: الحفظ والمراجعة والحضور والدرجات.',
   'qm.sub': 'سجّل متابعة الطالب اليومية في {org} خلال الشهر — الحفظ تلقائي.',
@@ -1278,6 +1282,10 @@ const en: Dict = {
   'qm.sendFailed': 'Could not send the report, try again later.',
   'qm.emailNotConfigured': 'Email is not set up yet — connect an email provider (Resend) via the RESEND_API_KEY key.',
   // ---- Page headings ----
+  'stu.info': 'Info',
+  'stu.presentDays': 'Days present',
+  'stu.openSheet': 'Open monthly sheet',
+  'stu.recentRecords': 'Recent records',
   'qm.title': 'Monthly guide',
   'qm.hubDesc': 'Per-student monthly daily tracking: memorization, review, attendance and scores.',
   'qm.sub': 'Record the student daily progress in {org} through the month — saved automatically.',

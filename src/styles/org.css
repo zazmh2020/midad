@@ -921,6 +921,17 @@ a.org-module:hover {
 }
 .org-report-grid .org-panel { margin-bottom: 0; }
 
+/* ---------- روابط وملفات ---------- */
+.org-link { color: var(--purple-700, #6b57a0); text-decoration: none; }
+.org-link:hover { text-decoration: underline; }
+.stu-info { list-style: none; margin: 0 0 1rem; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+.stu-info li { display: flex; justify-content: space-between; gap: 1rem; font-size: 0.86rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--line); }
+.stu-info li span { color: var(--text-muted); }
+.stu-info li b { color: var(--text-strong); }
+.stu-records { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+.stu-records li { display: flex; justify-content: space-between; gap: 1rem; font-size: 0.84rem; padding: 0.4rem 0; border-bottom: 1px solid var(--line); }
+.stu-absent { color: #c0392b; font-weight: 600; }
+
 /* ---------- قائمة الإشعارات ---------- */
 .notif-list { display: flex; flex-direction: column; gap: 0.5rem; }
 .notif-row {
