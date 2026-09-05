@@ -1,8 +1,9 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { ATTENDANCE_STATUSES } from '@/lib/permissions';
+import { SURAHS, MAJOR_SEGMENTS, MINOR_SEGMENTS } from '@/lib/quran';
 import { useLocale } from '@/lib/i18n/LocaleProvider';
 
 type Row = {
@@ -50,6 +51,8 @@ export default function MonthlySheetView({
   });
   const [saved, setSaved] = useState<Record<string, 'saving' | 'ok' | 'err'>>({});
   const timers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
+  const dataRef = useRef(data);
+  useEffect(() => { dataRef.current = data; }, [data]); // أحدث نسخة للحفظ المؤجَّل
   const [sending, setSending] = useState<'month' | 'day' | null>(null);
   const [sendMsg, setSendMsg] = useState<{ ok: boolean; text: string } | null>(null);
 
@@ -76,7 +79,7 @@ export default function MonthlySheetView({
 
   async function save(dateStr: string) {
     if (!canManage) return;
-    const row = data[dateStr];
+    const row = dataRef.current[dateStr]; // أحدث حالة (يتفادى إغلاقًا قديمًا عند التعديل السريع)
     setSaved((s) => ({ ...s, [dateStr]: 'saving' }));
     try {
       const res = await fetch('/api/org/education/monthly', {
@@ -92,6 +95,35 @@ export default function MonthlySheetView({
     clearTimeout(timers.current[dateStr]);
     timers.current[dateStr] = setTimeout(() => save(dateStr), 600);
   }
+
+  // تعيين حقلين معًا (لمقاطع المراجعة: من/إلى)
+  function setRange(dateStr: string, fromField: string, toField: string, encoded: string) {
+    const [from, to] = encoded ? encoded.split('-') : ['', ''];
+    setData((d) => ({ ...d, [dateStr]: { ...d[dateStr], [fromField]: from, [toField]: to } }));
+    clearTimeout(timers.current[dateStr]);
+    timers.current[dateStr] = setTimeout(() => save(dateStr), 600);
+  }
+  const rangeVal = (dateStr: string, fromField: string, toField: string) => {
+    const f = data[dateStr]?.[fromField], t2 = data[dateStr]?.[toField];
+    return f && t2 ? `${f}-${t2}` : '';
+  };
+
+  // خلية قائمة السور (الدرس) — تُخزَّن رقم السورة في newFrom
+  const surahCell = (r: Row) => (
+    <select className="qm-in qm-surah" disabled={!canManage}
+      value={data[r.dateStr]?.newFrom ?? ''} onChange={(e) => set(r.dateStr, 'newFrom', e.target.value)}>
+      <option value="">—</option>
+      {SURAHS.map((name, i) => <option key={i} value={i + 1}>{i + 1}. {name}</option>)}
+    </select>
+  );
+  // خلية مقطع المراجعة (كبرى/صغرى)
+  const segCell = (r: Row, segs: typeof MAJOR_SEGMENTS, fromField: string, toField: string) => (
+    <select className="qm-in qm-seg" disabled={!canManage}
+      value={rangeVal(r.dateStr, fromField, toField)} onChange={(e) => setRange(r.dateStr, fromField, toField, e.target.value)}>
+      <option value="">—</option>
+      {segs.map((s) => <option key={s.from} value={`${s.from}-${s.to}`}>{s.label}</option>)}
+    </select>
+  );
 
   const total = (dateStr: string) =>
     (Number(data[dateStr]?.reviewScore) || 0) + (Number(data[dateStr]?.conductScore) || 0);
@@ -154,9 +186,9 @@ export default function MonthlySheetView({
               <th>{t('qm.col.date')}</th>
               <th>{t('qm.col.day')}</th>
               <th>{t('qm.col.attendance')}</th>
-              <th colSpan={2} className="qm-g-new">{t('qm.col.newLesson')}</th>
-              <th colSpan={2} className="qm-g-review">{t('qm.col.review')}</th>
-              <th colSpan={2} className="qm-g-last5">{t('qm.col.last5')}</th>
+              <th className="qm-g-new">{t('qm.col.lesson')}</th>
+              <th className="qm-g-review">{t('qm.col.major')}</th>
+              <th className="qm-g-last5">{t('qm.col.minor')}</th>
               <th>{t('qm.col.pages')}</th>
               <th>{t('qm.col.errors')}</th>
               <th>{t('qm.col.alerts')}</th>
@@ -166,13 +198,6 @@ export default function MonthlySheetView({
               <th>{t('qm.col.total')}</th>
               <th>{t('qm.col.notes')}</th>
               <th aria-label="status" />
-            </tr>
-            <tr className="qm-subhead">
-              <th /><th /><th />
-              <th className="qm-g-new">{t('qm.from')}</th><th className="qm-g-new">{t('qm.to')}</th>
-              <th className="qm-g-review">{t('qm.from')}</th><th className="qm-g-review">{t('qm.to')}</th>
-              <th className="qm-g-last5">{t('qm.from')}</th><th className="qm-g-last5">{t('qm.to')}</th>
-              <th /><th /><th /><th /><th /><th /><th /><th /><th />
             </tr>
           </thead>
           <tbody>
@@ -191,12 +216,9 @@ export default function MonthlySheetView({
                       {ATTENDANCE_STATUSES.map((s) => <option key={s} value={s}>{t(`status.attendance.${s}`)}</option>)}
                     </select>
                   </td>
-                  <td>{numCell(r, 'newFrom')}</td>
-                  <td>{numCell(r, 'newTo')}</td>
-                  <td>{numCell(r, 'reviewFrom')}</td>
-                  <td>{numCell(r, 'reviewTo')}</td>
-                  <td>{numCell(r, 'last5From')}</td>
-                  <td>{numCell(r, 'last5To')}</td>
+                  <td>{surahCell(r)}</td>
+                  <td>{segCell(r, MAJOR_SEGMENTS, 'reviewFrom', 'reviewTo')}</td>
+                  <td>{segCell(r, MINOR_SEGMENTS, 'last5From', 'last5To')}</td>
                   <td>{numCell(r, 'pages')}</td>
                   <td>{numCell(r, 'errors')}</td>
                   <td>{numCell(r, 'alerts')}</td>

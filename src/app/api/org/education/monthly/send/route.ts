@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { getOrgActor } from '@/lib/org';
 import { canManageEducation } from '@/lib/permissions';
 import { sendEmail } from '@/lib/email';
+import { surahName } from '@/lib/quran';
 
 const numFmt = new Intl.NumberFormat('en-US');
 const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!));
@@ -56,8 +57,9 @@ export async function POST(request: Request) {
     const d = dayRec
       ? `<ul>
           <li>التاريخ: ${dayRec.date.toISOString().slice(0, 10)}</li>
-          <li>الدرس الجديد: ${dayRec.newFrom ?? '—'} → ${dayRec.newTo ?? '—'}</li>
-          <li>المراجعة: ${dayRec.reviewFrom ?? '—'} → ${dayRec.reviewTo ?? '—'}</li>
+          <li>الدرس: ${esc(surahName(dayRec.newFrom) || '—')}</li>
+          <li>المراجعة الكبرى: ${dayRec.reviewFrom ?? '—'} → ${dayRec.reviewTo ?? '—'}</li>
+          <li>المراجعة الصغرى: ${dayRec.last5From ?? '—'} → ${dayRec.last5To ?? '—'}</li>
           <li>الصفحات: ${dayRec.pages ?? '—'} · الأخطاء: ${dayRec.errors ?? '—'}</li>
           <li>المجموع: ${(dayRec.reviewScore ?? 0) + (dayRec.conductScore ?? 0)}</li>
         </ul>`
