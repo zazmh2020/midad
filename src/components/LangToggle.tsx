@@ -2,7 +2,9 @@
 
 import { useLocale } from '@/lib/i18n/LocaleProvider';
 
-/** زر تبديل اللغة عربي/إنجليزي. */
+const GLOBE = 'url(/icons/administration/administration-language.svg)';
+
+/** زر تبديل اللغة عربي/إنجليزي — أيقونة كرة أرضية. */
 export default function LangToggle({ className = '' }: { className?: string }) {
   const { locale, setLocale } = useLocale();
   const next = locale === 'ar' ? 'en' : 'ar';
@@ -14,7 +16,7 @@ export default function LangToggle({ className = '' }: { className?: string }) {
       aria-label={locale === 'ar' ? 'Switch to English' : 'التبديل إلى العربية'}
       title={locale === 'ar' ? 'English' : 'العربية'}
     >
-      {locale === 'ar' ? 'EN' : 'ع'}
+      <span className="lang-toggle-ic" aria-hidden="true" style={{ WebkitMaskImage: GLOBE, maskImage: GLOBE }} />
     </button>
   );
 }

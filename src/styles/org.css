@@ -71,9 +71,23 @@
 .org-nav {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.2rem;
   flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+  padding-inline-end: 2px;
 }
+.org-nav::-webkit-scrollbar { width: 6px; }
+.org-nav::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 100px; }
+
+/* ملف مستخدم مكدّس أعلى الشريط (أفاتار كبير موسّط) */
+.org-user-stacked { flex-direction: column; align-items: center; text-align: center; gap: 0.35rem; padding: 0.6rem 0.5rem; }
+.org-user-avatar-lg { width: 60px; height: 60px; font-size: 1.5rem; }
+.org-user-stacked .org-user-name { max-width: 100%; }
+.org-user-stacked .org-user-chev { margin: 0; opacity: 0.6; }
 
 .org-nav-item {
   display: flex;

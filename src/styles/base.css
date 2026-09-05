@@ -255,13 +255,18 @@ svg {
    تبديل اللغة + نافذة اختيار اللغة (i18n)
    ============================================================ */
 .lang-toggle {
-  min-width: 34px; height: 34px; padding: 0 0.55rem; border-radius: 100px;
+  width: 34px; height: 34px; border-radius: 50%;
   display: inline-grid; place-items: center; flex-shrink: 0;
   border: 1px solid var(--line, #e6e3ee); background: transparent; color: var(--gray-700, #4b4660);
-  font-family: var(--font-display); font-weight: 800; font-size: 0.78rem; letter-spacing: 0.02em;
   cursor: pointer; transition: color 0.18s, border-color 0.18s, background 0.18s;
 }
 .lang-toggle:hover { color: var(--purple-500, #6b57a0); border-color: var(--purple-300, #8873af); }
+.lang-toggle-ic {
+  width: 18px; height: 18px; display: block; background: currentColor;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-position: center; mask-position: center;
+  -webkit-mask-size: contain; mask-size: contain;
+}
 
 .lang-gate-scrim {
   position: fixed; inset: 0; z-index: 300; display: grid; place-items: center; padding: 1.5rem;

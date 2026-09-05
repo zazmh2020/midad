@@ -2,24 +2,28 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { PLANS, CURRENCY, yearlyPrice } from '@/lib/plans';
+import { PLANS, yearlyPrice } from '@/lib/plans';
+import { useLocale } from '@/lib/i18n/LocaleProvider';
 
 const fmt = new Intl.NumberFormat('en-US');
 
 export default function PricingPlans() {
+  const { t, locale } = useLocale();
   const [yearly, setYearly] = useState(false);
+  const cur = t('plan.currency');
+  const en = locale === 'en';
 
   return (
     <div className="pricing-wrap">
       {/* مفتاح التبديل شهري / سنوي */}
-      <div className="billing-toggle" role="group" aria-label="دورة الفوترة">
+      <div className="billing-toggle" role="group" aria-label={t('plan.billing.monthly')}>
         <button
           type="button"
           className={`billing-opt ${!yearly ? 'is-active' : ''}`}
           onClick={() => setYearly(false)}
           aria-pressed={!yearly}
         >
-          شهري
+          {t('plan.billing.monthly')}
         </button>
         <button
           type="button"
@@ -27,8 +31,8 @@ export default function PricingPlans() {
           onClick={() => setYearly(true)}
           aria-pressed={yearly}
         >
-          سنوي
-          <span className="billing-save">وفّر شهرين</span>
+          {t('plan.billing.yearly')}
+          <span className="billing-save">{t('plan.billing.save')}</span>
         </button>
       </div>
 
@@ -36,38 +40,42 @@ export default function PricingPlans() {
         {PLANS.map((p) => {
           const year = yearlyPrice(p);
           const isPaid = p.price !== null && p.price > 0;
+          const name = en ? p.en : p.name;
+          const tag = en ? p.name : p.en;
+          const tagline = en ? (p.tagEn ?? p.tagline) : p.tagline;
+          const features = en ? (p.featuresEn ?? p.features) : p.features;
           return (
             <article key={p.id} className={`plan-card ${p.highlighted ? 'is-featured' : ''}`}>
-              {p.highlighted && <span className="plan-badge">الأكثر طلبًا</span>}
+              {p.highlighted && <span className="plan-badge">{t('plan.badge')}</span>}
               <div className="plan-name-row">
-                <h3 className="plan-name">{p.name}</h3>
-                <span className="plan-tag">{p.en}</span>
+                <h3 className="plan-name">{name}</h3>
+                <span className="plan-tag">{tag}</span>
               </div>
-              <p className="plan-tagline">{p.tagline}</p>
+              <p className="plan-tagline">{tagline}</p>
 
               <div className="plan-price">
                 {p.price === null ? (
-                  <span className="plan-custom">تسعير مخصّص</span>
+                  <span className="plan-custom">{t('plan.custom')}</span>
                 ) : p.price === 0 ? (
-                  <span className="plan-custom">مجانًا</span>
+                  <span className="plan-custom">{t('plan.free')}</span>
                 ) : yearly ? (
                   <>
                     <span className="plan-amount">{fmt.format(year as number)}</span>
-                    <span className="plan-period">{CURRENCY} / سنة</span>
+                    <span className="plan-period">{cur} {t('plan.perYear')}</span>
                     <span className="plan-permonth">
-                      ≈ {fmt.format(Math.round((year as number) / 12))} {CURRENCY} / شهر
+                      {t('plan.approxMonth', { v: fmt.format(Math.round((year as number) / 12)), c: cur })}
                     </span>
                   </>
                 ) : (
                   <>
                     <span className="plan-amount">{fmt.format(p.price)}</span>
-                    <span className="plan-period">{CURRENCY} / شهر</span>
+                    <span className="plan-period">{cur} {t('plan.perMonth')}</span>
                   </>
                 )}
               </div>
 
               <ul className="plan-features">
-                {p.features.map((f) => (
+                {features.map((f) => (
                   <li key={f}>
                     <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 10.5l4 4 8-9" /></svg>
                     {f}
@@ -76,10 +84,10 @@ export default function PricingPlans() {
               </ul>
 
               {p.price === 0 ? (
-                <Link href="/login" className={`plan-cta ${p.highlighted ? 'is-primary' : ''}`}>ابدأ مجانًا</Link>
+                <Link href="/login" className={`plan-cta ${p.highlighted ? 'is-primary' : ''}`}>{t('plan.cta.free')}</Link>
               ) : (
                 <a href="#contact" className={`plan-cta ${p.highlighted ? 'is-primary' : ''}`}>
-                  {isPaid ? 'اشترك الآن' : 'تواصل معنا'}
+                  {isPaid ? t('plan.cta.subscribe') : t('plan.cta.contact')}
                 </a>
               )}
             </article>

@@ -22,6 +22,9 @@ export interface Plan {
   /** الاسم الإنجليزي المرافق */
   en: string;
   features: string[];
+  /** النصوص الإنجليزية (للعرض عند اختيار اللغة الإنجليزية) */
+  tagEn?: string;
+  featuresEn?: string[];
   highlighted?: boolean;
 }
 
@@ -31,6 +34,7 @@ export const PLANS: Plan[] = [
     name: 'انطلاقة',
     en: 'Launch',
     tagline: 'للمؤسسات الصغيرة في بدايتها',
+    tagEn: 'For small organizations starting out',
     price: 0,
     maxUsers: 5,
     storageGb: 1,
@@ -40,12 +44,19 @@ export const PLANS: Plan[] = [
       'المستندات (1 غيغابايت)',
       'دعم عبر البريد',
     ],
+    featuresEn: [
+      'Up to 5 users',
+      'Structure and projects',
+      'Documents (1 GB)',
+      'Email support',
+    ],
   },
   {
     id: 'GROWTH',
     name: 'نمو',
     en: 'Growth',
     tagline: 'للمؤسسات المتنامية',
+    tagEn: 'For growing organizations',
     price: 149,
     maxUsers: 20,
     storageGb: 10,
@@ -57,12 +68,20 @@ export const PLANS: Plan[] = [
       'مستندات (10 غيغابايت)',
       'التقارير والتحليلات',
     ],
+    featuresEn: [
+      'Up to 20 users',
+      'All of Launch + programs, campaigns and donations',
+      'Beneficiary management and knowledge base',
+      'Documents (10 GB)',
+      'Reports and analytics',
+    ],
   },
   {
     id: 'PROFESSIONAL',
     name: 'تمكين',
     en: 'Empower',
     tagline: 'للمؤسسات المتقدّمة',
+    tagEn: 'For advanced organizations',
     price: 449,
     maxUsers: 100,
     storageGb: 50,
@@ -74,12 +93,21 @@ export const PLANS: Plan[] = [
       'مستندات (50 غيغابايت)',
       'دعم بأولوية',
     ],
+    featuresEn: [
+      'Up to 100 users',
+      'All modules + education and circles',
+      'HR (employees, volunteers, teams)',
+      'Midad AI assistant',
+      'Documents (50 GB)',
+      'Priority support',
+    ],
   },
   {
     id: 'ENTERPRISE',
     name: 'أثر',
     en: 'Impact',
     tagline: 'للمؤسسات الكبيرة والشبكات',
+    tagEn: 'For large organizations and networks',
     price: null,
     maxUsers: null,
     storageGb: null,
@@ -89,6 +117,13 @@ export const PLANS: Plan[] = [
       'اتفاقية مستوى خدمة (SLA)',
       'مدير حساب مخصّص',
       'تهيئة وتدريب',
+    ],
+    featuresEn: [
+      'Unlimited users and storage',
+      'Digital identity and custom integrations',
+      'Service level agreement (SLA)',
+      'Dedicated account manager',
+      'Onboarding and training',
     ],
   },
 ];

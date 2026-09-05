@@ -125,8 +125,8 @@ export default function OrgShell({ children, org, user, nav, inbox }: Props) {
       <aside className={`org-sidebar ${open ? 'is-open' : ''}`}>
         {/* ملف المستخدم أعلى الشريط */}
         <div className="org-side-profile">
-          <button className="org-user" onClick={() => setProfileOpen((v) => !v)} aria-expanded={profileOpen}>
-            <span className="org-user-avatar">
+          <button className="org-user org-user-stacked" onClick={() => setProfileOpen((v) => !v)} aria-expanded={profileOpen}>
+            <span className="org-user-avatar org-user-avatar-lg">
               {user.avatarUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={user.avatarUrl} alt="" />
@@ -134,11 +134,9 @@ export default function OrgShell({ children, org, user, nav, inbox }: Props) {
                 user.name.charAt(0)
               )}
             </span>
-            <span className="org-user-info">
-              <span className="org-user-name">{user.name}</span>
-              <span className="org-user-role">{t(`role.${user.role}`)}</span>
-            </span>
-            <svg className="org-user-chev" width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8l4 4 4-4" /></svg>
+            <span className="org-user-name">{user.name}</span>
+            <span className="org-user-role">{t(`role.${user.role}`)}</span>
+            <svg className="org-user-chev" width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8l4 4 4-4" /></svg>
           </button>
           {profileOpen && (
             <div className="org-profile-menu">

@@ -63,8 +63,8 @@ export default function AdminShell({ children, session, avatarUrl, inbox }: Prop
       {/* Sidebar */}
       <aside className={`admin-sidebar ${sidebarOpen ? 'is-open' : ''}`}>
         <div className="admin-side-profile">
-          <button className="admin-user" onClick={() => setProfileOpen((v) => !v)} aria-expanded={profileOpen}>
-            <span className="admin-user-avatar">
+          <button className="admin-user admin-user-stacked" onClick={() => setProfileOpen((v) => !v)} aria-expanded={profileOpen}>
+            <span className="admin-user-avatar admin-user-avatar-lg">
               {avatarUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={avatarUrl} alt="" />
@@ -72,11 +72,9 @@ export default function AdminShell({ children, session, avatarUrl, inbox }: Prop
                 session.name.charAt(0).toUpperCase()
               )}
             </span>
-            <span className="admin-user-info">
-              <span className="admin-user-name">{session.name}</span>
-              <span className="admin-user-role">{t('anav.owner')}</span>
-            </span>
-            <svg className="admin-user-chev" width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8l4 4 4-4" /></svg>
+            <span className="admin-user-name">{session.name}</span>
+            <span className="admin-user-role">{t('anav.owner')}</span>
+            <svg className="admin-user-chev" width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8l4 4 4-4" /></svg>
           </button>
           {profileOpen && (
             <div className="admin-profile-menu">

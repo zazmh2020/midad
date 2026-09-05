@@ -175,7 +175,7 @@ const ar: Dict = {
   'login.remember': 'تذكّرني على هذا الجهاز',
   'login.submit': 'تسجيل الدخول',
   'login.submitting': 'جارٍ التحقق…',
-  'login.home': 'العودة إلى الصفحة الرئيسية',
+  'login.home': 'الصفحة الرئيسية',
   'login.demo.head': 'تجربة سريعة — حسابات وهمية',
   'login.err.empty': 'أدخل البريد الإلكتروني وكلمة المرور.',
   'login.err.failed': 'تعذّر تسجيل الدخول.',
@@ -529,6 +529,21 @@ const ar: Dict = {
   'camp.goalLabel': 'الهدف: {v}',
   'camp.donationsLabel': 'التبرعات: {n}',
   'camp.noneInStatus': 'لا حملات بهذه الحالة.',
+
+  // بطاقات الباقات (PricingPlans)
+  'plan.currency': 'ر.س',
+  'plan.badge': 'الأكثر طلبًا',
+  'plan.custom': 'تسعير مخصّص',
+  'plan.free': 'مجانًا',
+  'plan.perMonth': '/ شهر',
+  'plan.perYear': '/ سنة',
+  'plan.approxMonth': '≈ {v} {c} / شهر',
+  'plan.billing.monthly': 'شهري',
+  'plan.billing.yearly': 'سنوي',
+  'plan.billing.save': 'وفّر شهرين',
+  'plan.cta.free': 'ابدأ مجانًا',
+  'plan.cta.subscribe': 'اشترك الآن',
+  'plan.cta.contact': 'تواصل معنا',
 };
 
 const en: Dict = {
@@ -680,7 +695,7 @@ const en: Dict = {
   'login.remember': 'Remember me on this device',
   'login.submit': 'Sign in',
   'login.submitting': 'Verifying…',
-  'login.home': 'Back to home',
+  'login.home': 'Home',
   'login.demo.head': 'Quick demo — dummy accounts',
   'login.err.empty': 'Enter your email and password.',
   'login.err.failed': 'Could not sign in.',
@@ -1007,6 +1022,20 @@ const en: Dict = {
   'camp.goalLabel': 'Goal: {v}',
   'camp.donationsLabel': 'Donations: {n}',
   'camp.noneInStatus': 'No campaigns with this status.',
+
+  'plan.currency': 'SAR',
+  'plan.badge': 'Most popular',
+  'plan.custom': 'Custom pricing',
+  'plan.free': 'Free',
+  'plan.perMonth': '/ month',
+  'plan.perYear': '/ year',
+  'plan.approxMonth': '≈ {v} {c} / month',
+  'plan.billing.monthly': 'Monthly',
+  'plan.billing.yearly': 'Yearly',
+  'plan.billing.save': 'Save 2 months',
+  'plan.cta.free': 'Start free',
+  'plan.cta.subscribe': 'Subscribe now',
+  'plan.cta.contact': 'Contact us',
 };
 
 export const DICTIONARIES: Record<Locale, Dict> = { ar, en };
