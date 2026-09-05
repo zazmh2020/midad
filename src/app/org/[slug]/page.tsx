@@ -12,18 +12,17 @@ import DashboardShell from '@/components/dash/DashboardShell';
 import StatCard, { type StatColor } from '@/components/dash/StatCard';
 import AreaChart from '@/components/dash/AreaChart';
 import DonutRing from '@/components/dash/DonutRing';
+import { getT } from '@/lib/i18n/server';
 
 export const dynamic = 'force-dynamic';
 
 const numFmt = new Intl.NumberFormat('en-US');
-const dateFmt = new Intl.DateTimeFormat('ar-u-nu-latn', { day: 'numeric', month: 'short' });
-const weekdayFmt = new Intl.DateTimeFormat('ar', { weekday: 'short' });
 
-const TYPE_LABELS: Record<string, string> = {
-  ASSOCIATION: 'جمعية / مؤسسة',
-  MOSQUE: 'مسجد / مركز قرآني',
-  SCHOOL: 'مركز تعليمي',
-  PROJECT: 'مشروع خاص',
+const TYPE_KEYS: Record<string, string> = {
+  ASSOCIATION: 'type.association',
+  MOSQUE: 'type.mosque',
+  SCHOOL: 'type.school',
+  PROJECT: 'type.project',
 };
 
 function buildDays() {
@@ -53,6 +52,9 @@ export default async function OrgDashboard({
 }) {
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
+  const { t, locale } = await getT();
+  const dateFmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar-u-nu-latn', { day: 'numeric', month: 'short' });
+  const weekdayFmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar', { weekday: 'short' });
 
   const w = { organizationId: org.id };
   const days = buildDays();
@@ -100,34 +102,34 @@ export default async function OrgDashboard({
   // بطاقات الإحصاء (مقيّدة بالصلاحيات)
   const stats: { icon: string; color: StatColor; label: string; value: string; trend?: string }[] = [];
   if (canUsers) {
-    stats.push({ icon: 'people/people-users', color: 'purple', label: 'إجمالي المستخدمين', value: numFmt.format(total), trend: newUsers7.length ? `${newUsers7.length} هذا الأسبوع` : undefined });
-    stats.push({ icon: 'people/people-members', color: 'green', label: 'النشطون', value: numFmt.format(active) });
+    stats.push({ icon: 'people/people-users', color: 'purple', label: t('od.stat.totalUsers'), value: numFmt.format(total), trend: newUsers7.length ? t('od.thisWeek', { n: newUsers7.length }) : undefined });
+    stats.push({ icon: 'people/people-members', color: 'green', label: t('od.stat.active'), value: numFmt.format(active) });
   }
-  if (canStructure) stats.push({ icon: 'organization/organization-structure', color: 'blue', label: 'الوحدات التنظيمية', value: numFmt.format(deptCount) });
-  if (canProjects) stats.push({ icon: 'operations/operations-projects', color: 'gold', label: 'المشاريع', value: numFmt.format(projectCount), trend: newProjects7.length ? `${newProjects7.length} هذا الأسبوع` : undefined });
-  if (canPrograms) stats.push({ icon: 'operations/operations-programs', color: 'purple', label: 'البرامج', value: numFmt.format(programCount) });
-  if (canCampaigns) stats.push({ icon: 'operations/operations-campaigns', color: 'gold', label: 'الحملات', value: numFmt.format(campaignCount) });
-  if (canBeneficiaries) stats.push({ icon: 'people/people-beneficiaries', color: 'green', label: 'المستفيدون', value: numFmt.format(beneficiaryCount) });
+  if (canStructure) stats.push({ icon: 'organization/organization-structure', color: 'blue', label: t('od.stat.units'), value: numFmt.format(deptCount) });
+  if (canProjects) stats.push({ icon: 'operations/operations-projects', color: 'gold', label: t('od.stat.projects'), value: numFmt.format(projectCount), trend: newProjects7.length ? t('od.thisWeek', { n: newProjects7.length }) : undefined });
+  if (canPrograms) stats.push({ icon: 'operations/operations-programs', color: 'purple', label: t('od.stat.programs'), value: numFmt.format(programCount) });
+  if (canCampaigns) stats.push({ icon: 'operations/operations-campaigns', color: 'gold', label: t('od.stat.campaigns'), value: numFmt.format(campaignCount) });
+  if (canBeneficiaries) stats.push({ icon: 'people/people-beneficiaries', color: 'green', label: t('od.stat.beneficiaries'), value: numFmt.format(beneficiaryCount) });
   const topStats = stats.slice(0, 4);
 
   // آخر النشاطات (من أحدث السجلات الحقيقية)
   const activity: { icon: string; color: string; title: string; text: string; at: Date }[] = [];
-  if (canProjects && latestProject) activity.push({ icon: 'operations/operations-projects', color: '', title: 'مشروع', text: latestProject.name, at: latestProject.createdAt });
-  if (canCampaigns && latestCampaign) activity.push({ icon: 'operations/operations-campaigns', color: 'gold', title: 'حملة', text: latestCampaign.name, at: latestCampaign.createdAt });
-  if (canPrograms && latestProgram) activity.push({ icon: 'operations/operations-programs', color: 'green', title: 'برنامج', text: latestProgram.name, at: latestProgram.createdAt });
-  if (canUsers && recentUsers[0]) activity.push({ icon: 'people/people-users', color: 'blue', title: 'عضو جديد', text: recentUsers[0].name, at: recentUsers[0].createdAt });
+  if (canProjects && latestProject) activity.push({ icon: 'operations/operations-projects', color: '', title: t('od.act.project'), text: latestProject.name, at: latestProject.createdAt });
+  if (canCampaigns && latestCampaign) activity.push({ icon: 'operations/operations-campaigns', color: 'gold', title: t('od.act.campaign'), text: latestCampaign.name, at: latestCampaign.createdAt });
+  if (canPrograms && latestProgram) activity.push({ icon: 'operations/operations-programs', color: 'green', title: t('od.act.program'), text: latestProgram.name, at: latestProgram.createdAt });
+  if (canUsers && recentUsers[0]) activity.push({ icon: 'people/people-users', color: 'blue', title: t('od.act.newMember'), text: recentUsers[0].name, at: recentUsers[0].createdAt });
   activity.sort((a, b) => b.at.getTime() - a.at.getTime());
   const activityTop = activity.slice(0, 4);
 
   const modules = [
-    canStructure && { href: `/org/${org.slug}/organization`, icon: 'organization/organization-institution', title: 'المؤسسة', text: 'البيانات والهيكل' },
-    canProjects && { href: `/org/${org.slug}/operations`, icon: 'operations/operations-activities', title: 'العمليات', text: 'المشاريع والبرامج' },
-    canBeneficiaries && { href: `/org/${org.slug}/resources`, icon: 'people/people-groups', title: 'الموارد', text: 'المستفيدون والفرق' },
-    canProjects && { href: `/org/${org.slug}/education`, icon: 'education/education-education', title: 'التعليم', text: 'الطلاب والحلقات' },
-    canDocuments && { href: `/org/${org.slug}/documents`, icon: 'documents/documents-documents', title: 'المستندات', text: 'الملفات والأرشيف' },
-    canReports && { href: `/org/${org.slug}/reports`, icon: 'analytics/analytics-analytics', title: 'التحليلات', text: 'التقارير والمؤشرات' },
-    canAssistant && { href: `/org/${org.slug}/assistant`, icon: 'ai/ai-ai-assistant', title: 'مِداد AI', text: 'مساعد ذكي' },
-    canManage && { href: `/org/${org.slug}/admin`, icon: 'administration/administration-system-settings', title: 'الإدارة', text: 'الأدوار والوحدات' },
+    canStructure && { href: `/org/${org.slug}/organization`, icon: 'organization/organization-institution', title: t('onav.organization'), text: t('od.mod.org') },
+    canProjects && { href: `/org/${org.slug}/operations`, icon: 'operations/operations-activities', title: t('onav.operations'), text: t('od.mod.ops') },
+    canBeneficiaries && { href: `/org/${org.slug}/resources`, icon: 'people/people-groups', title: t('onav.resources'), text: t('od.mod.resources') },
+    canProjects && { href: `/org/${org.slug}/education`, icon: 'education/education-education', title: t('onav.education'), text: t('od.mod.education') },
+    canDocuments && { href: `/org/${org.slug}/documents`, icon: 'documents/documents-documents', title: t('onav.documents'), text: t('od.mod.documents') },
+    canReports && { href: `/org/${org.slug}/reports`, icon: 'analytics/analytics-analytics', title: t('onav.reports'), text: t('od.mod.reports') },
+    canAssistant && { href: `/org/${org.slug}/assistant`, icon: 'ai/ai-ai-assistant', title: t('onav.assistant'), text: t('od.mod.assistant') },
+    canManage && { href: `/org/${org.slug}/admin`, icon: 'administration/administration-system-settings', title: t('onav.admin'), text: t('od.mod.admin') },
   ].filter(Boolean) as { href: string; icon: string; title: string; text: string }[];
 
   return (
@@ -136,17 +138,17 @@ export default async function OrgDashboard({
         {/* رأس الصفحة */}
         <div className="dash-hd">
           <div>
-            <span className="dash-eyebrow">لوحة المؤسسة</span>
-            <h1>مرحباً، {user.name} 👋</h1>
+            <span className="dash-eyebrow">{t('od.eyebrow')}</span>
+            <h1>{t('od.welcome', { name: user.name })}</h1>
             <p className="dash-sub">
-              {org.name} — {TYPE_LABELS[org.type] ?? org.type} · دورك:{' '}
+              {org.name} — {TYPE_KEYS[org.type] ? t(TYPE_KEYS[org.type]) : org.type} · {t('od.role')}{' '}
               <strong>{roleLabel(user.role)}</strong>
             </p>
           </div>
           {canManage && (
             <div className="dash-hd-actions">
               <Link href={`/org/${org.slug}/users/new`} className="dash-btn">
-                <Icon name="actions/actions-add" size={16} /> إضافة مستخدم
+                <Icon name="actions/actions-add" size={16} /> {t('od.addUser')}
               </Link>
             </div>
           )}
@@ -166,8 +168,8 @@ export default async function OrgDashboard({
           <div className="dash-grid-main">
             <div className="dash-card">
               <div className="dash-card-hd">
-                <h3>نشاط المؤسسة — آخر ٧ أيام</h3>
-                {canReports && <Link href={`/org/${org.slug}/reports`} className="dash-link">عرض التفاصيل ←</Link>}
+                <h3>{t('od.activity7')}</h3>
+                {canReports && <Link href={`/org/${org.slug}/reports`} className="dash-link">{t('od.viewDetails')} ←</Link>}
               </div>
               {hasSeries ? (
                 <>
@@ -179,24 +181,24 @@ export default async function OrgDashboard({
                     ]}
                   />
                   <div className="dash-chart-legend">
-                    <span><span className="dot" style={{ background: '#6B57A0' }} />أعضاء جدد</span>
-                    <span><span className="dot" style={{ background: '#B8860B' }} />مشاريع</span>
+                    <span><span className="dot" style={{ background: '#6B57A0' }} />{t('od.newMembers')}</span>
+                    <span><span className="dot" style={{ background: '#B8860B' }} />{t('od.projects')}</span>
                   </div>
                 </>
               ) : (
-                <p className="dash-chart-empty">لا يوجد نشاط مُسجَّل خلال آخر سبعة أيام.</p>
+                <p className="dash-chart-empty">{t('od.noActivity')}</p>
               )}
             </div>
 
             <div className="dash-card">
               <div className="dash-card-hd">
-                <h3>نسبة النشاط</h3>
-                <span className="dash-link">المستخدمون</span>
+                <h3>{t('od.activityRatio')}</h3>
+                <span className="dash-link">{t('od.users')}</span>
               </div>
               <DonutRing
                 percent={activeRatio}
-                label="من المستخدمين نشطون"
-                hint={`${numFmt.format(active)} من أصل ${numFmt.format(total)} مستخدمًا نشطون حاليًا`}
+                label={t('od.activeOf')}
+                hint={t('od.activeHint', { a: numFmt.format(active), b: numFmt.format(total) })}
               />
             </div>
           </div>
@@ -207,15 +209,15 @@ export default async function OrgDashboard({
           {canUsers ? (
             <div className="dash-card">
               <div className="dash-card-hd">
-                <h3>أحدث المستخدمين</h3>
-                <Link href={`/org/${org.slug}/users`} className="dash-link">كل المستخدمين ←</Link>
+                <h3>{t('od.latestUsers')}</h3>
+                <Link href={`/org/${org.slug}/users`} className="dash-link">{t('od.allUsers')} ←</Link>
               </div>
               {recentUsers.length === 0 ? (
-                <p className="dash-ann-empty">لا يوجد مستخدمون بعد.</p>
+                <p className="dash-ann-empty">{t('od.noUsers')}</p>
               ) : (
                 <table className="dash-table">
                   <thead>
-                    <tr><th>المستخدم</th><th>الدور</th><th>الحالة</th><th>أُضيف</th></tr>
+                    <tr><th>{t('od.th.user')}</th><th>{t('od.th.role')}</th><th>{t('od.th.status')}</th><th>{t('od.th.added')}</th></tr>
                   </thead>
                   <tbody>
                     {recentUsers.map((u, i) => (
@@ -230,7 +232,7 @@ export default async function OrgDashboard({
                           </div>
                         </td>
                         <td>{roleLabel(u.role)}</td>
-                        <td><span className={`dash-badge ${u.isActive ? 'green' : 'muted'}`}>{u.isActive ? 'نشط' : 'معطّل'}</span></td>
+                        <td><span className={`dash-badge ${u.isActive ? 'green' : 'muted'}`}>{u.isActive ? t('od.status.active') : t('od.status.inactive')}</span></td>
                         <td>{dateFmt.format(u.createdAt)}</td>
                       </tr>
                     ))}
@@ -240,7 +242,7 @@ export default async function OrgDashboard({
             </div>
           ) : (
             <div className="dash-card">
-              <div className="dash-card-hd"><h3>الوصول السريع</h3></div>
+              <div className="dash-card-hd"><h3>{t('od.quickAccess')}</h3></div>
               <div className="dash-modules">
                 {modules.map((m) => (
                   <Link key={m.href} href={m.href} className="dash-module">
@@ -254,9 +256,9 @@ export default async function OrgDashboard({
 
           <div className="dash-side">
             <div className="dash-card">
-              <div className="dash-card-hd"><h3>آخر النشاطات</h3></div>
+              <div className="dash-card-hd"><h3>{t('od.recentActivity')}</h3></div>
               {activityTop.length === 0 ? (
-                <p className="dash-ann-empty">لا نشاط حديث.</p>
+                <p className="dash-ann-empty">{t('od.noRecent')}</p>
               ) : (
                 <div className="dash-ann-list">
                   {activityTop.map((a, i) => (
@@ -275,10 +277,10 @@ export default async function OrgDashboard({
 
             {canReports && (
               <div className="dash-promo">
-                <h4>تقاريرك جاهزة</h4>
-                <p>اطّلع على مؤشرات الأداء والإحصاءات المبنية من بيانات مؤسستك.</p>
+                <h4>{t('od.promo.title')}</h4>
+                <p>{t('od.promo.sub')}</p>
                 <Link href={`/org/${org.slug}/reports`} className="dash-promo-btn">
-                  <Icon name="analytics/analytics-analytics" size={14} /> عرض التحليلات
+                  <Icon name="analytics/analytics-analytics" size={14} /> {t('od.promo.cta')}
                 </Link>
               </div>
             )}

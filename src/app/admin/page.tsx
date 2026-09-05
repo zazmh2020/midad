@@ -5,18 +5,17 @@ import DashboardShell from '@/components/dash/DashboardShell';
 import StatCard from '@/components/dash/StatCard';
 import AreaChart from '@/components/dash/AreaChart';
 import DonutRing from '@/components/dash/DonutRing';
+import { getT } from '@/lib/i18n/server';
 
 export const dynamic = 'force-dynamic';
 
 const numFmt = new Intl.NumberFormat('en-US');
-const dateFmt = new Intl.DateTimeFormat('ar-u-nu-latn', { year: 'numeric', month: 'short', day: 'numeric' });
-const weekdayFmt = new Intl.DateTimeFormat('ar', { weekday: 'short' });
 
-const TYPE_LABELS: Record<string, string> = {
-  ASSOCIATION: 'جمعية / مؤسسة',
-  MOSQUE: 'مسجد / مركز قرآني',
-  SCHOOL: 'مركز تعليمي',
-  PROJECT: 'مشروع خاص',
+const TYPE_KEYS: Record<string, string> = {
+  ASSOCIATION: 'type.association',
+  MOSQUE: 'type.mosque',
+  SCHOOL: 'type.school',
+  PROJECT: 'type.project',
 };
 
 function buildDays() {
@@ -39,6 +38,11 @@ function bucketByDay(dates: Date[], days: Date[]): number[] {
 }
 
 export default async function AdminOverview() {
+  const { t, locale } = await getT();
+  const intlLocale = locale === 'en' ? 'en' : 'ar-u-nu-latn';
+  const dateFmt = new Intl.DateTimeFormat(intlLocale, { year: 'numeric', month: 'short', day: 'numeric' });
+  const weekdayFmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar', { weekday: 'short' });
+
   const startOfMonth = new Date();
   startOfMonth.setDate(1);
   startOfMonth.setHours(0, 0, 0, 0);
@@ -70,9 +74,9 @@ export default async function AdminOverview() {
   const usersSeries = bucketByDay(newUsers7.map((u) => u.createdAt), days);
   const hasSeries = orgsSeries.some((v) => v > 0) || usersSeries.some((v) => v > 0);
 
-  const typeMax = Math.max(1, ...byType.map((t) => t._count));
+  const typeMax = Math.max(1, ...byType.map((x) => x._count));
   const typeData = byType
-    .map((t) => ({ label: TYPE_LABELS[t.type] ?? t.type, value: t._count }))
+    .map((x) => ({ label: TYPE_KEYS[x.type] ? t(TYPE_KEYS[x.type]) : x.type, value: x._count }))
     .sort((a, b) => b.value - a.value);
 
   if (orgCount === 0) {
@@ -80,10 +84,10 @@ export default async function AdminOverview() {
       <div className="dash">
         <div className="admin-page-header">
           <div>
-            <h1>نظرة عامة</h1>
-            <p>ملخص حالة المنصة والمؤسسات المسجّلة.</p>
+            <h1>{t('adm.title')}</h1>
+            <p>{t('adm.sub')}</p>
           </div>
-          <Link href="/admin/organizations/new" className="btn-admin-primary">+ إنشاء مؤسسة</Link>
+          <Link href="/admin/organizations/new" className="btn-admin-primary">+ {t('adm.create')}</Link>
         </div>
         <div className="empty-state">
           <div className="empty-state-icon">
@@ -92,9 +96,9 @@ export default async function AdminOverview() {
               <path d="M16 8v32M32 8v32M8 16h32M8 32h32" />
             </svg>
           </div>
-          <h2>لا توجد مؤسسات بعد</h2>
-          <p>ابدأ بإنشاء أول مؤسسة على المنصة.</p>
-          <Link href="/admin/organizations/new" className="btn-admin-primary">إنشاء مؤسسة جديدة</Link>
+          <h2>{t('adm.empty.title')}</h2>
+          <p>{t('adm.empty.sub')}</p>
+          <Link href="/admin/organizations/new" className="btn-admin-primary">{t('adm.empty.cta')}</Link>
         </div>
       </div>
     );
@@ -104,29 +108,29 @@ export default async function AdminOverview() {
     <DashboardShell>
       <div className="dash-hd">
         <div>
-          <span className="dash-eyebrow">مالك المنصة</span>
-          <h1>نظرة عامة 👋</h1>
-          <p className="dash-sub">ملخص حالة المنصة والمؤسسات المسجّلة.</p>
+          <span className="dash-eyebrow">{t('anav.owner')}</span>
+          <h1>{t('adm.title')} 👋</h1>
+          <p className="dash-sub">{t('adm.sub')}</p>
         </div>
         <div className="dash-hd-actions">
           <Link href="/admin/organizations/new" className="dash-btn">
-            <Icon name="actions/actions-add" size={16} /> إنشاء مؤسسة
+            <Icon name="actions/actions-add" size={16} /> {t('adm.create')}
           </Link>
         </div>
       </div>
 
       <div className="dash-stats">
-        <StatCard icon="organization/organization-institution" color="purple" label="إجمالي المؤسسات" value={numFmt.format(orgCount)} trend={newThisMonth ? `${newThisMonth} هذا الشهر` : undefined} />
-        <StatCard icon="organization/organization-building" color="green" label="المؤسسات النشطة" value={numFmt.format(activeOrgCount)} />
-        <StatCard icon="people/people-users" color="blue" label="إجمالي المستخدمين" value={numFmt.format(userCount)} />
-        <StatCard icon="analytics/analytics-kpi" color="gold" label="متوسط المستخدمين / مؤسسة" value={numFmt.format(avgUsers)} />
+        <StatCard icon="organization/organization-institution" color="purple" label={t('adm.stat.totalOrgs')} value={numFmt.format(orgCount)} trend={newThisMonth ? t('adm.thisMonth', { n: newThisMonth }) : undefined} />
+        <StatCard icon="organization/organization-building" color="green" label={t('adm.stat.activeOrgs')} value={numFmt.format(activeOrgCount)} />
+        <StatCard icon="people/people-users" color="blue" label={t('adm.stat.totalUsers')} value={numFmt.format(userCount)} />
+        <StatCard icon="analytics/analytics-kpi" color="gold" label={t('adm.stat.avgUsers')} value={numFmt.format(avgUsers)} />
       </div>
 
       <div className="dash-grid-main">
         <div className="dash-card">
           <div className="dash-card-hd">
-            <h3>نمو المنصة — آخر ٧ أيام</h3>
-            <Link href="/admin/organizations" className="dash-link">المؤسسات ←</Link>
+            <h3>{t('adm.growth')}</h3>
+            <Link href="/admin/organizations" className="dash-link">{t('adm.orgs')} ←</Link>
           </div>
           {hasSeries ? (
             <>
@@ -138,24 +142,24 @@ export default async function AdminOverview() {
                 ]}
               />
               <div className="dash-chart-legend">
-                <span><span className="dot" style={{ background: '#6B57A0' }} />مستخدمون جدد</span>
-                <span><span className="dot" style={{ background: '#B8860B' }} />مؤسسات جديدة</span>
+                <span><span className="dot" style={{ background: '#6B57A0' }} />{t('adm.newUsers')}</span>
+                <span><span className="dot" style={{ background: '#B8860B' }} />{t('adm.newOrgs')}</span>
               </div>
             </>
           ) : (
-            <p className="dash-chart-empty">لا يوجد نشاط تسجيل خلال آخر سبعة أيام.</p>
+            <p className="dash-chart-empty">{t('adm.noActivity')}</p>
           )}
         </div>
 
         <div className="dash-card">
           <div className="dash-card-hd">
-            <h3>نسبة التفعيل</h3>
-            <span className="dash-link">المؤسسات</span>
+            <h3>{t('adm.activation')}</h3>
+            <span className="dash-link">{t('adm.orgs')}</span>
           </div>
           <DonutRing
             percent={activeRatio}
-            label="من المؤسسات نشطة"
-            hint={`${numFmt.format(activeOrgCount)} من أصل ${numFmt.format(orgCount)} مؤسسة نشطة`}
+            label={t('adm.activeOf')}
+            hint={t('adm.activeHint', { a: numFmt.format(activeOrgCount), b: numFmt.format(orgCount) })}
           />
         </div>
       </div>
@@ -163,12 +167,12 @@ export default async function AdminOverview() {
       <div className="dash-grid-bottom">
         <div className="dash-card">
           <div className="dash-card-hd">
-            <h3>أحدث المؤسسات</h3>
-            <Link href="/admin/organizations" className="dash-link">عرض الكل ←</Link>
+            <h3>{t('adm.latestOrgs')}</h3>
+            <Link href="/admin/organizations" className="dash-link">{t('adm.viewAll')} ←</Link>
           </div>
           <table className="dash-table">
             <thead>
-              <tr><th>الاسم</th><th>النوع</th><th>المستخدمون</th><th>الحالة</th><th>الإنشاء</th></tr>
+              <tr><th>{t('adm.th.name')}</th><th>{t('adm.th.type')}</th><th>{t('adm.th.users')}</th><th>{t('adm.th.status')}</th><th>{t('adm.th.created')}</th></tr>
             </thead>
             <tbody>
               {recent.map((o) => (
@@ -179,9 +183,9 @@ export default async function AdminOverview() {
                       <div className="n">{o.name}</div>
                     </div>
                   </td>
-                  <td>{TYPE_LABELS[o.type] ?? o.type}</td>
+                  <td>{TYPE_KEYS[o.type] ? t(TYPE_KEYS[o.type]) : o.type}</td>
                   <td>{numFmt.format(o._count.users)}</td>
-                  <td><span className={`dash-badge ${o.isActive ? 'green' : 'muted'}`}>{o.isActive ? 'نشطة' : 'معطّلة'}</span></td>
+                  <td><span className={`dash-badge ${o.isActive ? 'green' : 'muted'}`}>{o.isActive ? t('adm.status.active') : t('adm.status.inactive')}</span></td>
                   <td>{dateFmt.format(o.createdAt)}</td>
                 </tr>
               ))}
@@ -191,25 +195,25 @@ export default async function AdminOverview() {
 
         <div className="dash-side">
           <div className="dash-card">
-            <div className="dash-card-hd"><h3>توزيع المؤسسات حسب النوع</h3></div>
+            <div className="dash-card-hd"><h3>{t('adm.distByType')}</h3></div>
             <div className="dash-ann-list">
-              {typeData.map((t) => (
-                <div key={t.label} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '13px' }}>
-                  <span style={{ flex: '0 0 110px', color: 'var(--gray-700)' }}>{t.label}</span>
+              {typeData.map((row) => (
+                <div key={row.label} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '13px' }}>
+                  <span style={{ flex: '0 0 110px', color: 'var(--gray-700)' }}>{row.label}</span>
                   <span style={{ flex: 1, height: 8, borderRadius: 100, background: 'var(--gray-100)', overflow: 'hidden' }}>
-                    <span style={{ display: 'block', height: '100%', width: `${(t.value / typeMax) * 100}%`, background: 'linear-gradient(90deg, var(--purple-300), var(--purple-500))', borderRadius: 100 }} />
+                    <span style={{ display: 'block', height: '100%', width: `${(row.value / typeMax) * 100}%`, background: 'linear-gradient(90deg, var(--purple-300), var(--purple-500))', borderRadius: 100 }} />
                   </span>
-                  <span style={{ fontWeight: 700, color: 'var(--purple-900)', minWidth: 24, textAlign: 'left' }}>{numFmt.format(t.value)}</span>
+                  <span style={{ fontWeight: 700, color: 'var(--purple-900)', minWidth: 24, textAlign: 'left' }}>{numFmt.format(row.value)}</span>
                 </div>
               ))}
             </div>
           </div>
 
           <div className="dash-promo">
-            <h4>أضف مؤسسة جديدة</h4>
-            <p>أنشئ مساحة مستقلة لجهة جديدة وحدّد باقتها ومسؤولها.</p>
+            <h4>{t('adm.promo.title')}</h4>
+            <p>{t('adm.promo.sub')}</p>
             <Link href="/admin/organizations/new" className="dash-promo-btn">
-              <Icon name="actions/actions-add" size={14} /> إنشاء مؤسسة
+              <Icon name="actions/actions-add" size={14} /> {t('adm.create')}
             </Link>
           </div>
         </div>
