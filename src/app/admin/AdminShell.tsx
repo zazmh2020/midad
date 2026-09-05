@@ -176,9 +176,6 @@ export default function AdminShell({ children, session, avatarUrl, inbox }: Prop
               </>
             )}
           </div>
-          <button className="tbar-logout" onClick={() => setConfirmLogout(true)} aria-label={t('shell.logout')} title={t('shell.logout')}>
-            <Icon name="logout" />
-          </button>
         </header>
 
         <main className="admin-content">{children}</main>

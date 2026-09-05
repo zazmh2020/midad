@@ -328,12 +328,13 @@ svg {
 
 /* ---------- الشريط العلوي: بروفايل أسطواني + خروج مباشر + أيقونات موحّدة ---------- */
 /* توحيد أحجام أيقونات الأدوات (بحث/رسائل/جرس/لغة/ثيم) */
-.org-topbar .tbt, .admin-topbar .tbt { gap: 0.55rem; }
+/* الأدوات تملأ المسافة بين الشعار والبروفايل فلا يبقى فراغ غير منسّق */
+.org-topbar .tbt, .admin-topbar .tbt { flex: 1 1 auto; margin-inline-start: 0; gap: 0.55rem; }
 .org-topbar .theme-toggle, .admin-topbar .theme-toggle,
 .org-topbar .lang-toggle, .admin-topbar .lang-toggle { width: 38px; height: 38px; }
 .org-topbar .theme-toggle svg, .admin-topbar .theme-toggle svg { width: 18px; height: 18px; }
-/* بحث أصغر */
-.org-topbar .tbt-search, .admin-topbar .tbt-search { width: clamp(150px, 20vw, 300px); }
+/* البحث يتمدّد ليملأ الوسط (الشعار يمينًا، الأدوات والبروفايل يسارًا) */
+.org-topbar .tbt-search, .admin-topbar .tbt-search { flex: 1 1 auto; width: auto; min-width: 150px; max-width: 440px; }
 
 /* بروفايل أسطواني (أفاتار + اسم/مسمى + سهم) */
 .tbar-user {
@@ -352,15 +353,6 @@ svg {
 .tbar-user-name { font-family: var(--font-display); font-weight: 700; font-size: 0.82rem; color: var(--purple-900, #2b1a4e); max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tbar-user-role { font-size: 0.68rem; color: var(--gray-500, #7c7788); max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tbar-user-chev { color: var(--gray-500, #7c7788); flex-shrink: 0; }
-
-/* زر تسجيل خروج مباشر */
-.tbar-logout {
-  width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center;
-  border: 1px solid var(--line, #e6e3ee); background: #fff; color: #c0392b; cursor: pointer;
-  transition: background 0.18s, border-color 0.18s;
-}
-.tbar-logout:hover { background: #fdecec; border-color: #f2c4c4; }
-.tbar-logout .app-icon { width: 18px; height: 18px; }
 
 @media (max-width: 640px) {
   .tbar-user-tx { display: none; }

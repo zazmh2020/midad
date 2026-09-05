@@ -239,9 +239,6 @@ export default function OrgShell({ children, org, user, nav, inbox }: Props) {
               </>
             )}
           </div>
-          <button className="tbar-logout" onClick={() => setConfirmLogout(true)} aria-label={t('shell.logout')} title={t('shell.logout')}>
-            <Icon name="logout" />
-          </button>
         </header>
         <main className="org-content">{children}</main>
       </div>
