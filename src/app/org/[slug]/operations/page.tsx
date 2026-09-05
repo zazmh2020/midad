@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { requireOrgAccess } from '@/lib/org';
 import { prisma } from '@/lib/prisma';
-import { canViewProjects, canViewPrograms, canViewCampaigns, canViewDonations, canViewTasks } from '@/lib/permissions';
+import { canViewProjects, canViewPrograms, canViewCampaigns, canViewDonations, canViewTasks, canViewApprovals, canViewBranches } from '@/lib/permissions';
 import SectionHub, { type HubItem } from '@/components/SectionHub';
 import { getT } from '@/lib/i18n/server';
 
@@ -17,12 +17,14 @@ export default async function OperationsHub({ params }: { params: Promise<{ slug
   const base = `/org/${org.slug}`;
   const w = { organizationId: org.id };
 
-  const [projects, programs, campaigns, donations, tasks] = await Promise.all([
+  const [projects, programs, campaigns, donations, tasks, approvals, branches] = await Promise.all([
     prisma.project.count({ where: w }),
     prisma.program.count({ where: w }),
     prisma.campaign.count({ where: w }),
     prisma.donation.count({ where: w }),
     prisma.task.count({ where: w }),
+    prisma.approval.count({ where: { ...w, status: 'PENDING' } }),
+    prisma.branch.count({ where: w }),
   ]);
 
   const items: HubItem[] = [
@@ -41,7 +43,12 @@ export default async function OperationsHub({ params }: { params: Promise<{ slug
     ...(canViewTasks(r)
       ? [{ title: t('hub.ops.tasks'), desc: t('hub.ops.tasks.d'), href: `${base}/tasks`, count: tasks }]
       : []),
-    { title: t('hub.ops.workflow'), desc: t('hub.ops.workflow.d') },
+    ...(canViewApprovals(r)
+      ? [{ title: t('hub.ops.workflow'), desc: t('hub.ops.workflow.d'), href: `${base}/approvals`, count: approvals }]
+      : []),
+    ...(canViewBranches(r)
+      ? [{ title: t('hub.ops.branches'), desc: t('hub.ops.branches.d'), href: `${base}/branches`, count: branches }]
+      : []),
   ];
 
   return (

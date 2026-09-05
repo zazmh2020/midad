@@ -45,6 +45,7 @@ export function proxy(request: NextRequest) {
     path === '/privacy' ||      // صفحات قانونية عامة
     path === '/terms' ||
     path === '/login' ||
+    path.startsWith('/verify') || // التحقّق العام من البطاقات الرقمية
     path.includes('.')
   ) {
     return NextResponse.next();

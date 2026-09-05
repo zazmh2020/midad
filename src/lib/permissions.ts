@@ -22,6 +22,8 @@ import type {
   TaskPriority,
   RequestType,
   RequestStatus,
+  ApprovalCategory,
+  ApprovalStatus,
 } from '@/generated/prisma/client';
 
 /* ============================================================
@@ -112,6 +114,42 @@ export function canViewTasks(role: string): boolean {
 /** من ينشئ ويعدّل ويحذف المهام */
 export function canManageTasks(role: string): boolean {
   return role === 'ORG_ADMIN' || role === 'STAFF';
+}
+
+/* ---------- الفروع ---------- */
+
+/** يطّلع على فروع المؤسسة: الإدارة والموظفون */
+export function canViewBranches(role: string): boolean {
+  return role === 'ORG_ADMIN' || role === 'STAFF';
+}
+/** يدير الفروع (إضافة/تعديل/حذف): مدير المؤسسة */
+export function canManageBranches(role: string): boolean {
+  return role === 'ORG_ADMIN';
+}
+
+/* ---------- الاعتمادات / سير العمل ---------- */
+
+export const APPROVAL_CATEGORY_LABELS: Record<ApprovalCategory, string> = {
+  PURCHASE: 'شراء',
+  PAYMENT: 'صرف / دفع',
+  LEAVE: 'إجازة',
+  CONTRACT: 'عقد / اتفاقية',
+  GENERAL: 'عام',
+};
+export const APPROVAL_CATEGORIES = Object.keys(APPROVAL_CATEGORY_LABELS) as ApprovalCategory[];
+export const approvalCategoryLabel = (v: string) => APPROVAL_CATEGORY_LABELS[v as ApprovalCategory] ?? v;
+export const isApprovalCategory = (v: string): v is ApprovalCategory => (APPROVAL_CATEGORIES as string[]).includes(v);
+
+export const APPROVAL_STATUSES = ['PENDING', 'APPROVED', 'REJECTED'] as ApprovalStatus[];
+export const isApprovalStatus = (v: string): v is ApprovalStatus => (APPROVAL_STATUSES as string[]).includes(v);
+
+/** يقدّم طلب اعتماد ويطّلع على الاعتمادات — جميع الأعضاء */
+export function canViewApprovals(role: string): boolean {
+  return role === 'ORG_ADMIN' || role === 'STAFF' || role === 'MEMBER';
+}
+/** يعتمد/يرفض الطلبات — مدير المؤسسة */
+export function canDecideApprovals(role: string): boolean {
+  return role === 'ORG_ADMIN';
 }
 
 /* ---------- الطلبات ---------- */

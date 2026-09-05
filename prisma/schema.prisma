@@ -10,60 +10,64 @@ datasource db {
 
 /// المؤسسة — كل مؤسسة بيئة معزولة عن غيرها
 model Organization {
-  id          String   @id @default(cuid())
-  name        String
-  slug        String   @unique  // يُستخدم في الدومين الفرعي والمسار
-  type        OrgType  @default(ASSOCIATION)
-  isActive    Boolean  @default(true)
-  plan        OrgPlan  @default(STARTER)
-  planRenewsAt DateTime?
-  stripeCustomerId     String?  @unique // معرّف العميل في Stripe
-  stripeSubscriptionId String?         // معرّف الاشتراك النشط
-  subscriptionStatus   String?         // active / trialing / past_due / canceled …
-  brandColor  String?  // لون الهوية الأساسي للجهة (hex)
-  logoUrl     String?  // شعار الجهة (رابط)
-  disabledModules String[] @default([]) // وحدات معطّلة لهذه المؤسسة (المفعّلة = الباقي)
-  sitePublished Boolean @default(false)  // نشر الموقع العام للمؤسسة
-  contactEmail String?  // بيانات تواصل عامة
-  contactPhone String?
-  address      String?
-  aboutText    String?  // نبذة تُعرض في الموقع العام
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                   String    @id @default(cuid())
+  name                 String
+  slug                 String    @unique // يُستخدم في الدومين الفرعي والمسار
+  type                 OrgType   @default(ASSOCIATION)
+  isActive             Boolean   @default(true)
+  plan                 OrgPlan   @default(STARTER)
+  planRenewsAt         DateTime?
+  stripeCustomerId     String?   @unique // معرّف العميل في Stripe
+  stripeSubscriptionId String? // معرّف الاشتراك النشط
+  subscriptionStatus   String? // active / trialing / past_due / canceled …
+  brandColor           String? // لون الهوية الأساسي للجهة (hex)
+  logoUrl              String? // شعار الجهة (رابط)
+  disabledModules      String[]  @default([]) // وحدات معطّلة لهذه المؤسسة (المفعّلة = الباقي)
+  sitePublished        Boolean   @default(false) // نشر الموقع العام للمؤسسة
+  contactEmail         String? // بيانات تواصل عامة
+  contactPhone         String?
+  address              String?
+  aboutText            String? // نبذة تُعرض في الموقع العام
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
 
-  users         User[]
-  projects      Project[]
-  departments   Department[]
-  programs      Program[]
-  campaigns     Campaign[]
-  beneficiaries Beneficiary[]
-  donations     Donation[]
-  articles      KnowledgeArticle[]
-  documents     Document[]
-  teachers      Teacher[]
-  students      Student[]
-  halaqat       Halaqa[]
-  attendance    AttendanceRecord[]
-  memorization  MemorizationEntry[]
-  announcements Announcement[]
-  competitions  Competition[]
-  employees     Employee[]
-  volunteers    Volunteer[]
-  teams         Team[]
-  tasks         Task[]
-  quranRecords  QuranDailyRecord[]
-  requests      MemberRequest[]
-  fees          StudentFee[]
-  events        Event[]
-  auditLogs     AuditLog[]
+  users               User[]
+  projects            Project[]
+  departments         Department[]
+  programs            Program[]
+  campaigns           Campaign[]
+  beneficiaries       Beneficiary[]
+  donations           Donation[]
+  articles            KnowledgeArticle[]
+  documents           Document[]
+  teachers            Teacher[]
+  students            Student[]
+  halaqat             Halaqa[]
+  attendance          AttendanceRecord[]
+  memorization        MemorizationEntry[]
+  announcements       Announcement[]
+  competitions        Competition[]
+  employees           Employee[]
+  volunteers          Volunteer[]
+  teams               Team[]
+  tasks               Task[]
+  quranRecords        QuranDailyRecord[]
+  requests            MemberRequest[]
+  fees                StudentFee[]
+  events              Event[]
+  auditLogs           AuditLog[]
   competitionEntrants CompetitionParticipant[]
+  branches            Branch[]
+  approvals           Approval[]
 
   @@map("organizations")
 }
 
-/* ============================================================
-   الموارد البشرية
-   ============================================================ */
+/**
+ * ============================================================
+ * الموارد البشرية
+ * ============================================================
+ */
 
 /// الموظف
 model Employee {
@@ -89,8 +93,8 @@ model Employee {
 }
 
 enum EmployeeStatus {
-  ACTIVE     // على رأس العمل
-  ON_LEAVE   // في إجازة
+  ACTIVE // على رأس العمل
+  ON_LEAVE // في إجازة
   TERMINATED // منتهية خدمته
 }
 
@@ -112,7 +116,7 @@ model Volunteer {
 }
 
 enum VolunteerStatus {
-  ACTIVE   // نشط
+  ACTIVE // نشط
   INACTIVE // غير نشط
 }
 
@@ -136,9 +140,11 @@ model Team {
   @@map("teams")
 }
 
-/* ============================================================
-   نظام التعليم / الحلقات القرآنية
-   ============================================================ */
+/**
+ * ============================================================
+ * نظام التعليم / الحلقات القرآنية
+ * ============================================================
+ */
 
 /// المعلّم — قد لا يكون مستخدمًا في النظام
 model Teacher {
@@ -206,8 +212,8 @@ model StudentFee {
 
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  studentId String
-  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId      String
+  student        Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   @@index([organizationId])
   @@index([studentId])
@@ -233,10 +239,10 @@ model Event {
 }
 
 enum StudentStatus {
-  ACTIVE     // منتظم
-  PAUSED     // متوقّف مؤقتًا
-  GRADUATED  // متخرّج
-  WITHDRAWN  // منسحب
+  ACTIVE // منتظم
+  PAUSED // متوقّف مؤقتًا
+  GRADUATED // متخرّج
+  WITHDRAWN // منسحب
 }
 
 /// الحلقة / الفصل
@@ -244,7 +250,7 @@ model Halaqa {
   id        String        @id @default(cuid())
   name      String
   type      HalaqaType    @default(MEMORIZATION)
-  track     HalaqaTrack?  // قسم الحفظ/التلاوة
+  track     HalaqaTrack? // قسم الحفظ/التلاوة
   period    HalaqaPeriod? // الفترة الصباحية/المسائية
   schedule  String?
   createdAt DateTime      @default(now())
@@ -256,8 +262,8 @@ model Halaqa {
   teacherId String?
   teacher   Teacher? @relation(fields: [teacherId], references: [id], onDelete: SetNull)
 
-  students   Student[]
-  attendance AttendanceRecord[]
+  students     Student[]
+  attendance   AttendanceRecord[]
   quranRecords QuranDailyRecord[]
 
   @@index([organizationId])
@@ -271,20 +277,20 @@ model QuranDailyRecord {
   date       DateTime         @db.Date
   attendance AttendanceStatus @default(PRESENT)
 
-  newFrom    Int?    // الدرس الجديد: من صفحة
-  newTo      Int?    // إلى صفحة
-  newNote    String? // الشرح/السورة
-  reviewFrom Int?    // المراجعة اليومية: من
-  reviewTo   Int?    // إلى
-  last5From  Int?    // آخر ٥ صفحات: من
-  last5To    Int?    // إلى
-  listener   String? // اسم المستمع
-  pages      Float?  // عدد الصفحات
-  errors     Int?    // الأخطاء
-  alerts     Int?    // التنبيهات
-  reviewScore  Int?  // درجة المراجعة اليومية
-  conductScore Int?  // درجة السلوك والأخرى
-  notes      String? // ملاحظات المعلم
+  newFrom      Int? // الدرس الجديد: من صفحة
+  newTo        Int? // إلى صفحة
+  newNote      String? // الشرح/السورة
+  reviewFrom   Int? // المراجعة اليومية: من
+  reviewTo     Int? // إلى
+  last5From    Int? // آخر ٥ صفحات: من
+  last5To      Int? // إلى
+  listener     String? // اسم المستمع
+  pages        Float? // عدد الصفحات
+  errors       Int? // الأخطاء
+  alerts       Int? // التنبيهات
+  reviewScore  Int? // درجة المراجعة اليومية
+  conductScore Int? // درجة السلوك والأخرى
+  notes        String? // ملاحظات المعلم
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -306,20 +312,20 @@ model QuranDailyRecord {
 
 enum HalaqaType {
   MEMORIZATION // تحفيظ
-  TAJWEED      // تجويد
-  REVIEW       // مراجعة
-  OTHER        // أخرى
+  TAJWEED // تجويد
+  REVIEW // مراجعة
+  OTHER // أخرى
 }
 
 /// مسار الحلقة — قسم الحفظ أو التلاوة
 enum HalaqaTrack {
   MEMORIZATION // قسم الحفظ
-  RECITATION   // قسم التلاوة
+  RECITATION // قسم التلاوة
 }
 
 /// فترة الحلقة — الصباحية أو المسائية
 enum HalaqaPeriod {
-  MORNING  // الفترة الصباحية
+  MORNING // الفترة الصباحية
   EVENING1 // الفترة المسائية الأولى
   EVENING2 // الفترة المسائية الثانية
 }
@@ -347,10 +353,10 @@ model AttendanceRecord {
 }
 
 enum AttendanceStatus {
-  PRESENT  // حاضر
-  ABSENT   // غائب
-  LATE     // متأخّر
-  EXCUSED  // بعذر
+  PRESENT // حاضر
+  ABSENT // غائب
+  LATE // متأخّر
+  EXCUSED // بعذر
 }
 
 /// سجل حفظ / تسميع
@@ -375,7 +381,7 @@ model MemorizationEntry {
 }
 
 enum MemorizationKind {
-  NEW    // حفظ جديد
+  NEW // حفظ جديد
   REVIEW // مراجعة
 }
 
@@ -397,16 +403,16 @@ model Announcement {
 
 /// مسابقة حفظ/تجويد
 model Competition {
-  id             String   @id @default(cuid())
-  name           String
-  level          String?  // المستوى: جزء عمّ، 5 أجزاء، القرآن كاملًا…
-  startDate      DateTime?
-  status         String   @default("UPCOMING") // UPCOMING / OPEN / CLOSED
-  participants   Int      @default(0)
-  createdAt      DateTime @default(now())
+  id           String    @id @default(cuid())
+  name         String
+  level        String? // المستوى: جزء عمّ، 5 أجزاء، القرآن كاملًا…
+  startDate    DateTime?
+  status       String    @default("UPCOMING") // UPCOMING / OPEN / CLOSED
+  participants Int       @default(0)
+  createdAt    DateTime  @default(now())
 
   organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization   Organization             @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   entrants       CompetitionParticipant[]
 
   @@index([organizationId])
@@ -422,8 +428,8 @@ model CompetitionParticipant {
   note      String?
   createdAt DateTime @default(now())
 
-  competitionId String
-  competition   Competition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+  competitionId  String
+  competition    Competition  @relation(fields: [competitionId], references: [id], onDelete: Cascade)
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
@@ -435,9 +441,9 @@ model CompetitionParticipant {
 /// سجلّ النشاط — تتبّع الإجراءات المهمّة
 model AuditLog {
   id        String   @id @default(cuid())
-  action    String   // created / updated / deleted / approved / rejected …
-  entity    String   // task / request / student / module …
-  label     String?  // وصف الهدف
+  action    String // created / updated / deleted / approved / rejected …
+  entity    String // task / request / student / module …
+  label     String? // وصف الهدف
   actorName String
   createdAt DateTime @default(now())
 
@@ -449,14 +455,14 @@ model AuditLog {
 }
 
 enum MemorizationRating {
-  EXCELLENT    // ممتاز
-  GOOD         // جيد
+  EXCELLENT // ممتاز
+  GOOD // جيد
   NEEDS_REPEAT // يحتاج إعادة
 }
 
 /// وحدة تنظيمية (إدارة / قسم / فرع) — شجرة تُبنى بالإسناد الذاتي parentId
 model Department {
-  id          String  @id @default(cuid())
+  id          String   @id @default(cuid())
   name        String
   description String?
   createdAt   DateTime @default(now())
@@ -542,6 +548,7 @@ model User {
   jobTitle     String?
   phone        String?
   lastLoginAt  DateTime?
+  cardToken    String? // رمز البطاقة الرقمية (يُولّد عند أول إصدار) — عشوائي فريد عمليًا
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
@@ -551,14 +558,17 @@ model User {
   departmentId String?
   department   Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
 
-  articles  KnowledgeArticle[]
-  documents Document[]
-  tasks     Task[] @relation("TaskAssignee")
-  requests  MemberRequest[] @relation("RequestRequester")
-  teacherProfile Teacher? @relation("TeacherAccount")
+  articles           KnowledgeArticle[]
+  documents          Document[]
+  tasks              Task[]             @relation("TaskAssignee")
+  requests           MemberRequest[]    @relation("RequestRequester")
+  teacherProfile     Teacher?           @relation("TeacherAccount")
+  approvalsRequested Approval[]         @relation("ApprovalRequester")
+  approvalsDecided   Approval[]         @relation("ApprovalDecider")
 
   @@index([organizationId])
   @@index([departmentId])
+  @@index([cardToken])
   @@map("users")
 }
 
@@ -645,7 +655,7 @@ model Document {
   description String?
   category    String?
   fileKey     String   @unique // مفتاح الكائن في المخزن
-  fileName    String   // الاسم الأصلي
+  fileName    String // الاسم الأصلي
   contentType String
   size        Int
   createdAt   DateTime @default(now())
@@ -679,39 +689,39 @@ model KnowledgeArticle {
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   authorId String?
-  author   User?  @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  author   User?   @relation(fields: [authorId], references: [id], onDelete: SetNull)
 
   @@index([organizationId])
   @@map("knowledge_articles")
 }
 
 enum OrgType {
-  ASSOCIATION   // جمعية أو مؤسسة
-  MOSQUE        // مسجد أو مركز قرآني
-  SCHOOL        // مركز تعليمي
-  PROJECT       // مشروع خاص
+  ASSOCIATION // جمعية أو مؤسسة
+  MOSQUE // مسجد أو مركز قرآني
+  SCHOOL // مركز تعليمي
+  PROJECT // مشروع خاص
 }
 
 enum OrgPlan {
-  STARTER       // ستارتر
-  GROWTH        // غروث
-  PROFESSIONAL  // بروفيشنال
-  ENTERPRISE    // انتربرايز
+  STARTER // ستارتر
+  GROWTH // غروث
+  PROFESSIONAL // بروفيشنال
+  ENTERPRISE // انتربرايز
 }
 
 enum Role {
-  PLATFORM_OWNER  // مالك المنصة — يرى كل المؤسسات
-  ORG_ADMIN       // مدير المؤسسة — يدير كل شيء داخلها
-  STAFF           // موظف — يعمل داخل المؤسسة بصلاحيات محددة
-  MEMBER          // مستخدم عادي — قراءة وتفاعل محدود
+  PLATFORM_OWNER // مالك المنصة — يرى كل المؤسسات
+  ORG_ADMIN // مدير المؤسسة — يدير كل شيء داخلها
+  STAFF // موظف — يعمل داخل المؤسسة بصلاحيات محددة
+  MEMBER // مستخدم عادي — قراءة وتفاعل محدود
 }
 
 enum ProjectStatus {
-  PLANNED    // مخطّط
-  ACTIVE     // جارٍ
-  ON_HOLD    // متوقّف
-  COMPLETED  // مكتمل
-  CANCELLED  // ملغى
+  PLANNED // مخطّط
+  ACTIVE // جارٍ
+  ON_HOLD // متوقّف
+  COMPLETED // مكتمل
+  CANCELLED // ملغى
 }
 
 /// المهمة — عمل مُسنَد بحالة وأولوية ومسؤول وموعد
@@ -741,17 +751,17 @@ model Task {
 }
 
 enum TaskStatus {
-  TODO         // قيد الانتظار
-  IN_PROGRESS  // جارٍ التنفيذ
-  BLOCKED      // معطّل
-  DONE         // منجز
+  TODO // قيد الانتظار
+  IN_PROGRESS // جارٍ التنفيذ
+  BLOCKED // معطّل
+  DONE // منجز
 }
 
 enum TaskPriority {
-  LOW      // منخفضة
-  MEDIUM   // متوسطة
-  HIGH     // عالية
-  URGENT   // عاجلة
+  LOW // منخفضة
+  MEDIUM // متوسطة
+  HIGH // عالية
+  URGENT // عاجلة
 }
 
 /// طلب داخلي — يقدّمه عضو ويعتمده مدير المؤسسة
@@ -776,72 +786,132 @@ model MemberRequest {
 }
 
 enum RequestType {
-  EXAM               // طلب اختبار
-  GRADE_EDIT         // طلب تعديل درجات
+  EXAM // طلب اختبار
+  GRADE_EDIT // طلب تعديل درجات
   SUPERVISOR_MEETING // طلب اجتماع مع مراقب
-  PERMISSION         // طلب إذن
-  MAKEUP_CLASS       // طلب فتح فصل تعويض
-  TEACHER_SERVICE    // طلب خدمة للمعلمين
-  DROPOUT_EXAM       // اختبار المنقطعين
-  OTHER              // أخرى
+  PERMISSION // طلب إذن
+  MAKEUP_CLASS // طلب فتح فصل تعويض
+  TEACHER_SERVICE // طلب خدمة للمعلمين
+  DROPOUT_EXAM // اختبار المنقطعين
+  OTHER // أخرى
 }
 
 enum RequestStatus {
-  PENDING   // قيد المراجعة
-  APPROVED  // معتمَد
-  REJECTED  // مرفوض
+  PENDING // قيد المراجعة
+  APPROVED // معتمَد
+  REJECTED // مرفوض
+}
+
+/// فرع تابع للمؤسسة — موقع/مكتب له مدير وبيانات تواصل
+model Branch {
+  id        String   @id @default(cuid())
+  name      String
+  code      String? // رمز الفرع (اختياري)
+  city      String?
+  address   String?
+  phone     String?
+  manager   String? // اسم مدير الفرع
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@map("branches")
+}
+
+/// اعتماد — طلب موافقة يمرّ بسير عمل (قيد الاعتماد → معتمَد/مرفوض)
+model Approval {
+  id           String           @id @default(cuid())
+  title        String
+  description  String?
+  category     ApprovalCategory @default(GENERAL)
+  amount       Decimal?         @db.Decimal(12, 2) // مبلغ اختياري (للمشتريات/المدفوعات)
+  status       ApprovalStatus   @default(PENDING)
+  decisionNote String? // ملاحظة المُعتمِد عند القرار
+  decidedAt    DateTime?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  requestedById String?
+  requestedBy   User?   @relation("ApprovalRequester", fields: [requestedById], references: [id], onDelete: SetNull)
+
+  decidedById String?
+  decidedBy   User?   @relation("ApprovalDecider", fields: [decidedById], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@map("approvals")
+}
+
+enum ApprovalCategory {
+  PURCHASE // شراء
+  PAYMENT // صرف/دفع
+  LEAVE // إجازة
+  CONTRACT // عقد/اتفاقية
+  GENERAL // عام
+}
+
+enum ApprovalStatus {
+  PENDING // قيد الاعتماد
+  APPROVED // معتمَد
+  REJECTED // مرفوض
 }
 
 enum ProgramCategory {
-  EDUCATIONAL   // تعليمي
-  HUMANITARIAN  // إنساني
+  EDUCATIONAL // تعليمي
+  HUMANITARIAN // إنساني
   DEVELOPMENTAL // تنموي
-  RELIGIOUS     // ديني / قرآني
-  HEALTH        // صحي
+  RELIGIOUS // ديني / قرآني
+  HEALTH // صحي
 }
 
 enum ProgramStatus {
-  PLANNED    // مخطّط
-  ACTIVE     // جارٍ
-  COMPLETED  // منتهٍ
-  SUSPENDED  // موقوف
+  PLANNED // مخطّط
+  ACTIVE // جارٍ
+  COMPLETED // منتهٍ
+  SUSPENDED // موقوف
 }
 
 enum CampaignType {
-  CHARITY    // خيرية
-  SEASONAL   // موسمية
-  AWARENESS  // توعوية
+  CHARITY // خيرية
+  SEASONAL // موسمية
+  AWARENESS // توعوية
 }
 
 enum CampaignStatus {
-  PLANNED    // مخطّطة
-  ACTIVE     // جارية
-  COMPLETED  // منتهية
-  CANCELLED  // ملغاة
+  PLANNED // مخطّطة
+  ACTIVE // جارية
+  COMPLETED // منتهية
+  CANCELLED // ملغاة
 }
 
 enum BeneficiaryCategory {
-  FAMILY   // أسرة
-  ORPHAN   // يتيم
-  STUDENT  // طالب
-  ELDERLY  // مسنّ
-  OTHER    // أخرى
+  FAMILY // أسرة
+  ORPHAN // يتيم
+  STUDENT // طالب
+  ELDERLY // مسنّ
+  OTHER // أخرى
 }
 
 enum BeneficiaryStatus {
-  ACTIVE   // نشط
-  PENDING  // قيد المراجعة
+  ACTIVE // نشط
+  PENDING // قيد المراجعة
   INACTIVE // موقوف
 }
 
 enum DonationMethod {
-  CASH    // نقداً
-  BANK    // تحويل بنكي
-  CARD    // بطاقة
-  ONLINE  // إلكتروني
+  CASH // نقداً
+  BANK // تحويل بنكي
+  CARD // بطاقة
+  ONLINE // إلكتروني
 }
 
 enum DonationStatus {
-  PLEDGED   // متعهَّد به
-  RECEIVED  // مستلَم
+  PLEDGED // متعهَّد به
+  RECEIVED // مستلَم
 }
