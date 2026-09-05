@@ -9,6 +9,13 @@ type Dict = Record<string, string>;
 
 const ar: Dict = {
   // ---- Page headings ----
+  'inbox.newAnnouncement': 'إعلان جديد: {v}',
+  'inbox.newMember': 'انضمّ {name} إلى الفريق',
+  'inbox.newTask': 'مهمة جديدة: {v}',
+  'inbox.newRequest': 'طلب جديد من {name}: {v}',
+  'inbox.newDonation': 'تبرّع جديد من {name}',
+  'inbox.newStudent': 'طالب جديد: {name}',
+  // ---- Page headings ----
   'content.siteLive': 'منشور',
   'content.siteOff': 'غير منشور',
   'content.siteView': 'زيارة الموقع العام',
@@ -1077,6 +1084,13 @@ const ar: Dict = {
 };
 
 const en: Dict = {
+  // ---- Page headings ----
+  'inbox.newAnnouncement': 'New announcement: {v}',
+  'inbox.newMember': '{name} joined the team',
+  'inbox.newTask': 'New task: {v}',
+  'inbox.newRequest': 'New request from {name}: {v}',
+  'inbox.newDonation': 'New donation from {name}',
+  'inbox.newStudent': 'New student: {name}',
   // ---- Page headings ----
   'content.siteLive': 'Published',
   'content.siteOff': 'Unpublished',

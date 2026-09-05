@@ -34,6 +34,10 @@ function timeAgo(iso: string): string {
 
 type Panel = 'search' | 'messages' | 'notif' | null;
 
+const NOTIF_ICON: Record<string, string> = {
+  member: '👤', announcement: '📣', task: '✅', request: '📝', donation: '💛', student: '🎓',
+};
+
 export default function TopbarTools({ searchItems, messages, notifications, storageKey }: Props) {
   const router = useRouter();
   const t = useT();
@@ -152,7 +156,7 @@ export default function TopbarTools({ searchItems, messages, notifications, stor
             <div className="tbt-inbox-head">{t('tb.notifications')}</div>
             {notifications.length ? notifications.map((n) => (
               <div key={n.id} className="tbt-notif">
-                <span className={`tbt-notif-ic ${n.type}`}>{n.type === 'member' ? '👤' : '📣'}</span>
+                <span className={`tbt-notif-ic ${n.type}`}>{NOTIF_ICON[n.type] ?? '📣'}</span>
                 <div className="tbt-notif-tx"><span>{n.title}</span><span className="tbt-time">{timeAgo(n.time)}</span></div>
               </div>
             )) : <div className="tbt-empty">{t('tb.noNotifications')}</div>}

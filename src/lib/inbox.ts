@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma';
+import { getT } from '@/lib/i18n/server';
 
 /* ============================================================
    صندوق الوارد — رسائل (إعلانات الجهة) + إشعارات (نشاط حديث)
@@ -15,7 +16,7 @@ export interface InboxMessage {
 
 export interface InboxNotification {
   id: string;
-  type: 'member' | 'announcement';
+  type: 'member' | 'announcement' | 'task' | 'request' | 'donation' | 'student';
   title: string;
   time: string; // ISO
 }
@@ -69,44 +70,57 @@ export async function getAdminInbox(): Promise<OrgInbox> {
 }
 
 export async function getOrgInbox(organizationId: string): Promise<OrgInbox> {
-  const [announcements, members] = await Promise.all([
+  const where = { organizationId };
+  const { t } = await getT();
+  const [announcements, members, tasks, requests, donations, students] = await Promise.all([
     prisma.announcement.findMany({
       where: { organizationId, isPublished: true },
       orderBy: [{ pinned: 'desc' }, { createdAt: 'desc' }],
       take: 8,
     }),
-    prisma.user.findMany({
-      where: { organizationId },
-      orderBy: { createdAt: 'desc' },
-      take: 5,
-      select: { id: true, name: true, createdAt: true },
+    prisma.user.findMany({ where, orderBy: { createdAt: 'desc' }, take: 5, select: { id: true, name: true, createdAt: true } }),
+    prisma.task.findMany({ where, orderBy: { createdAt: 'desc' }, take: 5, select: { id: true, title: true, createdAt: true } }),
+    prisma.memberRequest.findMany({
+      where, orderBy: { createdAt: 'desc' }, take: 5,
+      select: { id: true, type: true, status: true, createdAt: true, requester: { select: { name: true } } },
     }),
+    prisma.donation.findMany({ where, orderBy: { donatedAt: 'desc' }, take: 5, select: { id: true, donorName: true, donatedAt: true } }),
+    prisma.student.findMany({ where, orderBy: { createdAt: 'desc' }, take: 5, select: { id: true, name: true, createdAt: true } }),
   ]);
 
   const messages: InboxMessage[] = announcements.map((a) => ({
-    id: a.id,
-    title: a.title,
-    body: a.body,
-    time: a.createdAt.toISOString(),
-    pinned: a.pinned,
+    id: a.id, title: a.title, body: a.body, time: a.createdAt.toISOString(), pinned: a.pinned,
   }));
 
   const notifications: InboxNotification[] = [
-    ...announcements.slice(0, 5).map((a) => ({
-      id: `ann-${a.id}`,
-      type: 'announcement' as const,
-      title: `إعلان جديد: ${a.title}`,
-      time: a.createdAt.toISOString(),
+    ...announcements.slice(0, 4).map((a) => ({
+      id: `ann-${a.id}`, type: 'announcement' as const,
+      title: t('inbox.newAnnouncement', { v: a.title }), time: a.createdAt.toISOString(),
     })),
     ...members.map((m) => ({
-      id: `usr-${m.id}`,
-      type: 'member' as const,
-      title: `انضمّ ${m.name} إلى الفريق`,
-      time: m.createdAt.toISOString(),
+      id: `usr-${m.id}`, type: 'member' as const,
+      title: t('inbox.newMember', { name: m.name }), time: m.createdAt.toISOString(),
+    })),
+    ...tasks.map((tk) => ({
+      id: `tsk-${tk.id}`, type: 'task' as const,
+      title: t('inbox.newTask', { v: tk.title }), time: tk.createdAt.toISOString(),
+    })),
+    ...requests.map((r) => ({
+      id: `req-${r.id}`, type: 'request' as const,
+      title: t('inbox.newRequest', { name: r.requester.name, v: t(`req.type.${r.type}`) }),
+      time: r.createdAt.toISOString(),
+    })),
+    ...donations.map((d) => ({
+      id: `don-${d.id}`, type: 'donation' as const,
+      title: t('inbox.newDonation', { name: d.donorName }), time: d.donatedAt.toISOString(),
+    })),
+    ...students.map((s) => ({
+      id: `std-${s.id}`, type: 'student' as const,
+      title: t('inbox.newStudent', { name: s.name }), time: s.createdAt.toISOString(),
     })),
   ]
     .sort((x, y) => (x.time < y.time ? 1 : -1))
-    .slice(0, 8);
+    .slice(0, 12);
 
   return { messages, notifications };
 }
