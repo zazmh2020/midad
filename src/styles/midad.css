@@ -577,8 +577,8 @@
   .mdl-nav-links { display: none; }
   .mdl-menu-btn { display: inline-flex; order: -1; }
   /* ترتيب الجوال (يمين→يسار): ٣ خطوط ← الشعار ← الأيقونات ← تسجيل الدخول */
-  .mdl-navbar { gap: 0.5rem; padding: 0.5rem 0.7rem; }
-  .mdl-brand { margin-inline-end: auto; }
+  /* توزيع متوازن: الخطوط عند الطرف، الشعار في الوسط، الأدوات عند الطرف الآخر */
+  .mdl-navbar { gap: 0.4rem; padding: 0.5rem 0.9rem; justify-content: space-between; }
   .mdl-nav-actions { gap: 0.35rem; }
   .mdl-nav-actions .mdl-login { display: none; }
   .mdl-navbar .mdl-btn { padding: 0.5rem 0.9rem; font-size: 0.82rem; }
