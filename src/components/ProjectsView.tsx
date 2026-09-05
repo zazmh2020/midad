@@ -2,7 +2,8 @@
 
 import { useMemo, useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
-import { PROJECT_STATUSES, projectStatusLabel } from '@/lib/permissions';
+import { PROJECT_STATUSES } from '@/lib/permissions';
+import { useLocale } from '@/lib/i18n/LocaleProvider';
 
 type Project = {
   id: string;
@@ -16,12 +17,6 @@ type Project = {
 
 type Department = { id: string; name: string };
 
-const dateFmt = new Intl.DateTimeFormat('ar-u-nu-latn', { year: 'numeric', month: 'short', day: 'numeric' });
-
-function fmt(d: string | null) {
-  return d ? dateFmt.format(new Date(d)) : '—';
-}
-
 export default function ProjectsView({
   projects,
   departments,
@@ -31,6 +26,10 @@ export default function ProjectsView({
   departments: Department[];
   canManage: boolean;
 }) {
+  const { t, locale } = useLocale();
+  const dateFmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar-u-nu-latn', { year: 'numeric', month: 'short', day: 'numeric' });
+  const fmt = (d: string | null) => (d ? dateFmt.format(new Date(d)) : '—');
+  const statusLabel = (s: string) => t(`status.project.${s}`);
   const router = useRouter();
   const [creating, setCreating] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -71,14 +70,14 @@ export default function ProjectsView({
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setError(data.error ?? 'تعذّر الإنشاء.');
+        setError(data.error ?? t('form.createErr'));
       } else {
         resetForm();
         setCreating(false);
         router.refresh();
       }
     } catch {
-      setError('تعذّر الاتصال بالخادم.');
+      setError(t('form.netErr'));
     } finally {
       setBusyId(null);
     }
@@ -94,26 +93,26 @@ export default function ProjectsView({
         body: JSON.stringify(body),
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) setError(data.error ?? 'تعذّر الحفظ.');
+      if (!res.ok) setError(data.error ?? t('form.saveErr'));
       else router.refresh();
     } catch {
-      setError('تعذّر الاتصال بالخادم.');
+      setError(t('form.netErr'));
     } finally {
       setBusyId(null);
     }
   }
 
   async function remove(id: string) {
-    if (!confirm('حذف هذا المشروع نهائياً؟')) return;
+    if (!confirm(t('proj.deleteConfirm'))) return;
     setError('');
     setBusyId(id);
     try {
       const res = await fetch(`/api/org/projects/${id}`, { method: 'DELETE' });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) setError(data.error ?? 'تعذّر الحذف.');
+      if (!res.ok) setError(data.error ?? t('form.deleteErr'));
       else router.refresh();
     } catch {
-      setError('تعذّر الاتصال بالخادم.');
+      setError(t('form.netErr'));
     } finally {
       setBusyId(null);
     }
@@ -127,10 +126,10 @@ export default function ProjectsView({
             className="org-inline-select"
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            aria-label="تصفية حسب الوحدة"
+            aria-label={t('view.filterByUnit')}
           >
-            <option value="ALL">كل الوحدات</option>
-            <option value="NONE">بلا وحدة</option>
+            <option value="ALL">{t('view.allUnits')}</option>
+            <option value="NONE">{t('view.noUnitFilter')}</option>
             {departments.map((d) => (
               <option key={d.id} value={d.id}>{d.name}</option>
             ))}
@@ -142,7 +141,7 @@ export default function ProjectsView({
             className="org-btn org-btn-primary"
             onClick={() => { setCreating((v) => !v); setError(''); }}
           >
-            {creating ? 'إلغاء' : '+ مشروع جديد'}
+            {creating ? t('shell.cancel') : t('proj.new')}
           </button>
         )}
       </div>
@@ -152,26 +151,26 @@ export default function ProjectsView({
       {creating && (
         <form className="org-form" onSubmit={handleCreate}>
           <div className="org-field">
-            <label htmlFor="p-name">اسم المشروع</label>
+            <label htmlFor="p-name">{t('proj.name')}</label>
             <input id="p-name" value={name} onChange={(e) => setName(e.target.value)} required />
           </div>
           <div className="org-field">
-            <label htmlFor="p-desc">الوصف <span className="org-hint">اختياري</span></label>
+            <label htmlFor="p-desc">{t('proj.desc')} <span className="org-hint">{t('view.optional')}</span></label>
             <textarea id="p-desc" rows={3} value={description} onChange={(e) => setDescription(e.target.value)} />
           </div>
           <div className="org-field-row">
             <div className="org-field">
-              <label htmlFor="p-status">الحالة</label>
+              <label htmlFor="p-status">{t('view.status')}</label>
               <select id="p-status" value={status} onChange={(e) => setStatus(e.target.value)}>
                 {PROJECT_STATUSES.map((s) => (
-                  <option key={s} value={s}>{projectStatusLabel(s)}</option>
+                  <option key={s} value={s}>{statusLabel(s)}</option>
                 ))}
               </select>
             </div>
             <div className="org-field">
-              <label htmlFor="p-dept">الوحدة التنظيمية</label>
+              <label htmlFor="p-dept">{t('view.unit')}</label>
               <select id="p-dept" value={departmentId} onChange={(e) => setDepartmentId(e.target.value)}>
-                <option value="">— بلا وحدة</option>
+                <option value="">{t('view.noUnit')}</option>
                 {departments.map((d) => (
                   <option key={d.id} value={d.id}>{d.name}</option>
                 ))}
@@ -180,17 +179,17 @@ export default function ProjectsView({
           </div>
           <div className="org-field-row">
             <div className="org-field">
-              <label htmlFor="p-start">تاريخ البداية</label>
+              <label htmlFor="p-start">{t('view.startDate')}</label>
               <input id="p-start" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
             </div>
             <div className="org-field">
-              <label htmlFor="p-end">تاريخ النهاية</label>
+              <label htmlFor="p-end">{t('view.endDate')}</label>
               <input id="p-end" type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
             </div>
           </div>
           <div className="org-form-actions">
             <button type="submit" className="org-btn org-btn-primary" disabled={busyId === '__new'}>
-              {busyId === '__new' ? 'جارٍ الإنشاء…' : 'إنشاء المشروع'}
+              {busyId === '__new' ? t('proj.creating') : t('proj.create')}
             </button>
           </div>
         </form>
@@ -198,7 +197,7 @@ export default function ProjectsView({
 
       {shown.length === 0 ? (
         <div className="org-empty">
-          {projects.length === 0 ? 'لا توجد مشاريع بعد.' : 'لا مشاريع في هذه الوحدة.'}
+          {projects.length === 0 ? t('proj.none') : t('proj.noneInUnit')}
         </div>
       ) : (
         <div className="org-cards">
@@ -207,7 +206,7 @@ export default function ProjectsView({
               <div className="org-card-head">
                 <h3>{p.name}</h3>
                 <span className={`org-status org-status-${p.status.toLowerCase()}`}>
-                  {projectStatusLabel(p.status)}
+                  {statusLabel(p.status)}
                 </span>
               </div>
               {deptName(p.departmentId) && (
@@ -215,8 +214,8 @@ export default function ProjectsView({
               )}
               {p.description && <p className="org-card-desc">{p.description}</p>}
               <div className="org-card-meta">
-                <span>من {fmt(p.startDate)}</span>
-                <span>إلى {fmt(p.endDate)}</span>
+                <span>{t('view.from', { d: fmt(p.startDate) })}</span>
+                <span>{t('view.to', { d: fmt(p.endDate) })}</span>
               </div>
               {canManage && (
                 <div className="org-card-actions">
@@ -227,7 +226,7 @@ export default function ProjectsView({
                     onChange={(e) => patch(p.id, { status: e.target.value })}
                   >
                     {PROJECT_STATUSES.map((s) => (
-                      <option key={s} value={s}>{projectStatusLabel(s)}</option>
+                      <option key={s} value={s}>{statusLabel(s)}</option>
                     ))}
                   </select>
                   {departments.length > 0 && (
@@ -236,9 +235,9 @@ export default function ProjectsView({
                       value={p.departmentId ?? ''}
                       disabled={busyId === p.id}
                       onChange={(e) => patch(p.id, { departmentId: e.target.value || null })}
-                      aria-label="الوحدة"
+                      aria-label={t('view.unitShort')}
                     >
-                      <option value="">— بلا وحدة</option>
+                      <option value="">{t('view.noUnit')}</option>
                       {departments.map((d) => (
                         <option key={d.id} value={d.id}>{d.name}</option>
                       ))}
@@ -249,7 +248,7 @@ export default function ProjectsView({
                     disabled={busyId === p.id}
                     onClick={() => remove(p.id)}
                   >
-                    حذف
+                    {t('view.delete')}
                   </button>
                 </div>
               )}
