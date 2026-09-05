@@ -66,12 +66,12 @@ export default function MidadHeader() {
           <a href="#home" className="mdl-nav-link">{t('nav.home')}</a>
           <a href="#platform" className="mdl-nav-link">{t('nav.platform')}</a>
           <div className="mdl-has-menu">
-            <a href="#platform" className="mdl-nav-link">{t('nav.orgs')} {chev}</a>
-            <Mega items={JIHAT_MEGA} href="#platform" />
-          </div>
-          <div className="mdl-has-menu">
             <a href="#systems" className="mdl-nav-link">{t('nav.systems')} {chev}</a>
             <Mega items={SYSTEMS_MEGA} href="#systems" wide />
+          </div>
+          <div className="mdl-has-menu">
+            <a href="#platform" className="mdl-nav-link">{t('nav.orgs')} {chev}</a>
+            <Mega items={JIHAT_MEGA} href="#platform" />
           </div>
           <a href="#ai" className="mdl-nav-link">{t('nav.ai')}</a>
           <a href="#pricing" className="mdl-nav-link">{t('nav.pricing')}</a>

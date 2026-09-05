@@ -30,11 +30,11 @@
   font-family: var(--font-display, 'Qomra', system-ui, sans-serif);
   color: var(--text);
   background-color: var(--bg);
-  background-image: url(/bg/lines.jpg);
-  background-size: cover;
-  background-position: center top;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
+  background-image: linear-gradient(rgba(246, 245, 251, 0.82), rgba(246, 245, 251, 0.82)), url(/bg/lines.jpg);
+  background-size: cover, cover;
+  background-position: center top, center top;
+  background-attachment: fixed, fixed;
+  background-repeat: no-repeat, no-repeat;
   direction: inherit;
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
