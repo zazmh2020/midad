@@ -3,12 +3,14 @@ import { requireOrgAccess } from '@/lib/org';
 import { prisma } from '@/lib/prisma';
 import { canViewCampaigns, canManageCampaigns } from '@/lib/permissions';
 import CampaignsView from '@/components/CampaignsView';
+import { getT } from '@/lib/i18n/server';
 
 export const dynamic = 'force-dynamic';
 
 export default async function OrgCampaignsPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
+  const { t } = await getT();
 
   if (!canViewCampaigns(user.role)) redirect(`/org/${org.slug}`);
   const canManage = canManageCampaigns(user.role);
@@ -30,9 +32,9 @@ export default async function OrgCampaignsPage({ params }: { params: Promise<{ s
     <div className="org-page">
       <div className="org-page-head">
         <div>
-          <span className="org-eyebrow">الوحدات</span>
-          <h1>الحملات</h1>
-          <p>{campaigns.length} حملة في {org.name}.</p>
+          <span className="org-eyebrow">{t('hub.units')}</span>
+          <h1>{t('hub.ops.campaigns')}</h1>
+          <p>{t('camp.count', { n: campaigns.length, org: org.name })}</p>
         </div>
       </div>
 

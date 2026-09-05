@@ -3,6 +3,7 @@ import { requireOrgAccess } from '@/lib/org';
 import { prisma } from '@/lib/prisma';
 import { canViewProjects, canManageProjects } from '@/lib/permissions';
 import ProjectsView from '@/components/ProjectsView';
+import { getT } from '@/lib/i18n/server';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,6 +14,7 @@ export default async function OrgProjectsPage({
 }) {
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
+  const { t } = await getT();
 
   if (!canViewProjects(user.role)) redirect(`/org/${org.slug}`);
   const canManage = canManageProjects(user.role);
@@ -42,9 +44,9 @@ export default async function OrgProjectsPage({
     <div className="org-page">
       <div className="org-page-head">
         <div>
-          <span className="org-eyebrow">الوحدات</span>
-          <h1>المشاريع</h1>
-          <p>{projects.length} مشروع في {org.name}.</p>
+          <span className="org-eyebrow">{t('hub.units')}</span>
+          <h1>{t('hub.ops.projects')}</h1>
+          <p>{t('proj.count', { n: projects.length, org: org.name })}</p>
         </div>
       </div>
 

@@ -1,10 +1,8 @@
 import { redirect } from 'next/navigation';
 import { requireOrgAccess } from '@/lib/org';
 import { prisma } from '@/lib/prisma';
-import {
-  canViewReports, projectStatusLabel, programStatusLabel,
-  campaignStatusLabel, beneficiaryStatusLabel,
-} from '@/lib/permissions';
+import { canViewReports } from '@/lib/permissions';
+import { getT } from '@/lib/i18n/server';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,14 +15,14 @@ function toMap<R extends { _count: number }>(rows: R[], keyer: (r: R) => string)
   return out;
 }
 
-function Distribution({ title, data, label }: { title: string; data: Record<string, number>; label: (k: string) => string }) {
+function Distribution({ title, data, label, noData }: { title: string; data: Record<string, number>; label: (k: string) => string; noData: string }) {
   const entries = Object.entries(data);
   const total = entries.reduce((s, [, v]) => s + v, 0);
   return (
     <div className="org-panel">
       <h2>{title}</h2>
       {entries.length === 0 ? (
-        <p className="org-panel-sub">لا بيانات بعد.</p>
+        <p className="org-panel-sub">{noData}</p>
       ) : (
         <div className="org-dist">
           {entries.map(([k, v]) => (
@@ -45,9 +43,11 @@ function Distribution({ title, data, label }: { title: string; data: Record<stri
 export default async function OrgReportsPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
+  const { t } = await getT();
 
   if (!canViewReports(user.role)) redirect(`/org/${org.slug}`);
   const where = { organizationId: org.id };
+  const sLabel = (kind: string) => (s: string) => t(`status.${kind}.${s}`);
 
   const [
     users, activeUsers, departments, programs, beneficiaries, campaigns,
@@ -72,23 +72,23 @@ export default async function OrgReportsPage({ params }: { params: Promise<{ slu
   const totalReceived = receivedAgg._sum.amount ?? 0;
 
   const metrics = [
-    { label: 'المستخدمون النشطون', value: `${activeUsers} / ${users}` },
-    { label: 'الوحدات التنظيمية', value: numFmt.format(departments) },
-    { label: 'المشاريع', value: numFmt.format(projectCount) },
-    { label: 'البرامج', value: numFmt.format(programs) },
-    { label: 'الحملات', value: numFmt.format(campaigns) },
-    { label: 'المستفيدون', value: numFmt.format(beneficiaries) },
-    { label: 'عمليات التبرع', value: numFmt.format(donationCount) },
-    { label: 'إجمالي التبرعات المستلَمة', value: numFmt.format(totalReceived) },
+    { label: t('rep.m.activeUsers'), value: `${activeUsers} / ${users}` },
+    { label: t('rep.m.units'), value: numFmt.format(departments) },
+    { label: t('rep.m.projects'), value: numFmt.format(projectCount) },
+    { label: t('rep.m.programs'), value: numFmt.format(programs) },
+    { label: t('rep.m.campaigns'), value: numFmt.format(campaigns) },
+    { label: t('rep.m.beneficiaries'), value: numFmt.format(beneficiaries) },
+    { label: t('rep.m.donations'), value: numFmt.format(donationCount) },
+    { label: t('rep.m.received'), value: numFmt.format(totalReceived) },
   ];
 
   return (
     <div className="org-page">
       <div className="org-page-head">
         <div>
-          <span className="org-eyebrow">لوحة القياس</span>
-          <h1>التقارير والتحليلات</h1>
-          <p>قراءة موحّدة لأداء {org.name}.</p>
+          <span className="org-eyebrow">{t('rep.eyebrow')}</span>
+          <h1>{t('rep.title')}</h1>
+          <p>{t('rep.intro', { org: org.name })}</p>
         </div>
       </div>
 
@@ -102,10 +102,10 @@ export default async function OrgReportsPage({ params }: { params: Promise<{ slu
       </div>
 
       <div className="org-report-grid">
-        <Distribution title="المشاريع حسب الحالة" data={toMap(projByStatus, (r) => r.status)} label={projectStatusLabel} />
-        <Distribution title="البرامج حسب الحالة" data={toMap(progByStatus, (r) => r.status)} label={programStatusLabel} />
-        <Distribution title="الحملات حسب الحالة" data={toMap(campByStatus, (r) => r.status)} label={campaignStatusLabel} />
-        <Distribution title="المستفيدون حسب الحالة" data={toMap(benByStatus, (r) => r.status)} label={beneficiaryStatusLabel} />
+        <Distribution title={t('rep.d.projects')} data={toMap(projByStatus, (r) => r.status)} label={sLabel('project')} noData={t('rep.noData')} />
+        <Distribution title={t('rep.d.programs')} data={toMap(progByStatus, (r) => r.status)} label={sLabel('program')} noData={t('rep.noData')} />
+        <Distribution title={t('rep.d.campaigns')} data={toMap(campByStatus, (r) => r.status)} label={sLabel('campaign')} noData={t('rep.noData')} />
+        <Distribution title={t('rep.d.beneficiaries')} data={toMap(benByStatus, (r) => r.status)} label={sLabel('beneficiary')} noData={t('rep.noData')} />
       </div>
     </div>
   );

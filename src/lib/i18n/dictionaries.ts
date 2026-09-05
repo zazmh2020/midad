@@ -460,6 +460,31 @@ const ar: Dict = {
   'struct.title': 'الهيكل المؤسسي',
   'struct.count': '{n} وحدة تنظيمية في {org}.',
   'know.count': '{n} مقالة في {org}.',
+
+  // حالات (مشاريع/برامج/حملات/مستفيدون)
+  'status.project.PLANNED': 'مخطّط', 'status.project.ACTIVE': 'جارٍ', 'status.project.ON_HOLD': 'متوقّف', 'status.project.COMPLETED': 'مكتمل', 'status.project.CANCELLED': 'ملغى',
+  'status.program.PLANNED': 'مخطّط', 'status.program.ACTIVE': 'جارٍ', 'status.program.COMPLETED': 'منتهٍ', 'status.program.SUSPENDED': 'موقوف',
+  'status.campaign.PLANNED': 'مخطّطة', 'status.campaign.ACTIVE': 'جارية', 'status.campaign.COMPLETED': 'منتهية', 'status.campaign.CANCELLED': 'ملغاة',
+  'status.beneficiary.ACTIVE': 'نشط', 'status.beneficiary.PENDING': 'قيد المراجعة', 'status.beneficiary.INACTIVE': 'موقوف',
+  // التقارير
+  'rep.eyebrow': 'لوحة القياس',
+  'rep.title': 'التقارير والتحليلات',
+  'rep.intro': 'قراءة موحّدة لأداء {org}.',
+  'rep.noData': 'لا بيانات بعد.',
+  'rep.m.activeUsers': 'المستخدمون النشطون',
+  'rep.m.units': 'الوحدات التنظيمية',
+  'rep.m.projects': 'المشاريع',
+  'rep.m.programs': 'البرامج',
+  'rep.m.campaigns': 'الحملات',
+  'rep.m.beneficiaries': 'المستفيدون',
+  'rep.m.donations': 'عمليات التبرع',
+  'rep.m.received': 'إجمالي التبرعات المستلَمة',
+  'rep.d.projects': 'المشاريع حسب الحالة',
+  'rep.d.programs': 'البرامج حسب الحالة',
+  'rep.d.campaigns': 'الحملات حسب الحالة',
+  'rep.d.beneficiaries': 'المستفيدون حسب الحالة',
+  'proj.count': '{n} مشروع في {org}.',
+  'camp.count': '{n} حملة في {org}.',
 };
 
 const en: Dict = {
@@ -874,6 +899,29 @@ const en: Dict = {
   'struct.title': 'Organizational structure',
   'struct.count': '{n} organizational units in {org}.',
   'know.count': '{n} articles in {org}.',
+
+  'status.project.PLANNED': 'Planned', 'status.project.ACTIVE': 'Active', 'status.project.ON_HOLD': 'On hold', 'status.project.COMPLETED': 'Completed', 'status.project.CANCELLED': 'Cancelled',
+  'status.program.PLANNED': 'Planned', 'status.program.ACTIVE': 'Active', 'status.program.COMPLETED': 'Ended', 'status.program.SUSPENDED': 'Suspended',
+  'status.campaign.PLANNED': 'Planned', 'status.campaign.ACTIVE': 'Active', 'status.campaign.COMPLETED': 'Ended', 'status.campaign.CANCELLED': 'Cancelled',
+  'status.beneficiary.ACTIVE': 'Active', 'status.beneficiary.PENDING': 'Under review', 'status.beneficiary.INACTIVE': 'Inactive',
+  'rep.eyebrow': 'Dashboard',
+  'rep.title': 'Reports & analytics',
+  'rep.intro': 'A unified view of {org}’s performance.',
+  'rep.noData': 'No data yet.',
+  'rep.m.activeUsers': 'Active users',
+  'rep.m.units': 'Organizational units',
+  'rep.m.projects': 'Projects',
+  'rep.m.programs': 'Programs',
+  'rep.m.campaigns': 'Campaigns',
+  'rep.m.beneficiaries': 'Beneficiaries',
+  'rep.m.donations': 'Donations',
+  'rep.m.received': 'Total donations received',
+  'rep.d.projects': 'Projects by status',
+  'rep.d.programs': 'Programs by status',
+  'rep.d.campaigns': 'Campaigns by status',
+  'rep.d.beneficiaries': 'Beneficiaries by status',
+  'proj.count': '{n} projects in {org}.',
+  'camp.count': '{n} campaigns in {org}.',
 };
 
 export const DICTIONARIES: Record<Locale, Dict> = { ar, en };
