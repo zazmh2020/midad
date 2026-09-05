@@ -19,7 +19,7 @@ export default async function AdminHub({ params }: { params: Promise<{ slug: str
 
   const items: HubItem[] = [
     { title: t('pg.admin.usersTitle'), desc: t('pg.admin.usersDesc'), href: `${base}/users`, count: userCount },
-    { title: t('pg.admin.rolesTitle'), desc: t('pg.admin.rolesDesc') },
+    { title: t('pg.admin.rolesTitle'), desc: t('pg.admin.rolesDesc'), href: `${base}/roles` },
     { title: t('pg.admin.unitsTitle'), desc: t('pg.admin.unitsDesc') },
   ];
 

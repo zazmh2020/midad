@@ -9,6 +9,16 @@ type Dict = Record<string, string>;
 
 const ar: Dict = {
   // ---- Page headings ----
+  'roles.title': 'الأدوار والصلاحيات',
+  'roles.sub': 'ما الذي يستطيع كل دور الاطّلاع عليه وإدارته عبر وحدات المنصة.',
+  'roles.colModule': 'الوحدة',
+  'roles.level.manage': 'إدارة',
+  'roles.level.view': 'عرض',
+  'roles.level.none': '—',
+  'roles.legend': 'إدارة = عرض وتعديل · عرض = اطّلاع فقط · — = بلا صلاحية.',
+  'roles.mod.structure': 'الهيكل التنظيمي',
+  'roles.mod.users': 'إدارة المستخدمين',
+  // ---- Page headings ----
   'task.new': '+ مهمة جديدة',
   'task.title': 'عنوان المهمة',
   'task.desc': 'الوصف',
@@ -973,6 +983,16 @@ const ar: Dict = {
 };
 
 const en: Dict = {
+  // ---- Page headings ----
+  'roles.title': 'Roles & permissions',
+  'roles.sub': 'What each role can view and manage across the platform modules.',
+  'roles.colModule': 'Module',
+  'roles.level.manage': 'Manage',
+  'roles.level.view': 'View',
+  'roles.level.none': '—',
+  'roles.legend': 'Manage = view & edit · View = read only · — = no access.',
+  'roles.mod.structure': 'Organization structure',
+  'roles.mod.users': 'User management',
   // ---- Page headings ----
   'task.new': '+ New task',
   'task.title': 'Task title',

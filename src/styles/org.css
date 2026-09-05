@@ -880,6 +880,28 @@ a.org-module:hover {
 }
 .org-report-grid .org-panel { margin-bottom: 0; }
 
+/* ---------- مصفوفة الأدوار والصلاحيات ---------- */
+.org-matrix { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+.org-matrix th, .org-matrix td {
+  padding: 0.7rem 0.9rem; text-align: center; border-bottom: 1px solid var(--line);
+}
+.org-matrix thead th {
+  color: var(--purple-900); font-weight: 700; font-size: 0.82rem;
+  background: var(--gray-100, #f3f0f8); white-space: nowrap;
+}
+.org-matrix th.org-matrix-mod, .org-matrix td.org-matrix-mod {
+  text-align: start; font-weight: 600; color: var(--dark, #2b1a4e); white-space: nowrap;
+}
+.org-matrix tbody tr:hover { background: var(--p-04, rgba(107,87,160,0.04)); }
+.org-lvl {
+  display: inline-block; min-width: 62px; padding: 0.18rem 0.6rem; border-radius: 100px;
+  font-size: 0.74rem; font-weight: 700;
+}
+.org-lvl-manage { background: #e7f4ee; color: #1d7a55; }
+.org-lvl-view { background: #eef0fb; color: #5647a0; }
+.org-lvl-none { background: transparent; color: var(--muted, #9a94ab); font-weight: 600; }
+.org-matrix-legend { margin-top: 0.9rem; font-size: 0.8rem; color: var(--muted, #6c6780); }
+
 /* ---------- لوحة المهام (Kanban) ---------- */
 .org-board {
   display: grid;
