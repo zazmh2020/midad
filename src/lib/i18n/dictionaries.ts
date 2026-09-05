@@ -599,6 +599,7 @@ const ar: Dict = {
   'doc.th.doc': 'الوثيقة', 'doc.th.category': 'التصنيف', 'doc.th.unit': 'الوحدة', 'doc.th.size': 'الحجم', 'doc.th.date': 'التاريخ',
   'doc.download': 'تنزيل',
   'doc.deleteConfirm': 'حذف هذه الوثيقة نهائياً؟',
+  'doc.storageNotReady': 'التخزين غير مُعدّ بعد. أضِف متغيّرات التخزين لتفعيل رفع الوثائق:',
 };
 
 const en: Dict = {
@@ -1146,6 +1147,7 @@ const en: Dict = {
   'doc.th.doc': 'Document', 'doc.th.category': 'Category', 'doc.th.unit': 'Unit', 'doc.th.size': 'Size', 'doc.th.date': 'Date',
   'doc.download': 'Download',
   'doc.deleteConfirm': 'Delete this document permanently?',
+  'doc.storageNotReady': 'Storage is not configured yet. Add the storage variables to enable document uploads:',
 };
 
 export const DICTIONARIES: Record<Locale, Dict> = { ar, en };

@@ -2,6 +2,7 @@
 
 import { useMemo, useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
+import { useT } from '@/lib/i18n/LocaleProvider';
 
 type Dept = {
   id: string;
@@ -62,6 +63,7 @@ export default function StructureView({
   departments: Dept[];
   canManage: boolean;
 }) {
+  const t = useT();
   const router = useRouter();
   const [mode, setMode] = useState<Mode>({ kind: 'closed' });
   const [busy, setBusy] = useState(false);
@@ -104,26 +106,26 @@ export default function StructureView({
         body: JSON.stringify({ name, description, parentId }),
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) setError(data.error ?? 'تعذّر الحفظ.');
+      if (!res.ok) setError(data.error ?? t('form.saveErr'));
       else { setMode({ kind: 'closed' }); router.refresh(); }
     } catch {
-      setError('تعذّر الاتصال بالخادم.');
+      setError(t('form.netErr'));
     } finally {
       setBusy(false);
     }
   }
 
   async function remove(id: string) {
-    if (!confirm('حذف هذه الوحدة؟')) return;
+    if (!confirm(t('struct.deleteConfirm'))) return;
     setBusy(true);
     setError('');
     try {
       const res = await fetch(`/api/org/departments/${id}`, { method: 'DELETE' });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) setError(data.error ?? 'تعذّر الحذف.');
+      if (!res.ok) setError(data.error ?? t('form.deleteErr'));
       else router.refresh();
     } catch {
-      setError('تعذّر الاتصال بالخادم.');
+      setError(t('form.netErr'));
     } finally {
       setBusy(false);
     }
@@ -138,17 +140,17 @@ export default function StructureView({
       <form className="org-form" onSubmit={submit} key={editing ? mode.dept.id : `new-${mode.parentId}`}>
         {error && <div className="org-alert">{error}</div>}
         <div className="org-field">
-          <label htmlFor="d-name">اسم الوحدة</label>
+          <label htmlFor="d-name">{t('struct.name')}</label>
           <input id="d-name" name="name" defaultValue={editing ? mode.dept.name : ''} required />
         </div>
         <div className="org-field">
-          <label htmlFor="d-desc">الوصف <span className="org-hint">اختياري</span></label>
+          <label htmlFor="d-desc">{t('proj.desc')} <span className="org-hint">{t('view.optional')}</span></label>
           <textarea id="d-desc" name="description" rows={2} defaultValue={editing ? mode.dept.description ?? '' : ''} />
         </div>
         <div className="org-field">
-          <label htmlFor="d-parent">الوحدة الأصل</label>
+          <label htmlFor="d-parent">{t('struct.parent')}</label>
           <select id="d-parent" name="parentId" defaultValue={defaultParent}>
-            <option value="">— بلا أصل (وحدة رئيسية)</option>
+            <option value="">{t('struct.noParent')}</option>
             {options.map((o) => (
               <option key={o.id} value={o.id}>{o.label}</option>
             ))}
@@ -156,10 +158,10 @@ export default function StructureView({
         </div>
         <div className="org-form-actions">
           <button type="button" className="org-btn org-btn-outline" onClick={() => setMode({ kind: 'closed' })}>
-            إلغاء
+            {t('shell.cancel')}
           </button>
           <button type="submit" className="org-btn org-btn-primary" disabled={busy}>
-            {busy ? 'جارٍ الحفظ…' : editing ? 'حفظ' : 'إنشاء'}
+            {busy ? t('form.saving') : editing ? t('form.save') : t('form.create')}
           </button>
         </div>
       </form>
@@ -172,19 +174,19 @@ export default function StructureView({
         <div className="org-tree-row">
           <div className="org-tree-info">
             <strong>{node.name}</strong>
-            {node.memberCount > 0 && <span className="org-tree-count">{node.memberCount} عضو</span>}
+            {node.memberCount > 0 && <span className="org-tree-count">{t('struct.member', { n: node.memberCount })}</span>}
             {node.description && <small>{node.description}</small>}
           </div>
           {canManage && (
             <div className="org-tree-actions">
               <button className="org-btn org-btn-quiet" onClick={() => { setError(''); setMode({ kind: 'create', parentId: node.id }); }}>
-                + تابع
+                {t('struct.addChild')}
               </button>
               <button className="org-btn org-btn-quiet" onClick={() => { setError(''); setMode({ kind: 'edit', dept: node }); }}>
-                تعديل
+                {t('struct.edit')}
               </button>
               <button className="org-btn org-btn-danger" onClick={() => remove(node.id)} disabled={busy}>
-                حذف
+                {t('view.delete')}
               </button>
             </div>
           )}
@@ -204,7 +206,7 @@ export default function StructureView({
             className="org-btn org-btn-primary"
             onClick={() => { setError(''); setMode(mode.kind === 'closed' ? { kind: 'create', parentId: null } : { kind: 'closed' }); }}
           >
-            {mode.kind === 'closed' ? '+ وحدة جديدة' : 'إغلاق النموذج'}
+            {mode.kind === 'closed' ? t('struct.new') : t('view.close')}
           </button>
         </div>
       )}
@@ -212,7 +214,7 @@ export default function StructureView({
       {renderForm()}
 
       {departments.length === 0 ? (
-        <div className="org-empty">لا توجد وحدات تنظيمية بعد.</div>
+        <div className="org-empty">{t('struct.none')}</div>
       ) : (
         <div className="org-panel">
           <ul className="org-tree org-tree-root">{tree.map(renderNode)}</ul>

@@ -2,6 +2,7 @@
 
 import { useMemo, useRef, useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
+import { useLocale } from '@/lib/i18n/LocaleProvider';
 
 type Doc = {
   id: string; name: string; description: string | null; category: string | null;
@@ -10,17 +11,16 @@ type Doc = {
 };
 type Ref = { id: string; name: string };
 
-const dateFmt = new Intl.DateTimeFormat('ar-u-nu-latn', { year: 'numeric', month: 'short', day: 'numeric' });
-
-function humanSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} ب`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} ك.ب`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} م.ب`;
-}
-
 export default function DocumentsView({
   documents, departments, storageReady, canManage,
 }: { documents: Doc[]; departments: Ref[]; storageReady: boolean; canManage: boolean }) {
+  const { t, locale } = useLocale();
+  const dateFmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar-u-nu-latn', { year: 'numeric', month: 'short', day: 'numeric' });
+  const humanSize = (bytes: number): string => {
+    if (bytes < 1024) return `${bytes} ${t('doc.byteB')}`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} ${t('doc.byteKB')}`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} ${t('doc.byteMB')}`;
+  };
   const router = useRouter();
   const fileRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
@@ -58,27 +58,27 @@ export default function DocumentsView({
   async function handleUpload(e: FormEvent) {
     e.preventDefault();
     setError('');
-    if (!file) { setError('اختر ملفًا.'); return; }
+    if (!file) { setError(t('doc.selectFile')); return; }
     setUploading(true);
     try {
       // 1) رابط رفع موقّع
-      setProgress('جارٍ التجهيز…');
+      setProgress(t('doc.preparing'));
       const pres = await fetch('/api/org/documents/presign', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ fileName: file.name, contentType: file.type || 'application/octet-stream', size: file.size }),
       });
       const pdata = await pres.json().catch(() => ({}));
-      if (!pres.ok) { setError(pdata.error ?? 'تعذّر التجهيز.'); return; }
+      if (!pres.ok) { setError(pdata.error ?? t('doc.prepErr')); return; }
 
       // 2) رفع الملف مباشرةً إلى المخزن
-      setProgress('جارٍ الرفع…');
+      setProgress(t('doc.uploadingP'));
       const put = await fetch(pdata.uploadUrl, {
         method: 'PUT', headers: { 'Content-Type': file.type || 'application/octet-stream' }, body: file,
       });
-      if (!put.ok) { setError('فشل رفع الملف إلى المخزن.'); return; }
+      if (!put.ok) { setError(t('doc.uploadFail')); return; }
 
       // 3) تسجيل البيانات الوصفية
-      setProgress('جارٍ الحفظ…');
+      setProgress(t('doc.savingP'));
       const save = await fetch('/api/org/documents', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -88,12 +88,12 @@ export default function DocumentsView({
         }),
       });
       const sdata = await save.json().catch(() => ({}));
-      if (!save.ok) { setError(sdata.error ?? 'تعذّر الحفظ.'); return; }
+      if (!save.ok) { setError(sdata.error ?? t('form.saveErr')); return; }
 
       reset();
       router.refresh();
     } catch {
-      setError('تعذّر الاتصال بالخادم.');
+      setError(t('form.netErr'));
     } finally {
       setUploading(false);
       setProgress('');
@@ -101,14 +101,14 @@ export default function DocumentsView({
   }
 
   async function remove(id: string) {
-    if (!confirm('حذف هذه الوثيقة نهائياً؟')) return;
+    if (!confirm(t('doc.deleteConfirm'))) return;
     setError(''); setBusyId(id);
     try {
       const res = await fetch(`/api/org/documents/${id}`, { method: 'DELETE' });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) setError(data.error ?? 'تعذّر الحذف.');
+      if (!res.ok) setError(data.error ?? t('form.deleteErr'));
       else router.refresh();
-    } catch { setError('تعذّر الاتصال بالخادم.'); }
+    } catch { setError(t('form.netErr')); }
     finally { setBusyId(null); }
   }
 
@@ -116,14 +116,14 @@ export default function DocumentsView({
     <>
       {!storageReady && (
         <div className="org-alert">
-          التخزين غير مُعدّ بعد. أضِف متغيّرات <code dir="ltr">S3_*</code> في ملف <code dir="ltr">.env</code> لتفعيل رفع الوثائق.
+          {t('doc.storageNotReady')} <code dir="ltr">S3_*</code> · <code dir="ltr">.env</code>
         </div>
       )}
 
       <div className="org-toolbar">
         {categories.length > 0 && (
-          <select className="org-inline-select" value={filter} onChange={(e) => setFilter(e.target.value)} aria-label="تصفية حسب التصنيف">
-            <option value="ALL">كل التصنيفات</option>
+          <select className="org-inline-select" value={filter} onChange={(e) => setFilter(e.target.value)} aria-label={t('doc.filterByCat')}>
+            <option value="ALL">{t('doc.allCats')}</option>
             {categories.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
         )}
@@ -133,34 +133,34 @@ export default function DocumentsView({
       {canManage && storageReady && (
         <form className="org-form" onSubmit={handleUpload}>
           <div className="org-field">
-            <label htmlFor="doc-file">الملف <span className="org-hint">حتى 25 م.ب</span></label>
+            <label htmlFor="doc-file">{t('doc.file')} <span className="org-hint">{t('doc.maxSize')}</span></label>
             <input id="doc-file" ref={fileRef} type="file" onChange={(e) => pickFile(e.target.files?.[0] ?? null)} required />
           </div>
           <div className="org-field-row">
             <div className="org-field">
-              <label htmlFor="doc-name">اسم الوثيقة</label>
+              <label htmlFor="doc-name">{t('doc.name')}</label>
               <input id="doc-name" value={name} onChange={(e) => setName(e.target.value)} required />
             </div>
             <div className="org-field">
-              <label htmlFor="doc-cat">التصنيف <span className="org-hint">اختياري</span></label>
-              <input id="doc-cat" value={category} onChange={(e) => setCategory(e.target.value)} placeholder="سياسات، نماذج…" />
+              <label htmlFor="doc-cat">{t('doc.category')} <span className="org-hint">{t('view.optional')}</span></label>
+              <input id="doc-cat" value={category} onChange={(e) => setCategory(e.target.value)} placeholder={t('doc.catPh')} />
             </div>
             <div className="org-field">
-              <label htmlFor="doc-dept">الوحدة</label>
+              <label htmlFor="doc-dept">{t('view.unitShort')}</label>
               <select id="doc-dept" value={departmentId} onChange={(e) => setDepartmentId(e.target.value)}>
-                <option value="">— بلا وحدة</option>
+                <option value="">{t('view.noUnit')}</option>
                 {departments.map((d) => <option key={d.id} value={d.id}>{d.name}</option>)}
               </select>
             </div>
           </div>
           <div className="org-field">
-            <label htmlFor="doc-desc">الوصف <span className="org-hint">اختياري</span></label>
+            <label htmlFor="doc-desc">{t('doc.desc')} <span className="org-hint">{t('view.optional')}</span></label>
             <input id="doc-desc" value={description} onChange={(e) => setDescription(e.target.value)} />
           </div>
           <div className="org-form-actions">
             {progress && <span className="org-hint">{progress}</span>}
             <button type="submit" className="org-btn org-btn-primary" disabled={uploading}>
-              {uploading ? 'جارٍ…' : 'رفع الوثيقة'}
+              {uploading ? t('doc.uploadingShort') : t('doc.upload')}
             </button>
           </div>
         </form>
@@ -169,17 +169,17 @@ export default function DocumentsView({
       {error && <div className="org-alert">{error}</div>}
 
       {shown.length === 0 ? (
-        <div className="org-empty">{documents.length === 0 ? 'لا توجد وثائق بعد.' : 'لا وثائق بهذا التصنيف.'}</div>
+        <div className="org-empty">{documents.length === 0 ? t('doc.none') : t('doc.noneInCat')}</div>
       ) : (
         <div className="org-table-wrap">
           <table className="org-table">
             <thead>
               <tr>
-                <th>الوثيقة</th>
-                <th>التصنيف</th>
-                <th>الوحدة</th>
-                <th>الحجم</th>
-                <th>التاريخ</th>
+                <th>{t('doc.th.doc')}</th>
+                <th>{t('doc.th.category')}</th>
+                <th>{t('doc.th.unit')}</th>
+                <th>{t('doc.th.size')}</th>
+                <th>{t('doc.th.date')}</th>
                 <th></th>
               </tr>
             </thead>
@@ -196,9 +196,9 @@ export default function DocumentsView({
                   <td dir="ltr">{humanSize(d.size)}</td>
                   <td>{dateFmt.format(new Date(d.createdAt))}</td>
                   <td className="org-row-actions">
-                    <a className="org-btn org-btn-quiet" href={`/api/org/documents/${d.id}/download`}>تنزيل</a>
+                    <a className="org-btn org-btn-quiet" href={`/api/org/documents/${d.id}/download`}>{t('doc.download')}</a>
                     {canManage && (
-                      <button className="org-btn org-btn-danger" disabled={busyId === d.id} onClick={() => remove(d.id)}>حذف</button>
+                      <button className="org-btn org-btn-danger" disabled={busyId === d.id} onClick={() => remove(d.id)}>{t('view.delete')}</button>
                     )}
                   </td>
                 </tr>
