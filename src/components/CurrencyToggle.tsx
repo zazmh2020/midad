@@ -2,7 +2,7 @@
 
 import { useCurrency } from '@/components/CurrencyProvider';
 import { useLocale } from '@/lib/i18n/LocaleProvider';
-import { CURRENCIES, CURRENCY_ORDER, currencyName, currencySymbol } from '@/lib/currency';
+import { CURRENCY_ORDER, currencyName, currencySymbol } from '@/lib/currency';
 
 /** أيقونة تبديل العملة — تتنقّل بين ر.س / $ / ل.س عند الضغط. */
 export default function CurrencyToggle({ className = '' }: { className?: string }) {
@@ -21,7 +21,6 @@ export default function CurrencyToggle({ className = '' }: { className?: string 
       title={`${currencyName(currency, locale)} → ${currencyName(next, locale)}`}
     >
       <span className="cur-toggle-sym" aria-hidden="true">{currencySymbol(currency, locale)}</span>
-      <span className="cur-toggle-code" aria-hidden="true">{CURRENCIES[currency].code}</span>
     </button>
   );
 }

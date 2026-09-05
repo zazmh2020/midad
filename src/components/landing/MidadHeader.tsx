@@ -6,6 +6,7 @@ import Icon from '@/components/Icon';
 import { LogoMark } from '@/components/Logo';
 import ThemeToggle from '@/components/ThemeToggle';
 import LangToggle from '@/components/LangToggle';
+import CurrencyToggle from '@/components/CurrencyToggle';
 import { useT } from '@/lib/i18n/LocaleProvider';
 
 const SYSTEMS_MEGA = [
@@ -82,6 +83,7 @@ export default function MidadHeader() {
         </div>
 
         <div className="mdl-nav-actions">
+          <CurrencyToggle />
           <LangToggle />
           <ThemeToggle />
           <Link href="/login" className="mdl-btn mdl-btn-white">{t('nav.login')}</Link>
