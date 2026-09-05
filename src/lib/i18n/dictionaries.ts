@@ -443,6 +443,23 @@ const ar: Dict = {
   // الوثائق
   'docs.title': 'الوثائق',
   'docs.count': '{n} وثيقة في {org}.',
+  // المؤسسة (محور)
+  'hub.org.title': 'المؤسسة',
+  'hub.org.intro': 'كل ما يتعلق بـ {org} نفسها.',
+  'hub.org.data': 'بيانات المؤسسة', 'hub.org.data.d': 'الاسم والنوع والرابط الفرعي.',
+  'hub.org.structure': 'الهيكل التنظيمي', 'hub.org.structure.d': 'إدارات وأقسام وفروع.',
+  'hub.org.users': 'المستخدمون', 'hub.org.users.d': 'حسابات المؤسسة وأدوارها.',
+  'hub.org.branches': 'الفروع', 'hub.org.branches.d': 'إدارة فروع المؤسسة الجغرافية.',
+  // الهوية الرقمية (محور)
+  'hub.id.intro': 'نظام الهويّات والبطاقات الرقمية — قيد الإعداد.',
+  'hub.id.cards': 'البطاقات الرقمية', 'hub.id.cards.d': 'بطاقات هوية رقمية للأعضاء والمستفيدين.',
+  'hub.id.qr': 'رمز QR', 'hub.id.qr.d': 'توليد رموز QR للتحقق السريع.',
+  'hub.id.nfc': 'NFC', 'hub.id.nfc.d': 'دعم بطاقات NFC مستقبلًا.',
+  'hub.id.verify': 'التحقق من الهوية', 'hub.id.verify.d': 'التأكّد من هوية الأعضاء والمستفيدين.',
+  // الهيكل + المعرفة
+  'struct.title': 'الهيكل المؤسسي',
+  'struct.count': '{n} وحدة تنظيمية في {org}.',
+  'know.count': '{n} مقالة في {org}.',
 };
 
 const en: Dict = {
@@ -843,6 +860,20 @@ const en: Dict = {
   'hub.res.teams': 'Teams', 'hub.res.teams.d': 'Build and manage work teams.',
   'docs.title': 'Documents',
   'docs.count': '{n} documents in {org}.',
+  'hub.org.title': 'Organization',
+  'hub.org.intro': 'Everything related to {org} itself.',
+  'hub.org.data': 'Organization details', 'hub.org.data.d': 'Name, type and subdomain.',
+  'hub.org.structure': 'Organizational structure', 'hub.org.structure.d': 'Departments, divisions and branches.',
+  'hub.org.users': 'Users', 'hub.org.users.d': 'Organization accounts and their roles.',
+  'hub.org.branches': 'Branches', 'hub.org.branches.d': 'Manage the organization’s geographic branches.',
+  'hub.id.intro': 'Digital identity and cards system — in setup.',
+  'hub.id.cards': 'Digital cards', 'hub.id.cards.d': 'Digital ID cards for members and beneficiaries.',
+  'hub.id.qr': 'QR code', 'hub.id.qr.d': 'Generate QR codes for quick verification.',
+  'hub.id.nfc': 'NFC', 'hub.id.nfc.d': 'NFC card support in the future.',
+  'hub.id.verify': 'Identity verification', 'hub.id.verify.d': 'Verify the identity of members and beneficiaries.',
+  'struct.title': 'Organizational structure',
+  'struct.count': '{n} organizational units in {org}.',
+  'know.count': '{n} articles in {org}.',
 };
 
 export const DICTIONARIES: Record<Locale, Dict> = { ar, en };

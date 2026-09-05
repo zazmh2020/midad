@@ -3,12 +3,14 @@ import { requireOrgAccess } from '@/lib/org';
 import { prisma } from '@/lib/prisma';
 import { canViewKnowledge, canManageKnowledge } from '@/lib/permissions';
 import KnowledgeView from '@/components/KnowledgeView';
+import { getT } from '@/lib/i18n/server';
 
 export const dynamic = 'force-dynamic';
 
 export default async function OrgKnowledgePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
+  const { t } = await getT();
 
   if (!canViewKnowledge(user.role)) redirect(`/org/${org.slug}`);
   const canManage = canManageKnowledge(user.role);
@@ -27,9 +29,9 @@ export default async function OrgKnowledgePage({ params }: { params: Promise<{ s
     <div className="org-page">
       <div className="org-page-head">
         <div>
-          <span className="org-eyebrow">الوحدات</span>
-          <h1>قاعدة المعرفة</h1>
-          <p>{articles.length} مقالة في {org.name}.</p>
+          <span className="org-eyebrow">{t('hub.units')}</span>
+          <h1>{t('onav.knowledge')}</h1>
+          <p>{t('know.count', { n: articles.length, org: org.name })}</p>
         </div>
       </div>
 

@@ -145,5 +145,13 @@
 /* حقوق النشر أسفل صفحة الدخول */
 .lg-copyright {
   position: absolute; bottom: 1.2rem; inset-inline: 0; text-align: center;
-  font-size: 0.78rem; color: var(--gray-500); z-index: 2;
+  font-size: 0.78rem; color: rgba(255, 255, 255, 0.5); z-index: 2;
 }
+
+/* رابط العودة للرئيسية في الزاوية العليا (يمين) — على خلفية داكنة */
+.lg-home-top {
+  position: absolute; top: 1.6rem; right: 1.4rem; z-index: 2;
+  font-size: 0.85rem; font-weight: 600; color: rgba(255, 255, 255, 0.78);
+  display: inline-flex; align-items: center; gap: 0.35rem; transition: color 0.2s;
+}
+.lg-home-top:hover { color: #fff; }

@@ -3,12 +3,14 @@ import { requireOrgAccess } from '@/lib/org';
 import { prisma } from '@/lib/prisma';
 import { canViewStructure, canViewUsers, canManageSettings } from '@/lib/permissions';
 import SectionHub, { type HubItem } from '@/components/SectionHub';
+import { getT } from '@/lib/i18n/server';
 
 export const dynamic = 'force-dynamic';
 
 export default async function OrganizationHub({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
+  const { t } = await getT();
   const r = user.role;
 
   if (!(canViewStructure(r) || canViewUsers(r) || canManageSettings(r))) redirect(`/org/${org.slug}`);
@@ -21,22 +23,22 @@ export default async function OrganizationHub({ params }: { params: Promise<{ sl
 
   const items: HubItem[] = [
     ...(canManageSettings(r)
-      ? [{ title: 'بيانات المؤسسة', desc: 'الاسم والنوع والرابط الفرعي.', href: `${base}/settings` }]
+      ? [{ title: t('hub.org.data'), desc: t('hub.org.data.d'), href: `${base}/settings` }]
       : []),
     ...(canViewStructure(r)
-      ? [{ title: 'الهيكل التنظيمي', desc: 'إدارات وأقسام وفروع.', href: `${base}/structure`, count: deptCount }]
+      ? [{ title: t('hub.org.structure'), desc: t('hub.org.structure.d'), href: `${base}/structure`, count: deptCount }]
       : []),
     ...(canViewUsers(r)
-      ? [{ title: 'المستخدمون', desc: 'حسابات المؤسسة وأدوارها.', href: `${base}/users`, count: userCount }]
+      ? [{ title: t('hub.org.users'), desc: t('hub.org.users.d'), href: `${base}/users`, count: userCount }]
       : []),
-    { title: 'الفروع', desc: 'إدارة فروع المؤسسة الجغرافية.' },
+    { title: t('hub.org.branches'), desc: t('hub.org.branches.d') },
   ];
 
   return (
     <SectionHub
-      eyebrow="العمل المؤسسي"
-      title="المؤسسة"
-      intro={`كل ما يتعلق بـ ${org.name} نفسها.`}
+      eyebrow={t('hub.corp')}
+      title={t('hub.org.title')}
+      intro={t('hub.org.intro', { org: org.name })}
       items={items}
     />
   );

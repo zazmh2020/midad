@@ -3,6 +3,7 @@ import { requireOrgAccess } from '@/lib/org';
 import { prisma } from '@/lib/prisma';
 import { canViewStructure, canManageStructure } from '@/lib/permissions';
 import StructureView from '@/components/StructureView';
+import { getT } from '@/lib/i18n/server';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,6 +14,7 @@ export default async function OrgStructurePage({
 }) {
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
+  const { t } = await getT();
 
   if (!canViewStructure(user.role)) redirect(`/org/${org.slug}`);
   const canManage = canManageStructure(user.role);
@@ -33,9 +35,9 @@ export default async function OrgStructurePage({
     <div className="org-page">
       <div className="org-page-head">
         <div>
-          <span className="org-eyebrow">الوحدات</span>
-          <h1>الهيكل المؤسسي</h1>
-          <p>{departments.length} وحدة تنظيمية في {org.name}.</p>
+          <span className="org-eyebrow">{t('hub.units')}</span>
+          <h1>{t('struct.title')}</h1>
+          <p>{t('struct.count', { n: departments.length, org: org.name })}</p>
         </div>
       </div>
 

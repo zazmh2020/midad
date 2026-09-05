@@ -65,6 +65,8 @@ export default function LoginPage() {
         <ThemeToggle onDeep />
       </div>
 
+      <Link href="/" className="lg-home lg-home-top">{t('login.home')}</Link>
+
       <motion.main
         className="lg-card"
         initial={{ opacity: 0, y: 26, scale: 0.985 }}
@@ -136,7 +138,6 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <Link href="/" className="lg-home">{t('login.home')}</Link>
       </motion.main>
 
       <div className="lg-copyright">{t('footer.rights')}</div>
