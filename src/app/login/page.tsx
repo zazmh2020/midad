@@ -65,7 +65,7 @@ export default function LoginPage() {
         <ThemeToggle onDeep />
       </div>
 
-      <Link href="/" className="lg-home lg-home-top">{t('login.home')}</Link>
+      <Link href="/" className="lg-home-top">{t('login.home')}</Link>
 
       <motion.main
         className="lg-card"
