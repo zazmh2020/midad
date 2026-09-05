@@ -6,12 +6,15 @@ import { useT } from '@/lib/i18n/LocaleProvider';
 
 export default function ProfileForm({
   name: initialName, email, role, avatarUrl: initialAvatar = '',
-}: { name: string; email: string; role: string; avatarUrl?: string | null }) {
+  jobTitle: initialJob = '', phone: initialPhone = '',
+}: { name: string; email: string; role: string; avatarUrl?: string | null; jobTitle?: string | null; phone?: string | null }) {
   const t = useT();
   const router = useRouter();
 
   const [name, setName] = useState(initialName);
   const [avatarUrl, setAvatarUrl] = useState(initialAvatar ?? '');
+  const [jobTitle, setJobTitle] = useState(initialJob ?? '');
+  const [phone, setPhone] = useState(initialPhone ?? '');
   const [nameStatus, setNameStatus] = useState<{ kind: 'ok' | 'error'; msg: string } | null>(null);
   const [nameBusy, setNameBusy] = useState(false);
 
@@ -27,7 +30,7 @@ export default function ProfileForm({
     try {
       const res = await fetch('/api/profile', {
         method: 'PATCH', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, avatarUrl }),
+        body: JSON.stringify({ name, avatarUrl, jobTitle, phone }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) setNameStatus({ kind: 'error', msg: data.error ?? t('form.saveErr') });
@@ -73,18 +76,31 @@ export default function ProfileForm({
             <span className="org-hint">{t('pf.avatarHint')}</span>
           </div>
         </div>
-        <div className="org-field">
-          <label htmlFor="pf-name">{t('pf.name')}</label>
-          <input id="pf-name" value={name} onChange={(e) => setName(e.target.value)} minLength={2} required />
+        <div className="org-field-row">
+          <div className="org-field">
+            <label htmlFor="pf-name">{t('pf.name')}</label>
+            <input id="pf-name" value={name} onChange={(e) => setName(e.target.value)} minLength={2} required />
+          </div>
+          <div className="org-field">
+            <label htmlFor="pf-job">{t('pf.jobTitle')} <span className="org-hint">{t('view.optional')}</span></label>
+            <input id="pf-job" value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} />
+          </div>
         </div>
-        <div className="org-field">
-          <label htmlFor="pf-email">{t('pf.email')}</label>
-          <input id="pf-email" dir="ltr" value={email} readOnly />
-          <span className="org-hint">{t('pf.emailHint')}</span>
+        <div className="org-field-row">
+          <div className="org-field">
+            <label htmlFor="pf-email">{t('pf.email')}</label>
+            <input id="pf-email" dir="ltr" value={email} readOnly />
+            <span className="org-hint">{t('pf.emailHint')}</span>
+          </div>
+          <div className="org-field">
+            <label htmlFor="pf-phone">{t('pf.phone')}</label>
+            <input id="pf-phone" dir="ltr" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder={t('pf.phonePh')} />
+            <span className="org-hint">{t('pf.phoneHint')}</span>
+          </div>
         </div>
         <div className="org-kv"><span>{t('pf.role')}</span><strong>{t(`role.${role}`)}</strong></div>
         <div className="org-form-actions">
-          <button type="submit" className="org-btn org-btn-primary" disabled={nameBusy || (name.trim() === initialName.trim() && avatarUrl.trim() === (initialAvatar ?? '').trim())}>
+          <button type="submit" className="org-btn org-btn-primary" disabled={nameBusy || (name.trim() === initialName.trim() && avatarUrl.trim() === (initialAvatar ?? '').trim() && jobTitle.trim() === (initialJob ?? '').trim() && phone.trim() === (initialPhone ?? '').trim())}>
             {nameBusy ? t('form.saving') : t('pf.saveChanges')}
           </button>
         </div>

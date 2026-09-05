@@ -27,9 +27,17 @@ export async function PATCH(request: Request) {
     }
   }
 
+  const jobTitle = body.jobTitle !== undefined ? String(body.jobTitle ?? '').trim().slice(0, 120) || null : undefined;
+  const phone = body.phone !== undefined ? String(body.phone ?? '').trim().slice(0, 40) || null : undefined;
+
   await prisma.user.update({
     where: { id: session.userId },
-    data: { name, ...(avatarUrl !== undefined ? { avatarUrl } : {}) },
+    data: {
+      name,
+      ...(avatarUrl !== undefined ? { avatarUrl } : {}),
+      ...(jobTitle !== undefined ? { jobTitle } : {}),
+      ...(phone !== undefined ? { phone } : {}),
+    },
   });
   return NextResponse.json({ ok: true });
 }

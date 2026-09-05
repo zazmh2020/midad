@@ -42,7 +42,7 @@ export default async function OrgSettingsPage({
       </div>
 
       <h2 className="org-settings-h2">{t('oset.profile')}</h2>
-      <ProfileForm name={user.name} email={user.email} role={user.role} avatarUrl={user.avatarUrl} />
+      <ProfileForm name={user.name} email={user.email} role={user.role} avatarUrl={user.avatarUrl} jobTitle={user.jobTitle} phone={user.phone} />
 
       <h2 className="org-settings-h2">{t('oset.prefs')}</h2>
       <div className="org-panel">

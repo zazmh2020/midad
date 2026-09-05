@@ -278,7 +278,8 @@
 
 /* ---------- Page ---------- */
 .org-page-narrow {
-  max-width: 680px;
+  max-width: 780px;
+  margin-inline: auto;
 }
 
 .org-page-head {

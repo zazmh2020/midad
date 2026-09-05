@@ -16,7 +16,7 @@ export default async function AdminSettingsPage() {
 
   const me = await prisma.user.findUnique({
     where: { id: session.userId },
-    select: { name: true, email: true, role: true, avatarUrl: true },
+    select: { name: true, email: true, role: true, avatarUrl: true, jobTitle: true, phone: true },
   });
   if (!me) redirect('/login');
 
@@ -29,7 +29,7 @@ export default async function AdminSettingsPage() {
 
       <div style={{ maxWidth: 620 }}>
         <h2 className="org-settings-h2">{t('oset.profile')}</h2>
-        <ProfileForm name={me.name} email={me.email} role={me.role} avatarUrl={me.avatarUrl} />
+        <ProfileForm name={me.name} email={me.email} role={me.role} avatarUrl={me.avatarUrl} jobTitle={me.jobTitle} phone={me.phone} />
 
         <h2 className="org-settings-h2">{t('oset.account')}</h2>
         <LogoutButton redirectTo="http://midad.localhost:3000/login" />
