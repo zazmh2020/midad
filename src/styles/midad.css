@@ -575,8 +575,13 @@
    ============================================================ */
 @media (max-width: 960px) {
   .mdl-nav-links { display: none; }
-  .mdl-menu-btn { display: inline-flex; }
-  .mdl-nav-actions .mdl-login, .mdl-nav-actions .mdl-btn { display: none; }
+  .mdl-menu-btn { display: inline-flex; order: -1; }
+  /* ترتيب الجوال (يمين→يسار): ٣ خطوط ← الشعار ← الأيقونات ← تسجيل الدخول */
+  .mdl-navbar { gap: 0.5rem; padding: 0.5rem 0.7rem; }
+  .mdl-brand { margin-inline-end: auto; }
+  .mdl-nav-actions { gap: 0.35rem; }
+  .mdl-nav-actions .mdl-login { display: none; }
+  .mdl-navbar .mdl-btn { padding: 0.5rem 0.9rem; font-size: 0.82rem; }
   .mdl-hero-grid, .mdl-ps, .mdl-sys, .mdl-tl, .mdl-ai-grid, .mdl-sec-grid { grid-template-columns: 1fr; }
   .mdl-show-row, .mdl-show-row.rev { grid-template-columns: 1fr; }
   .mdl-show-row.rev .mdl-show-text { order: 0; }

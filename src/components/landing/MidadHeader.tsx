@@ -57,6 +57,9 @@ export default function MidadHeader() {
   return (
     <header className={`mdl-header ${scrolled ? 'is-scrolled' : ''}`}>
       <nav className="mdl-navbar" aria-label="التنقل الرئيسي">
+        <button className="mdl-menu-btn" aria-label="القائمة" onClick={() => setOpen(true)}>
+          <svg width="24" height="18" viewBox="0 0 26 20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M1 1h24M1 10h24M1 19h24" /></svg>
+        </button>
         <a href="#home" className="mdl-brand" aria-label="مِداد">
           <LogoMark size={26} className="mark" />
           <span className="name">{t('brand')}</span>
@@ -82,9 +85,6 @@ export default function MidadHeader() {
           <LangToggle />
           <ThemeToggle />
           <Link href="/login" className="mdl-btn mdl-btn-white">{t('nav.login')}</Link>
-          <button className="mdl-menu-btn" aria-label="القائمة" onClick={() => setOpen(true)}>
-            <svg width="24" height="18" viewBox="0 0 26 20" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M1 1h24M1 10h24M1 19h24" /></svg>
-          </button>
         </div>
       </nav>
 
