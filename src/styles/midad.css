@@ -189,7 +189,7 @@
 .mdl-hero::before {
   content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
   background: url(/bg/paper.jpg) center / cover no-repeat;
-  opacity: 0.12; mix-blend-mode: soft-light;
+  opacity: 0.22; mix-blend-mode: soft-light;
 }
 .mdl-hero::after {
   content: ''; position: absolute; inset: 0; pointer-events: none;
