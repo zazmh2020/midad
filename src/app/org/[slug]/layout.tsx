@@ -97,6 +97,9 @@ export default async function OrgLayout({
     ...(canManageUsers(r)
       ? ([{ kind: 'link', href: `${base}/admin`, label: t('onav.admin'), icon: 'admin' }] as NavEntry[])
       : []),
+    ...(canManageUsers(r)
+      ? ([{ kind: 'link', href: `${base}/audit`, label: t('onav.audit'), icon: 'reports', match: [`${base}/audit`] }] as NavEntry[])
+      : []),
     { kind: 'link', href: `${base}/settings`, label: t('onav.settings'), icon: 'settings' },
   ];
 

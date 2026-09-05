@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getOrgActor } from '@/lib/org';
 import { canManageSettings } from '@/lib/permissions';
+import { logAudit } from '@/lib/audit';
 
 /** نشر/إلغاء نشر الموقع العام للمؤسسة — مدير المؤسسة فقط. */
 export async function PATCH(request: Request) {
@@ -24,5 +25,6 @@ export async function PATCH(request: Request) {
 
   if (Object.keys(data).length === 0) return NextResponse.json({ error: 'لا تغيير مطلوب.' }, { status: 400 });
   await prisma.organization.update({ where: { id: actor.organization.id }, data });
+  if (data.sitePublished !== undefined) await logAudit(actor.organization.id, actor.name, data.sitePublished ? "published" : "unpublished", "site");
   return NextResponse.json({ ok: true });
 }

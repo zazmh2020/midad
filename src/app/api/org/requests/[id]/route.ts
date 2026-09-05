@@ -3,6 +3,7 @@ import type { RequestStatus } from '@/generated/prisma/client';
 import { prisma } from '@/lib/prisma';
 import { getOrgActor } from '@/lib/org';
 import { canManageRequests, canViewRequests, isRequestStatus } from '@/lib/permissions';
+import { logAudit } from '@/lib/audit';
 
 async function own(orgId: string, id: string) {
   return prisma.memberRequest.findFirst({ where: { id, organizationId: orgId } });
@@ -31,6 +32,9 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
   if (Object.keys(data).length === 0) return NextResponse.json({ error: 'لا تغيير مطلوب.' }, { status: 400 });
   await prisma.memberRequest.update({ where: { id: target.id }, data });
+  if (data.status) {
+    await logAudit(actor.organization.id, actor.name, data.status === 'APPROVED' ? 'approved' : 'rejected', 'request', target.type);
+  }
   return NextResponse.json({ ok: true });
 }
 

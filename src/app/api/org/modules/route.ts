@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { getOrgActor } from '@/lib/org';
 import { canManageSettings } from '@/lib/permissions';
 import { ORG_MODULES, isOrgModule } from '@/lib/modules';
+import { logAudit } from '@/lib/audit';
 
 /** تعيين الوحدات المعطّلة للمؤسسة (مدير المؤسسة فقط). */
 export async function PATCH(request: Request) {
@@ -28,5 +29,6 @@ export async function PATCH(request: Request) {
     data: { disabledModules: disabled },
   });
 
+  await logAudit(actor.organization.id, actor.name, "updated", "modules", disabled.length ? disabled.join(", ") : "—");
   return NextResponse.json({ ok: true });
 }

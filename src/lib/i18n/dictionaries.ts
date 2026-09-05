@@ -9,6 +9,23 @@ type Dict = Record<string, string>;
 
 const ar: Dict = {
   // ---- Page headings ----
+  'onav.audit': 'سجل النشاط',
+  'audit.title': 'سجل النشاط',
+  'audit.sub': 'آخر الإجراءات المهمّة في المؤسسة.',
+  'audit.none': 'لا سجلات بعد.',
+  'audit.action.created': 'أنشأ',
+  'audit.action.updated': 'حدّث',
+  'audit.action.deleted': 'حذف',
+  'audit.action.approved': 'اعتمد',
+  'audit.action.rejected': 'رفض',
+  'audit.action.published': 'نشر',
+  'audit.action.unpublished': 'ألغى نشر',
+  'audit.entity.request': 'طلبًا',
+  'audit.entity.modules': 'الوحدات',
+  'audit.entity.site': 'الموقع العام',
+  'audit.entity.task': 'مهمة',
+  'audit.entity.student': 'طالبًا',
+  // ---- Page headings ----
   'onav.fees': 'الرسوم',
   'fee.pageTitle': 'رسوم الطلاب',
   'fee.pageSub': 'رسوم واشتراكات طلاب {org} ومتابعة سدادها.',
@@ -1162,6 +1179,23 @@ const ar: Dict = {
 };
 
 const en: Dict = {
+  // ---- Page headings ----
+  'onav.audit': 'Activity log',
+  'audit.title': 'Activity log',
+  'audit.sub': 'Recent important actions in the organization.',
+  'audit.none': 'No entries yet.',
+  'audit.action.created': 'created',
+  'audit.action.updated': 'updated',
+  'audit.action.deleted': 'deleted',
+  'audit.action.approved': 'approved',
+  'audit.action.rejected': 'rejected',
+  'audit.action.published': 'published',
+  'audit.action.unpublished': 'unpublished',
+  'audit.entity.request': 'a request',
+  'audit.entity.modules': 'modules',
+  'audit.entity.site': 'the public site',
+  'audit.entity.task': 'a task',
+  'audit.entity.student': 'a student',
   // ---- Page headings ----
   'onav.fees': 'Fees',
   'fee.pageTitle': 'Student fees',

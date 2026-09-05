@@ -52,6 +52,8 @@ model Organization {
   requests      MemberRequest[]
   fees          StudentFee[]
   events        Event[]
+  auditLogs     AuditLog[]
+  competitionEntrants CompetitionParticipant[]
 
   @@map("organizations")
 }
@@ -402,9 +404,45 @@ model Competition {
 
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  entrants       CompetitionParticipant[]
 
   @@index([organizationId])
   @@map("competitions")
+}
+
+/// مشارك في مسابقة — بدرجة وترتيب
+model CompetitionParticipant {
+  id        String   @id @default(cuid())
+  name      String
+  score     Int?
+  rank      Int?
+  note      String?
+  createdAt DateTime @default(now())
+
+  competitionId String
+  competition   Competition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([competitionId])
+  @@index([organizationId])
+  @@map("competition_participants")
+}
+
+/// سجلّ النشاط — تتبّع الإجراءات المهمّة
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String   // created / updated / deleted / approved / rejected …
+  entity    String   // task / request / student / module …
+  label     String?  // وصف الهدف
+  actorName String
+  createdAt DateTime @default(now())
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@map("audit_logs")
 }
 
 enum MemorizationRating {
