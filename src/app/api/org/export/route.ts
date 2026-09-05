@@ -2,10 +2,12 @@ import { prisma } from '@/lib/prisma';
 import { getOrgActor } from '@/lib/org';
 import { canViewEducation, canViewDonations } from '@/lib/permissions';
 
-/** يبني سطر CSV آمنًا (تهريب علامات الاقتباس والفواصل). */
+/** يبني سطر CSV آمنًا: تهريب علامات الاقتباس/الفواصل + تحييد حقن الصيغ
+ *  (أي خلية تبدأ بـ = + - @ أو محرف جدولة/سطر تُسبَق بعلامة اقتباس مفردة). */
 function row(cells: (string | number | null | undefined)[]): string {
   return cells.map((c) => {
-    const s = c == null ? '' : String(c);
+    let s = c == null ? '' : String(c);
+    if (/^[=+\-@\t\r]/.test(s)) s = `'${s}`; // تحييد الصيغ عند فتح الملف في Excel/Sheets
     return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
   }).join(',');
 }
