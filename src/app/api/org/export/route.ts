@@ -1,20 +1,10 @@
 import { prisma } from '@/lib/prisma';
 import { getOrgActor } from '@/lib/org';
 import { canViewEducation, canViewDonations } from '@/lib/permissions';
-
-/** يبني سطر CSV آمنًا: تهريب علامات الاقتباس/الفواصل + تحييد حقن الصيغ
- *  (أي خلية تبدأ بـ = + - @ أو محرف جدولة/سطر تُسبَق بعلامة اقتباس مفردة). */
-function row(cells: (string | number | null | undefined)[]): string {
-  return cells.map((c) => {
-    let s = c == null ? '' : String(c);
-    if (/^[=+\-@\t\r]/.test(s)) s = `'${s}`; // تحييد الصيغ عند فتح الملف في Excel/Sheets
-    return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
-  }).join(',');
-}
+import { csvRow as row, csvBody } from '@/lib/csv';
 
 function csvResponse(name: string, rows: string[]): Response {
-  const body = '﻿' + rows.join('\r\n'); // BOM ليقرأ Excel العربية
-  return new Response(body, {
+  return new Response(csvBody(rows), {
     headers: {
       'Content-Type': 'text/csv; charset=utf-8',
       'Content-Disposition': `attachment; filename="${name}.csv"`,
