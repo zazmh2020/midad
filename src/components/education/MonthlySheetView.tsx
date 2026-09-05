@@ -50,6 +50,24 @@ export default function MonthlySheetView({
   });
   const [saved, setSaved] = useState<Record<string, 'saving' | 'ok' | 'err'>>({});
   const timers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
+  const [sending, setSending] = useState<'month' | 'day' | null>(null);
+  const [sendMsg, setSendMsg] = useState<{ ok: boolean; text: string } | null>(null);
+
+  async function sendReport(scope: 'month' | 'day') {
+    if (sending) return;
+    setSending(scope); setSendMsg(null);
+    try {
+      const res = await fetch('/api/org/education/monthly/send', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ studentId: selectedId, ym, scope }),
+      });
+      const d = await res.json().catch(() => ({}));
+      if (d.ok) setSendMsg({ ok: true, text: t('qm.sentTo', { email: d.to }) });
+      else if (d.reason === 'not_configured') setSendMsg({ ok: false, text: t('qm.emailNotConfigured') });
+      else setSendMsg({ ok: false, text: t('qm.sendFailed') });
+    } catch { setSendMsg({ ok: false, text: t('form.netErr') }); }
+    finally { setSending(null); }
+  }
 
   function navigate(next: { student?: string; ym?: string }) {
     const params = new URLSearchParams({ student: next.student ?? selectedId, ym: next.ym ?? ym });
@@ -115,8 +133,19 @@ export default function MonthlySheetView({
       </div>
 
       <div className="qm-meta">
-        <strong>{studentName}</strong>{halaqaName && <span> — {halaqaName}</span>}
+        <div><strong>{studentName}</strong>{halaqaName && <span> — {halaqaName}</span>}</div>
+        {canManage && selectedId && (
+          <div className="qm-send">
+            <button className="org-btn org-btn-outline" disabled={!!sending} onClick={() => sendReport('day')}>
+              {sending === 'day' ? t('qm.sending') : t('qm.sendDaily')}
+            </button>
+            <button className="org-btn org-btn-primary" disabled={!!sending} onClick={() => sendReport('month')}>
+              {sending === 'month' ? t('qm.sending') : t('qm.sendMonthly')}
+            </button>
+          </div>
+        )}
       </div>
+      {sendMsg && <div className={`qm-sendmsg ${sendMsg.ok ? 'is-ok' : 'is-err'}`}>{sendMsg.text}</div>}
 
       <div className="qm-wrap">
         <table className="qm-table">

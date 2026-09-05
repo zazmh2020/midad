@@ -9,6 +9,13 @@ type Dict = Record<string, string>;
 
 const ar: Dict = {
   // ---- Page headings ----
+  'qm.sendDaily': 'إرسال التقرير اليومي',
+  'qm.sendMonthly': 'إرسال التقرير الشهري',
+  'qm.sending': 'جارٍ الإرسال…',
+  'qm.sentTo': 'أُرسل التقرير إلى {email}.',
+  'qm.sendFailed': 'تعذّر إرسال التقرير، حاول لاحقًا.',
+  'qm.emailNotConfigured': 'إرسال البريد غير مُهيّأ بعد — يلزم ربط مزوّد بريد (Resend) عبر المفتاح RESEND_API_KEY.',
+  // ---- Page headings ----
   'qm.title': 'الدليل الشهري',
   'qm.hubDesc': 'متابعة يومية شهرية لكل طالب: الحفظ والمراجعة والحضور والدرجات.',
   'qm.sub': 'سجّل متابعة الطالب اليومية في {org} خلال الشهر — الحفظ تلقائي.',
@@ -1023,6 +1030,13 @@ const ar: Dict = {
 };
 
 const en: Dict = {
+  // ---- Page headings ----
+  'qm.sendDaily': 'Send daily report',
+  'qm.sendMonthly': 'Send monthly report',
+  'qm.sending': 'Sending…',
+  'qm.sentTo': 'Report sent to {email}.',
+  'qm.sendFailed': 'Could not send the report, try again later.',
+  'qm.emailNotConfigured': 'Email is not set up yet — connect an email provider (Resend) via the RESEND_API_KEY key.',
   // ---- Page headings ----
   'qm.title': 'Monthly guide',
   'qm.hubDesc': 'Per-student monthly daily tracking: memorization, review, attendance and scores.',
