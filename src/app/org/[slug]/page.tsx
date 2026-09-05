@@ -5,7 +5,6 @@ import {
   canViewUsers, canManageUsers, canViewProjects, canViewStructure, canViewPrograms,
   canViewCampaigns, canViewBeneficiaries, canViewReports,
   canViewDocuments, canUseAssistant,
-  roleLabel,
 } from '@/lib/permissions';
 import Icon from '@/components/Icon';
 import DashboardShell from '@/components/dash/DashboardShell';
@@ -142,7 +141,7 @@ export default async function OrgDashboard({
             <h1>{t('od.welcome', { name: user.name })}</h1>
             <p className="dash-sub">
               {org.name} — {TYPE_KEYS[org.type] ? t(TYPE_KEYS[org.type]) : org.type} · {t('od.role')}{' '}
-              <strong>{roleLabel(user.role)}</strong>
+              <strong>{t(`role.${user.role}`)}</strong>
             </p>
           </div>
           {canManage && (
@@ -231,7 +230,7 @@ export default async function OrgDashboard({
                             </div>
                           </div>
                         </td>
-                        <td>{roleLabel(u.role)}</td>
+                        <td>{t(`role.${u.role}`)}</td>
                         <td><span className={`dash-badge ${u.isActive ? 'green' : 'muted'}`}>{u.isActive ? t('od.status.active') : t('od.status.inactive')}</span></td>
                         <td>{dateFmt.format(u.createdAt)}</td>
                       </tr>

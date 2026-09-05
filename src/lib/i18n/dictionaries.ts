@@ -310,6 +310,12 @@ const ar: Dict = {
   'od.promo.title': 'تقاريرك جاهزة',
   'od.promo.sub': 'اطّلع على مؤشرات الأداء والإحصاءات المبنية من بيانات مؤسستك.',
   'od.promo.cta': 'عرض التحليلات',
+
+  // الأدوار
+  'role.PLATFORM_OWNER': 'مالك المنصة',
+  'role.ORG_ADMIN': 'مدير المؤسسة',
+  'role.STAFF': 'موظف',
+  'role.MEMBER': 'عضو',
 };
 
 const en: Dict = {
@@ -589,6 +595,11 @@ const en: Dict = {
   'od.promo.title': 'Your reports are ready',
   'od.promo.sub': 'Explore performance metrics and statistics built from your organization’s data.',
   'od.promo.cta': 'View analytics',
+
+  'role.PLATFORM_OWNER': 'Platform owner',
+  'role.ORG_ADMIN': 'Organization admin',
+  'role.STAFF': 'Staff',
+  'role.MEMBER': 'Member',
 };
 
 export const DICTIONARIES: Record<Locale, Dict> = { ar, en };
