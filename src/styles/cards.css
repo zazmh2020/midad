@@ -87,3 +87,11 @@
 .vf-row strong { color: #2b1a4e; font-size: 0.95rem; }
 .vf-hint { color: #6c6780; line-height: 1.8; margin: 0; }
 .vf-foot { margin-top: 1.4rem; font-size: 0.74rem; color: #a49ebb; }
+
+/* ---------- أداة التحقّق (لوحة المؤسسة) ---------- */
+.vt-wrap { max-width: 520px; }
+.vt-form { margin-bottom: 0.4rem; }
+.vt-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.vt-note { margin: 0.6rem 0; }
+.vt-scanning { color: var(--purple-700, #6b57a0); font-weight: 600; }
+.vt-hint { margin-top: 0.8rem; font-size: 0.82rem; color: var(--text-muted, #6c6780); line-height: 1.8; }

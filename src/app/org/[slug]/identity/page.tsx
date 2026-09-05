@@ -15,8 +15,8 @@ export default async function IdentityHub({ params }: { params: Promise<{ slug: 
   const items: HubItem[] = [
     { title: t('hub.id.cards'), desc: t('hub.id.cards.d'), ...(canCards ? { href: `${base}/identity/cards` } : {}) },
     { title: t('hub.id.qr'), desc: t('hub.id.qr.d'), ...(canCards ? { href: `${base}/identity/cards` } : {}) },
-    { title: t('hub.id.verify'), desc: t('hub.id.verify.d') },
-    { title: t('hub.id.nfc'), desc: t('hub.id.nfc.d') },
+    { title: t('hub.id.verify'), desc: t('hub.id.verify.d'), ...(canCards ? { href: `${base}/identity/verify` } : {}) },
+    { title: t('hub.id.nfc'), desc: t('hub.id.nfc.d'), ...(canCards ? { href: `${base}/identity/verify` } : {}) },
   ];
 
   return (
