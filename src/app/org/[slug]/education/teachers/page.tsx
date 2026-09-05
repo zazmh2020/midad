@@ -13,14 +13,17 @@ export default async function TeachersPage({ params }: { params: Promise<{ slug:
   const { t } = await getT();
   if (!canViewEducation(user.role)) redirect(`/org/${org.slug}`);
 
-  const teachers = await prisma.teacher.findMany({
-    where: { organizationId: org.id },
-    orderBy: { createdAt: 'desc' },
-    select: {
-      id: true, name: true, phone: true, specialization: true, isActive: true,
-      _count: { select: { halaqat: true } },
-    },
-  });
+  const [teachers, users] = await Promise.all([
+    prisma.teacher.findMany({
+      where: { organizationId: org.id },
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true, name: true, phone: true, specialization: true, isActive: true, userId: true,
+        _count: { select: { halaqat: true } },
+      },
+    }),
+    prisma.user.findMany({ where: { organizationId: org.id, isActive: true }, orderBy: { name: 'asc' }, select: { id: true, name: true } }),
+  ]);
 
   return (
     <div className="org-page">
@@ -31,7 +34,10 @@ export default async function TeachersPage({ params }: { params: Promise<{ slug:
           <p>{t('pg.teachers.sub', { n: teachers.length, org: org.name })}</p>
         </div>
       </div>
-      <TeachersView teachers={teachers.map((t) => ({ ...t, halaqatCount: t._count.halaqat }))} />
+      <TeachersView users={users} teachers={teachers.map((t) => ({
+        id: t.id, name: t.name, phone: t.phone, specialization: t.specialization,
+        isActive: t.isActive, userId: t.userId, halaqatCount: t._count.halaqat,
+      }))} />
     </div>
   );
 }

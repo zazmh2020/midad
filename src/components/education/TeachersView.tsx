@@ -6,10 +6,11 @@ import { useLocale } from '@/lib/i18n/LocaleProvider';
 
 type Teacher = {
   id: string; name: string; phone: string | null; specialization: string | null;
-  isActive: boolean; halaqatCount: number;
+  isActive: boolean; halaqatCount: number; userId: string | null;
 };
+type UserRef = { id: string; name: string };
 
-export default function TeachersView({ teachers }: { teachers: Teacher[] }) {
+export default function TeachersView({ teachers, users }: { teachers: Teacher[]; users: UserRef[] }) {
   const { t } = useLocale();
   const router = useRouter();
   const [creating, setCreating] = useState(false);
@@ -96,7 +97,7 @@ export default function TeachersView({ teachers }: { teachers: Teacher[] }) {
         <div className="org-table-wrap">
           <table className="org-table">
             <thead>
-              <tr><th>{t('edu.tc.thTeacher')}</th><th>{t('edu.tc.spec')}</th><th>{t('edu.tc.thHalaqat')}</th><th>{t('view.status')}</th><th></th></tr>
+              <tr><th>{t('edu.tc.thTeacher')}</th><th>{t('edu.tc.spec')}</th><th>{t('edu.tc.thHalaqat')}</th><th>{t('edu.tc.account')}</th><th>{t('view.status')}</th><th></th></tr>
             </thead>
             <tbody>
               {teachers.map((tc) => (
@@ -104,6 +105,13 @@ export default function TeachersView({ teachers }: { teachers: Teacher[] }) {
                   <td><strong>{tc.name}</strong>{tc.phone && <small dir="ltr">{tc.phone}</small>}</td>
                   <td>{tc.specialization ?? '—'}</td>
                   <td>{tc.halaqatCount}</td>
+                  <td>
+                    <select className="org-inline-select" value={tc.userId ?? ''} disabled={busyId === tc.id}
+                      onChange={(e) => patch(tc.id, { userId: e.target.value || null })} aria-label={t('edu.tc.account')}>
+                      <option value="">{t('edu.tc.noAccount')}</option>
+                      {users.map((u) => <option key={u.id} value={u.id}>{u.name}</option>)}
+                    </select>
+                  </td>
                   <td><span className={`org-badge ${tc.isActive ? 'is-on' : ''}`}>{tc.isActive ? t('status.teacher.active') : t('status.teacher.inactive')}</span></td>
                   <td className="org-row-actions">
                     <button className="org-btn org-btn-quiet" disabled={busyId === tc.id} onClick={() => patch(tc.id, { isActive: !tc.isActive })}>

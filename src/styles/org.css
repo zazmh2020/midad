@@ -922,6 +922,8 @@ a.org-module:hover {
 .org-report-grid .org-panel { margin-bottom: 0; }
 
 /* ---------- الدليل الشهري (شبكة يومية) ---------- */
+/* توسيط ترويسة الصفحة فقط (العنوان والوصف) */
+.qm-page .org-page-head { justify-content: center; text-align: center; }
 .qm-toolbar {
   display: flex; flex-wrap: wrap; align-items: flex-end; gap: 1rem;
   margin-bottom: 0.8rem;

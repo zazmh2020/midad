@@ -9,6 +9,20 @@ type Dict = Record<string, string>;
 
 const ar: Dict = {
   // ---- Page headings ----
+  'onav.myHalaqat': 'حلقاتي',
+  'edu.tc.account': 'الحساب',
+  'edu.tc.noAccount': '— بلا حساب',
+  'myh.title': 'حلقاتي',
+  'myh.sub': 'الحلقات المسندة إليك يا {name}.',
+  'myh.notTeacher': 'حسابك غير مرتبط بمعلّم.',
+  'myh.notTeacherBody': 'حسابك غير مرتبط بسجلّ معلّم بعد — اطلب من مدير المؤسسة ربط حسابك من صفحة المعلمين.',
+  'myh.none': 'لا توجد حلقات مسندة إليك بعد.',
+  'myh.col.name': 'اسم الحلقة',
+  'myh.col.track': 'المسار',
+  'myh.col.period': 'الفترة',
+  'myh.col.students': 'عدد الطلاب',
+  'myh.col.type': 'النوع',
+  // ---- Page headings ----
   'inbox.newAnnouncement': 'إعلان جديد: {v}',
   'inbox.newMember': 'انضمّ {name} إلى الفريق',
   'inbox.newTask': 'مهمة جديدة: {v}',
@@ -1084,6 +1098,20 @@ const ar: Dict = {
 };
 
 const en: Dict = {
+  // ---- Page headings ----
+  'onav.myHalaqat': 'My halaqat',
+  'edu.tc.account': 'Account',
+  'edu.tc.noAccount': '— No account',
+  'myh.title': 'My halaqat',
+  'myh.sub': 'Halaqat assigned to you, {name}.',
+  'myh.notTeacher': 'Your account is not linked to a teacher.',
+  'myh.notTeacherBody': 'Your account is not linked to a teacher record yet — ask your organization admin to link it from the teachers page.',
+  'myh.none': 'No halaqat assigned to you yet.',
+  'myh.col.name': 'Halaqa name',
+  'myh.col.track': 'Track',
+  'myh.col.period': 'Period',
+  'myh.col.students': 'Students',
+  'myh.col.type': 'Type',
   // ---- Page headings ----
   'inbox.newAnnouncement': 'New announcement: {v}',
   'inbox.newMember': '{name} joined the team',

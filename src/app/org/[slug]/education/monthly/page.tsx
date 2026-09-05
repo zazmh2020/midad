@@ -71,7 +71,7 @@ export default async function MonthlySheetPage({
   const selectedStudent = students.find((s) => s.id === selectedId) ?? null;
 
   return (
-    <div className="org-page">
+    <div className="org-page qm-page">
       <div className="org-page-head">
         <div>
           <span className="org-eyebrow">{t('pg.eyeQuran')}</span>
