@@ -921,6 +921,17 @@ a.org-module:hover {
 }
 .org-report-grid .org-panel { margin-bottom: 0; }
 
+/* ---------- قائمة الإشعارات ---------- */
+.notif-list { display: flex; flex-direction: column; gap: 0.5rem; }
+.notif-row {
+  display: flex; align-items: center; gap: 0.8rem; background: #fff; border: 1px solid var(--line);
+  border-radius: 12px; padding: 0.7rem 0.9rem;
+}
+.notif-row.is-unread { border-inline-start: 3px solid var(--purple-500, #6b57a0); background: var(--p-04, rgba(107,87,160,0.04)); }
+.notif-ic { font-size: 1.1rem; flex-shrink: 0; }
+.notif-tx { flex: 1; min-width: 0; font-size: 0.88rem; color: var(--text-strong); }
+.notif-time { font-size: 0.74rem; color: var(--text-muted); flex-shrink: 0; }
+
 /* ---------- الفعاليات ---------- */
 .ev-list { grid-template-columns: 1fr; }
 .ev-card { display: flex; align-items: flex-start; gap: 1rem; }

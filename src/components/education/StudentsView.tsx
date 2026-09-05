@@ -85,6 +85,7 @@ export default function StudentsView({ students, halaqat }: { students: Student[
           </select>
         )}
         <span className="org-toolbar-spacer" />
+        <a className="org-btn org-btn-outline" href="/api/org/export?type=students">⬇ {t('view.exportCsv')}</a>
         <button className="org-btn org-btn-primary" onClick={() => { setCreating((v) => !v); setError(''); }}>
           {creating ? t('shell.cancel') : t('edu.st.new')}
         </button>

@@ -74,6 +74,8 @@
 :root[data-theme="dark"] .stats-band,
 :root[data-theme="dark"] .org-task,
 :root[data-theme="dark"] .org-module-row,
+:root[data-theme="dark"] .notif-row,
+:root[data-theme="dark"] .ev-card,
 :root[data-theme="dark"] .org-board-count {
   background: #221a35 !important;
   border-color: rgba(255, 255, 255, 0.1) !important;

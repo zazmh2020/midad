@@ -104,6 +104,7 @@ export default function DonationsView({
           {DONATION_STATUSES.map((s) => <option key={s} value={s}>{statusLabel(s)}</option>)}
         </select>
         <span className="org-toolbar-spacer" />
+        <a className="org-btn org-btn-outline" href="/api/org/export?type=donations">⬇ {t('view.exportCsv')}</a>
         {canManage && (
           <button className="org-btn org-btn-primary" onClick={() => { setCreating((v) => !v); setError(''); }}>
             {creating ? t('shell.cancel') : t('don.new')}
