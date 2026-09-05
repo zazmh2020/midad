@@ -5,11 +5,20 @@
 /* ---------- مفتاح الفوترة (شهري / سنوي) ---------- */
 .pricing-wrap { display: block; text-align: center; }
 
+.pricing-controls {
+  display: flex; align-items: center; justify-content: center;
+  gap: 1rem 1.4rem; flex-wrap: wrap; margin: 0 0 2rem;
+}
+.pricing-cur { display: inline-flex; align-items: center; gap: 0.5rem; }
+.pricing-cur-label {
+  font-family: var(--font-body); font-size: 0.85rem; font-weight: 600;
+  color: var(--text-muted, #6c6780);
+}
+
 .billing-toggle {
   display: inline-flex;
   gap: 0.25rem;
   padding: 0.28rem;
-  margin: 0 0 2rem;
   background: var(--purple-100);
   border-radius: 100px;
 }

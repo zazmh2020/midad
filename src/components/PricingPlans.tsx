@@ -4,36 +4,47 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { PLANS, yearlyPrice } from '@/lib/plans';
 import { useLocale } from '@/lib/i18n/LocaleProvider';
-
-const fmt = new Intl.NumberFormat('en-US');
+import { useCurrency } from '@/components/CurrencyProvider';
+import CurrencyToggle from '@/components/CurrencyToggle';
+import { convertRounded, currencySymbol, formatAmount } from '@/lib/currency';
 
 export default function PricingPlans() {
   const { t, locale } = useLocale();
+  const { currency } = useCurrency();
   const [yearly, setYearly] = useState(false);
-  const cur = t('plan.currency');
+  const cur = currencySymbol(currency, locale);
   const en = locale === 'en';
+  // يحوّل مبلغًا بالريال إلى العملة المختارة وينسّقه
+  const money = (sar: number) => formatAmount(convertRounded(sar, currency), locale);
 
   return (
     <div className="pricing-wrap">
-      {/* مفتاح التبديل شهري / سنوي */}
-      <div className="billing-toggle" role="group" aria-label={t('plan.billing.monthly')}>
-        <button
-          type="button"
-          className={`billing-opt ${!yearly ? 'is-active' : ''}`}
-          onClick={() => setYearly(false)}
-          aria-pressed={!yearly}
-        >
-          {t('plan.billing.monthly')}
-        </button>
-        <button
-          type="button"
-          className={`billing-opt ${yearly ? 'is-active' : ''}`}
-          onClick={() => setYearly(true)}
-          aria-pressed={yearly}
-        >
-          {t('plan.billing.yearly')}
-          <span className="billing-save">{t('plan.billing.save')}</span>
-        </button>
+      <div className="pricing-controls">
+        {/* مفتاح التبديل شهري / سنوي */}
+        <div className="billing-toggle" role="group" aria-label={t('plan.billing.monthly')}>
+          <button
+            type="button"
+            className={`billing-opt ${!yearly ? 'is-active' : ''}`}
+            onClick={() => setYearly(false)}
+            aria-pressed={!yearly}
+          >
+            {t('plan.billing.monthly')}
+          </button>
+          <button
+            type="button"
+            className={`billing-opt ${yearly ? 'is-active' : ''}`}
+            onClick={() => setYearly(true)}
+            aria-pressed={yearly}
+          >
+            {t('plan.billing.yearly')}
+            <span className="billing-save">{t('plan.billing.save')}</span>
+          </button>
+        </div>
+        {/* أيقونة تبديل العملة */}
+        <div className="pricing-cur">
+          <span className="pricing-cur-label">{t('plan.currencyLabel')}</span>
+          <CurrencyToggle />
+        </div>
       </div>
 
       <div className="pricing-grid">
@@ -60,15 +71,15 @@ export default function PricingPlans() {
                   <span className="plan-custom">{t('plan.free')}</span>
                 ) : yearly ? (
                   <>
-                    <span className="plan-amount">{fmt.format(year as number)}</span>
+                    <span className="plan-amount">{money(year as number)}</span>
                     <span className="plan-period">{cur} {t('plan.perYear')}</span>
                     <span className="plan-permonth">
-                      {t('plan.approxMonth', { v: fmt.format(Math.round((year as number) / 12)), c: cur })}
+                      {t('plan.approxMonth', { v: money(Math.round((year as number) / 12)), c: cur })}
                     </span>
                   </>
                 ) : (
                   <>
-                    <span className="plan-amount">{fmt.format(p.price)}</span>
+                    <span className="plan-amount">{money(p.price)}</span>
                     <span className="plan-period">{cur} {t('plan.perMonth')}</span>
                   </>
                 )}

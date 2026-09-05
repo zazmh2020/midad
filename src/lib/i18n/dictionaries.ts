@@ -1181,6 +1181,7 @@ const ar: Dict = {
 
   // بطاقات الباقات (PricingPlans)
   'plan.currency': 'ر.س',
+  'plan.currencyLabel': 'العملة',
   'plan.badge': 'الأكثر طلبًا',
   'plan.custom': 'تسعير مخصّص',
   'plan.free': 'مجانًا',
@@ -2374,6 +2375,7 @@ const en: Dict = {
   'camp.noneInStatus': 'No campaigns with this status.',
 
   'plan.currency': 'SAR',
+  'plan.currencyLabel': 'Currency',
   'plan.badge': 'Most popular',
   'plan.custom': 'Custom pricing',
   'plan.free': 'Free',
