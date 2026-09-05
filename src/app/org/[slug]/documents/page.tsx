@@ -4,12 +4,14 @@ import { prisma } from '@/lib/prisma';
 import { canViewDocuments, canManageDocuments } from '@/lib/permissions';
 import { isS3Configured } from '@/lib/s3';
 import DocumentsView from '@/components/DocumentsView';
+import { getT } from '@/lib/i18n/server';
 
 export const dynamic = 'force-dynamic';
 
 export default async function OrgDocumentsPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
+  const { t } = await getT();
 
   if (!canViewDocuments(user.role)) redirect(`/org/${org.slug}`);
   const canManage = canManageDocuments(user.role);
@@ -31,9 +33,9 @@ export default async function OrgDocumentsPage({ params }: { params: Promise<{ s
     <div className="org-page">
       <div className="org-page-head">
         <div>
-          <span className="org-eyebrow">الوحدات</span>
-          <h1>الوثائق</h1>
-          <p>{documents.length} وثيقة في {org.name}.</p>
+          <span className="org-eyebrow">{t('hub.units')}</span>
+          <h1>{t('docs.title')}</h1>
+          <p>{t('docs.count', { n: documents.length, org: org.name })}</p>
         </div>
       </div>
 

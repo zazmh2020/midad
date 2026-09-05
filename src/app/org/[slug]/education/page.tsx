@@ -3,12 +3,14 @@ import { requireOrgAccess } from '@/lib/org';
 import { prisma } from '@/lib/prisma';
 import { canViewEducation } from '@/lib/permissions';
 import SectionHub, { type HubItem } from '@/components/SectionHub';
+import { getT } from '@/lib/i18n/server';
 
 export const dynamic = 'force-dynamic';
 
 export default async function EducationHub({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
+  const { t } = await getT();
 
   if (!canViewEducation(user.role)) redirect(`/org/${org.slug}`);
   const base = `/org/${org.slug}/education`;
@@ -23,19 +25,19 @@ export default async function EducationHub({ params }: { params: Promise<{ slug:
   ]);
 
   const items: HubItem[] = [
-    { title: 'الطلاب', desc: 'ملفات الطلاب وأولياء أمورهم.', href: `${base}/students`, count: students },
-    { title: 'المعلمون', desc: 'المعلمون وتخصصاتهم.', href: `${base}/teachers`, count: teachers },
-    { title: quran ? 'الحلقات' : 'الفصول', desc: quran ? 'حلقات التحفيظ ومواعيدها.' : 'الفصول والمجموعات.', href: `${base}/halaqat`, count: halaqat },
-    { title: 'الحضور', desc: 'تسجيل الحضور والغياب.', href: `${base}/attendance` },
-    { title: quran ? 'الحفظ والتسميع' : 'الواجبات', desc: quran ? 'خطط الحفظ والتسميع والتقدير.' : 'متابعة الواجبات.', href: `${base}/memorization`, count: memos },
-    { title: 'التقييم والشهادات', desc: 'الاختبارات والدرجات والشهادات.' },
+    { title: t('hub.edu.students'), desc: t('hub.edu.students.d'), href: `${base}/students`, count: students },
+    { title: t('hub.edu.teachers'), desc: t('hub.edu.teachers.d'), href: `${base}/teachers`, count: teachers },
+    { title: quran ? t('hub.edu.halaqat') : t('hub.edu.classes'), desc: quran ? t('hub.edu.halaqat.d') : t('hub.edu.classes.d'), href: `${base}/halaqat`, count: halaqat },
+    { title: t('hub.edu.attendance'), desc: t('hub.edu.attendance.d'), href: `${base}/attendance` },
+    { title: quran ? t('hub.edu.memo') : t('hub.edu.homework'), desc: quran ? t('hub.edu.memo.d') : t('hub.edu.homework.d'), href: `${base}/memorization`, count: memos },
+    { title: t('hub.edu.assessment'), desc: t('hub.edu.assessment.d') },
   ];
 
   return (
     <SectionHub
-      eyebrow="العمل المؤسسي"
-      title="التعليم"
-      intro={quran ? 'النظام التعليمي والحلقات القرآنية.' : 'النظام التعليمي وإدارة الطلاب والمعلمين.'}
+      eyebrow={t('hub.corp')}
+      title={t('hub.edu.title')}
+      intro={quran ? t('hub.edu.introQuran') : t('hub.edu.intro')}
       items={items}
     />
   );

@@ -138,6 +138,8 @@ export default function LoginPage() {
 
         <Link href="/" className="lg-home">{t('login.home')}</Link>
       </motion.main>
+
+      <div className="lg-copyright">{t('footer.rights')}</div>
     </div>
   );
 }

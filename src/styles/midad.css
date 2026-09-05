@@ -711,3 +711,7 @@ html { scroll-behavior: smooth; }
   background: var(--p-08); border-radius: 100px; padding: 0.12rem 0.5rem; letter-spacing: 0.02em;
 }
 .mdl-sys-cat { display: block; font-size: 0.72rem; color: var(--muted); margin-top: 0.15rem; }
+
+/* الفوتر عائم فوق نداء الختام السفلي */
+.mdl-footer-float { position: relative; z-index: 3; padding-bottom: 0; }
+.mdl-cta-bottom { margin-top: -2.2rem; padding-top: 5rem; position: relative; z-index: 1; }

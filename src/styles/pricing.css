@@ -67,36 +67,45 @@
   flex-direction: column;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 1.75rem 1.4rem 1.4rem;
-  box-shadow: var(--shadow-soft);
+  border-radius: 20px;
+  padding: 2rem 1.6rem 1.6rem;
+  box-shadow: 0 1px 2px rgba(43, 26, 78, 0.04);
+  transition: border-color 0.22s, box-shadow 0.22s, transform 0.22s;
 }
+.plan-card:hover { border-color: var(--purple-300); box-shadow: 0 20px 50px -30px rgba(43, 26, 78, 0.4); }
 
 .plan-card.is-featured {
-  border-color: var(--purple-500);
-  box-shadow: var(--shadow-lift);
-  transform: translateY(-6px);
+  border-color: transparent;
+  background: linear-gradient(180deg, #ffffff 0%, #f7f4fc 100%);
+  box-shadow: 0 30px 70px -34px rgba(61, 40, 121, 0.55), 0 0 0 1.5px var(--purple-500);
+  transform: translateY(-8px);
 }
 
 .plan-badge {
   position: absolute;
-  top: -12px;
+  top: -13px;
   inset-inline-start: 50%;
   transform: translateX(50%);
-  background: var(--purple-500);
+  background: var(--purple-900);
   color: #fff;
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 0.72rem;
-  padding: 0.3rem 0.9rem;
+  padding: 0.35rem 1rem;
   border-radius: 100px;
   white-space: nowrap;
+  box-shadow: 0 8px 20px -8px rgba(43, 26, 78, 0.6);
 }
 
+.plan-name-row { display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
+.plan-tag {
+  font-family: var(--font-display); font-weight: 700; font-size: 0.66rem; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--purple-300);
+}
 .plan-name {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   color: var(--purple-900);
   margin: 0;
 }

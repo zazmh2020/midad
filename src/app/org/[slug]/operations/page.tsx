@@ -3,12 +3,14 @@ import { requireOrgAccess } from '@/lib/org';
 import { prisma } from '@/lib/prisma';
 import { canViewProjects, canViewPrograms, canViewCampaigns, canViewDonations } from '@/lib/permissions';
 import SectionHub, { type HubItem } from '@/components/SectionHub';
+import { getT } from '@/lib/i18n/server';
 
 export const dynamic = 'force-dynamic';
 
 export default async function OperationsHub({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
+  const { t } = await getT();
   const r = user.role;
 
   if (!(canViewProjects(r) || canViewCampaigns(r))) redirect(`/org/${org.slug}`);
@@ -24,26 +26,26 @@ export default async function OperationsHub({ params }: { params: Promise<{ slug
 
   const items: HubItem[] = [
     ...(canViewProjects(r)
-      ? [{ title: 'المشاريع', desc: 'مراحل التنفيذ والمتابعة.', href: `${base}/projects`, count: projects }]
+      ? [{ title: t('hub.ops.projects'), desc: t('hub.ops.projects.d'), href: `${base}/projects`, count: projects }]
       : []),
     ...(canViewPrograms(r)
-      ? [{ title: 'البرامج', desc: 'برامج مصنّفة بسعة مستهدفة.', href: `${base}/programs`, count: programs }]
+      ? [{ title: t('hub.ops.programs'), desc: t('hub.ops.programs.d'), href: `${base}/programs`, count: programs }]
       : []),
     ...(canViewCampaigns(r)
-      ? [{ title: 'الحملات', desc: 'حملات بهدف مالي ومواعيد.', href: `${base}/campaigns`, count: campaigns }]
+      ? [{ title: t('hub.ops.campaigns'), desc: t('hub.ops.campaigns.d'), href: `${base}/campaigns`, count: campaigns }]
       : []),
     ...(canViewDonations(r)
-      ? [{ title: 'التبرعات', desc: 'العمليات المالية الواردة.', href: `${base}/donations`, count: donations }]
+      ? [{ title: t('hub.ops.donations'), desc: t('hub.ops.donations.d'), href: `${base}/donations`, count: donations }]
       : []),
-    { title: 'المهام', desc: 'إسناد المهام ومتابعة إنجازها.' },
-    { title: 'سير العمل', desc: 'مسارات اعتماد وأتمتة العمليات.' },
+    { title: t('hub.ops.tasks'), desc: t('hub.ops.tasks.d') },
+    { title: t('hub.ops.workflow'), desc: t('hub.ops.workflow.d') },
   ];
 
   return (
     <SectionHub
-      eyebrow="العمل المؤسسي"
-      title="العمليات"
-      intro="إدارة العمل اليومي للمؤسسة."
+      eyebrow={t('hub.corp')}
+      title={t('hub.ops.title')}
+      intro={t('hub.ops.intro')}
       items={items}
     />
   );

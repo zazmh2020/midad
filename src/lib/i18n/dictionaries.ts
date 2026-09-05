@@ -408,6 +408,41 @@ const ar: Dict = {
   'brand.logoHint2': 'يظهر في شريط الجهة الجانبي. اتركه فارغًا لاستخدام شعار مِداد.',
   'brand.save': 'حفظ الهوية البصرية',
   'aset.sub': 'بيانات حسابك كمالك للمنصة.',
+
+  // محاور الأقسام (Hubs)
+  'hub.corp': 'العمل المؤسسي',
+  'hub.units': 'الوحدات',
+  // العمليات
+  'hub.ops.title': 'العمليات',
+  'hub.ops.intro': 'إدارة العمل اليومي للمؤسسة.',
+  'hub.ops.projects': 'المشاريع', 'hub.ops.projects.d': 'مراحل التنفيذ والمتابعة.',
+  'hub.ops.programs': 'البرامج', 'hub.ops.programs.d': 'برامج مصنّفة بسعة مستهدفة.',
+  'hub.ops.campaigns': 'الحملات', 'hub.ops.campaigns.d': 'حملات بهدف مالي ومواعيد.',
+  'hub.ops.donations': 'التبرعات', 'hub.ops.donations.d': 'العمليات المالية الواردة.',
+  'hub.ops.tasks': 'المهام', 'hub.ops.tasks.d': 'إسناد المهام ومتابعة إنجازها.',
+  'hub.ops.workflow': 'سير العمل', 'hub.ops.workflow.d': 'مسارات اعتماد وأتمتة العمليات.',
+  // التعليم
+  'hub.edu.title': 'التعليم',
+  'hub.edu.introQuran': 'النظام التعليمي والحلقات القرآنية.',
+  'hub.edu.intro': 'النظام التعليمي وإدارة الطلاب والمعلمين.',
+  'hub.edu.students': 'الطلاب', 'hub.edu.students.d': 'ملفات الطلاب وأولياء أمورهم.',
+  'hub.edu.teachers': 'المعلمون', 'hub.edu.teachers.d': 'المعلمون وتخصصاتهم.',
+  'hub.edu.halaqat': 'الحلقات', 'hub.edu.halaqat.d': 'حلقات التحفيظ ومواعيدها.',
+  'hub.edu.classes': 'الفصول', 'hub.edu.classes.d': 'الفصول والمجموعات.',
+  'hub.edu.attendance': 'الحضور', 'hub.edu.attendance.d': 'تسجيل الحضور والغياب.',
+  'hub.edu.memo': 'الحفظ والتسميع', 'hub.edu.memo.d': 'خطط الحفظ والتسميع والتقدير.',
+  'hub.edu.homework': 'الواجبات', 'hub.edu.homework.d': 'متابعة الواجبات.',
+  'hub.edu.assessment': 'التقييم والشهادات', 'hub.edu.assessment.d': 'الاختبارات والدرجات والشهادات.',
+  // الموارد
+  'hub.res.title': 'الموارد',
+  'hub.res.intro': 'إدارة الموارد البشرية والمؤسسية.',
+  'hub.res.beneficiaries': 'المستفيدون', 'hub.res.beneficiaries.d': 'ملفات الحالات والخدمات.',
+  'hub.res.employees': 'الموظفون', 'hub.res.employees.d': 'ملفات الموارد البشرية والمناصب.',
+  'hub.res.volunteers': 'المتطوعون', 'hub.res.volunteers.d': 'سجل المتطوعين ومهاراتهم.',
+  'hub.res.teams': 'الفرق', 'hub.res.teams.d': 'تكوين فرق العمل وإدارتها.',
+  // الوثائق
+  'docs.title': 'الوثائق',
+  'docs.count': '{n} وثيقة في {org}.',
 };
 
 const en: Dict = {
@@ -778,6 +813,36 @@ const en: Dict = {
   'brand.logoHint2': 'Shown in the organization sidebar. Leave empty to use the Midad logo.',
   'brand.save': 'Save visual identity',
   'aset.sub': 'Your account details as the platform owner.',
+
+  'hub.corp': 'Organizational work',
+  'hub.units': 'Units',
+  'hub.ops.title': 'Operations',
+  'hub.ops.intro': 'Manage the organization’s daily work.',
+  'hub.ops.projects': 'Projects', 'hub.ops.projects.d': 'Execution stages and tracking.',
+  'hub.ops.programs': 'Programs', 'hub.ops.programs.d': 'Categorized programs with target capacity.',
+  'hub.ops.campaigns': 'Campaigns', 'hub.ops.campaigns.d': 'Campaigns with financial goals and dates.',
+  'hub.ops.donations': 'Donations', 'hub.ops.donations.d': 'Incoming financial transactions.',
+  'hub.ops.tasks': 'Tasks', 'hub.ops.tasks.d': 'Assign tasks and track completion.',
+  'hub.ops.workflow': 'Workflow', 'hub.ops.workflow.d': 'Approval paths and process automation.',
+  'hub.edu.title': 'Education',
+  'hub.edu.introQuran': 'The educational system and Quran circles.',
+  'hub.edu.intro': 'The educational system and management of students and teachers.',
+  'hub.edu.students': 'Students', 'hub.edu.students.d': 'Student and guardian records.',
+  'hub.edu.teachers': 'Teachers', 'hub.edu.teachers.d': 'Teachers and their specializations.',
+  'hub.edu.halaqat': 'Circles', 'hub.edu.halaqat.d': 'Memorization circles and schedules.',
+  'hub.edu.classes': 'Classes', 'hub.edu.classes.d': 'Classes and groups.',
+  'hub.edu.attendance': 'Attendance', 'hub.edu.attendance.d': 'Record attendance and absence.',
+  'hub.edu.memo': 'Memorization', 'hub.edu.memo.d': 'Memorization plans, recitation and grading.',
+  'hub.edu.homework': 'Homework', 'hub.edu.homework.d': 'Track homework.',
+  'hub.edu.assessment': 'Assessment & certificates', 'hub.edu.assessment.d': 'Tests, grades and certificates.',
+  'hub.res.title': 'Resources',
+  'hub.res.intro': 'Manage human and organizational resources.',
+  'hub.res.beneficiaries': 'Beneficiaries', 'hub.res.beneficiaries.d': 'Case and service records.',
+  'hub.res.employees': 'Employees', 'hub.res.employees.d': 'HR records and positions.',
+  'hub.res.volunteers': 'Volunteers', 'hub.res.volunteers.d': 'Volunteer register and skills.',
+  'hub.res.teams': 'Teams', 'hub.res.teams.d': 'Build and manage work teams.',
+  'docs.title': 'Documents',
+  'docs.count': '{n} documents in {org}.',
 };
 
 export const DICTIONARIES: Record<Locale, Dict> = { ar, en };

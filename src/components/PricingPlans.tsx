@@ -39,7 +39,10 @@ export default function PricingPlans() {
           return (
             <article key={p.id} className={`plan-card ${p.highlighted ? 'is-featured' : ''}`}>
               {p.highlighted && <span className="plan-badge">الأكثر طلبًا</span>}
-              <h3 className="plan-name">{p.name}</h3>
+              <div className="plan-name-row">
+                <h3 className="plan-name">{p.name}</h3>
+                <span className="plan-tag">{p.en}</span>
+              </div>
               <p className="plan-tagline">{p.tagline}</p>
 
               <div className="plan-price">

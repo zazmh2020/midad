@@ -284,23 +284,10 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* ========== FINAL CTA ========== */}
-        <section className="mdl-cta">
-          <div className="mdl-wrap mdl-cta-inner">
-            <Reveal>
-              <h2>{t('cta.title')}</h2>
-              <p>{t('cta.lead')}</p>
-              <div className="mdl-cta-actions">
-                <Link href="/login" className="mdl-btn mdl-btn-light">{t('cta.login')}</Link>
-                <a href="#about" className="mdl-btn mdl-btn-outline-light">{t('cta.contact')}</a>
-              </div>
-            </Reveal>
-          </div>
-        </section>
       </main>
 
-      {/* ========== FOOTER ========== */}
-      <footer id="about" className="mdl-footer">
+      {/* ========== FOOTER (عائم فوق نداء الختام) ========== */}
+      <footer id="about" className="mdl-footer mdl-footer-float">
         <div className="mdl-wrap">
           <div className="mdl-footer-grid">
             <div>
@@ -323,6 +310,20 @@ export default async function HomePage() {
           <div className="mdl-footer-bottom">{t('footer.rights')}</div>
         </div>
       </footer>
+
+      {/* ========== FINAL CTA (آخر الصفحة) ========== */}
+      <section className="mdl-cta mdl-cta-bottom">
+        <div className="mdl-wrap mdl-cta-inner">
+          <Reveal>
+            <h2>{t('cta.title')}</h2>
+            <p>{t('cta.lead')}</p>
+            <div className="mdl-cta-actions">
+              <Link href="/login" className="mdl-btn mdl-btn-light">{t('cta.login')}</Link>
+              <a href="#about" className="mdl-btn mdl-btn-outline-light">{t('cta.contact')}</a>
+            </div>
+          </Reveal>
+        </div>
+      </section>
 
       <MidadAssistant />
     </div>

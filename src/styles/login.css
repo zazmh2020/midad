@@ -139,5 +139,11 @@
 :root[data-theme="dark"] .lg-demo-btn { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.12); }
 :root[data-theme="dark"] .lg-demo-btn:hover { background: rgba(255,255,255,0.08); }
 
-/* مجموعة مبدّلات (لغة + ثيم) أعلى صفحة الدخول */
-.lg-toggles { position: absolute; top: 1.4rem; inset-inline-start: 1.4rem; z-index: 2; display: flex; align-items: center; gap: 0.5rem; }
+/* مجموعة مبدّلات (لغة + ثيم) أعلى يسار صفحة الدخول */
+.lg-toggles { position: absolute; top: 1.4rem; left: 1.4rem; z-index: 2; display: flex; align-items: center; gap: 0.5rem; }
+
+/* حقوق النشر أسفل صفحة الدخول */
+.lg-copyright {
+  position: absolute; bottom: 1.2rem; inset-inline: 0; text-align: center;
+  font-size: 0.78rem; color: var(--gray-500); z-index: 2;
+}

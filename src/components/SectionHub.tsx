@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { getT } from '@/lib/i18n/server';
 
 export type HubItem = {
   title: string;
@@ -8,7 +9,7 @@ export type HubItem = {
 };
 
 /** محور قسم: عنوان + وصف + شبكة بطاقات تربط بوحدات القسم */
-export default function SectionHub({
+export default async function SectionHub({
   eyebrow, title, intro, items,
 }: {
   eyebrow: string;
@@ -16,6 +17,7 @@ export default function SectionHub({
   intro: string;
   items: HubItem[];
 }) {
+  const { t } = await getT();
   return (
     <div className="org-page">
       <div className="org-page-head">
@@ -39,7 +41,7 @@ export default function SectionHub({
           ) : (
             <div key={it.title} className="org-module is-soon">
               <strong>{it.title}</strong>
-              <span>{it.desc} · قريبًا</span>
+              <span>{it.desc} · {t('oset.soon')}</span>
             </div>
           ),
         )}
