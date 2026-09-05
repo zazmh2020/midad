@@ -2,11 +2,12 @@
 
 import { useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
-import { roleLabel } from '@/lib/permissions';
+import { useT } from '@/lib/i18n/LocaleProvider';
 
 export default function ProfileForm({
   name: initialName, email, role, avatarUrl: initialAvatar = '',
 }: { name: string; email: string; role: string; avatarUrl?: string | null }) {
+  const t = useT();
   const router = useRouter();
 
   const [name, setName] = useState(initialName);
@@ -29,10 +30,10 @@ export default function ProfileForm({
         body: JSON.stringify({ name, avatarUrl }),
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) setNameStatus({ kind: 'error', msg: data.error ?? 'تعذّر الحفظ.' });
-      else { setNameStatus({ kind: 'ok', msg: 'تم حفظ الملف الشخصي.' }); router.refresh(); }
+      if (!res.ok) setNameStatus({ kind: 'error', msg: data.error ?? t('form.saveErr') });
+      else { setNameStatus({ kind: 'ok', msg: t('pf.savedProfile') }); router.refresh(); }
     } catch {
-      setNameStatus({ kind: 'error', msg: 'تعذّر الاتصال بالخادم.' });
+      setNameStatus({ kind: 'error', msg: t('form.netErr') });
     } finally { setNameBusy(false); }
   }
 
@@ -46,10 +47,10 @@ export default function ProfileForm({
         body: JSON.stringify({ currentPassword: current, newPassword: next }),
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) setPwStatus({ kind: 'error', msg: data.error ?? 'تعذّر التغيير.' });
-      else { setPwStatus({ kind: 'ok', msg: 'تم تغيير كلمة المرور.' }); setCurrent(''); setNext(''); }
+      if (!res.ok) setPwStatus({ kind: 'error', msg: data.error ?? t('pf.pwChangeErr') });
+      else { setPwStatus({ kind: 'ok', msg: t('pf.pwChanged') }); setCurrent(''); setNext(''); }
     } catch {
-      setPwStatus({ kind: 'error', msg: 'تعذّر الاتصال بالخادم.' });
+      setPwStatus({ kind: 'error', msg: t('form.netErr') });
     } finally { setPwBusy(false); }
   }
 
@@ -67,42 +68,42 @@ export default function ProfileForm({
             )}
           </span>
           <div className="org-field" style={{ flex: 1, margin: 0 }}>
-            <label htmlFor="pf-avatar">رابط الصورة الشخصية</label>
+            <label htmlFor="pf-avatar">{t('pf.avatarUrl')}</label>
             <input id="pf-avatar" dir="ltr" placeholder="https://example.com/photo.jpg" value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} />
-            <span className="org-hint">الصق رابط صورة (يبدأ بـ http). اتركه فارغًا لإزالتها.</span>
+            <span className="org-hint">{t('pf.avatarHint')}</span>
           </div>
         </div>
         <div className="org-field">
-          <label htmlFor="pf-name">الاسم</label>
+          <label htmlFor="pf-name">{t('pf.name')}</label>
           <input id="pf-name" value={name} onChange={(e) => setName(e.target.value)} minLength={2} required />
         </div>
         <div className="org-field">
-          <label htmlFor="pf-email">البريد الإلكتروني</label>
+          <label htmlFor="pf-email">{t('pf.email')}</label>
           <input id="pf-email" dir="ltr" value={email} readOnly />
-          <span className="org-hint">يُدار من قِبل إدارة المؤسسة.</span>
+          <span className="org-hint">{t('pf.emailHint')}</span>
         </div>
-        <div className="org-kv"><span>الدور</span><strong>{roleLabel(role)}</strong></div>
+        <div className="org-kv"><span>{t('pf.role')}</span><strong>{t(`role.${role}`)}</strong></div>
         <div className="org-form-actions">
           <button type="submit" className="org-btn org-btn-primary" disabled={nameBusy || (name.trim() === initialName.trim() && avatarUrl.trim() === (initialAvatar ?? '').trim())}>
-            {nameBusy ? 'جارٍ الحفظ…' : 'حفظ التغييرات'}
+            {nameBusy ? t('form.saving') : t('pf.saveChanges')}
           </button>
         </div>
       </form>
 
-      <h2 className="org-settings-h2">كلمة المرور</h2>
+      <h2 className="org-settings-h2">{t('pf.password')}</h2>
       <form className="org-form" onSubmit={changePassword}>
         {pwStatus && <div className={`org-alert ${pwStatus.kind === 'ok' ? 'is-ok' : ''}`}>{pwStatus.msg}</div>}
         <div className="org-field">
-          <label htmlFor="pf-current">كلمة المرور الحالية</label>
+          <label htmlFor="pf-current">{t('pf.currentPw')}</label>
           <input id="pf-current" type="password" autoComplete="current-password" value={current} onChange={(e) => setCurrent(e.target.value)} required />
         </div>
         <div className="org-field">
-          <label htmlFor="pf-next">كلمة المرور الجديدة <span className="org-hint">8 محارف على الأقل</span></label>
+          <label htmlFor="pf-next">{t('pf.newPw')} <span className="org-hint">{t('pf.pwHint')}</span></label>
           <input id="pf-next" type="password" autoComplete="new-password" minLength={8} value={next} onChange={(e) => setNext(e.target.value)} required />
         </div>
         <div className="org-form-actions">
           <button type="submit" className="org-btn org-btn-primary" disabled={pwBusy || !current || next.length < 8}>
-            {pwBusy ? 'جارٍ التغيير…' : 'تغيير كلمة المرور'}
+            {pwBusy ? t('pf.changing') : t('pf.changePw')}
           </button>
         </div>
       </form>

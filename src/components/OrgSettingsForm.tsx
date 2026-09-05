@@ -2,8 +2,10 @@
 
 import { useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
+import { useT } from '@/lib/i18n/LocaleProvider';
 
 export default function OrgSettingsForm({ name: initial }: { name: string }) {
+  const t = useT();
   const router = useRouter();
   const [name, setName] = useState(initial);
   const [status, setStatus] = useState<'' | 'saved' | 'error'>('');
@@ -23,15 +25,15 @@ export default function OrgSettingsForm({ name: initial }: { name: string }) {
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         setStatus('error');
-        setMessage(data.error ?? 'تعذّر الحفظ.');
+        setMessage(data.error ?? t('form.saveErr'));
       } else {
         setStatus('saved');
-        setMessage('تم الحفظ.');
+        setMessage(t('form.saved'));
         router.refresh();
       }
     } catch {
       setStatus('error');
-      setMessage('تعذّر الاتصال بالخادم.');
+      setMessage(t('form.netErr'));
     } finally {
       setBusy(false);
     }
@@ -43,13 +45,13 @@ export default function OrgSettingsForm({ name: initial }: { name: string }) {
       {status === 'saved' && <div className="org-alert is-ok">{message}</div>}
 
       <div className="org-field">
-        <label htmlFor="orgName">اسم المؤسسة</label>
+        <label htmlFor="orgName">{t('oset.orgName')}</label>
         <input id="orgName" value={name} onChange={(e) => setName(e.target.value)} minLength={2} required />
       </div>
 
       <div className="org-form-actions">
         <button type="submit" className="org-btn org-btn-primary" disabled={busy || name.trim() === initial.trim()}>
-          {busy ? 'جارٍ الحفظ…' : 'حفظ'}
+          {busy ? t('form.saving') : t('form.save')}
         </button>
       </div>
     </form>

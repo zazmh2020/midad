@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
+import { useT } from '@/lib/i18n/LocaleProvider';
 
 /**
  * تخصيص الهوية البصرية للجهة: لون أساسي + شعار.
@@ -16,6 +17,7 @@ export default function BrandingForm({
   logoUrl?: string | null;
   apiBase?: string;
 }) {
+  const t = useT();
   const router = useRouter();
   const [color, setColor] = useState((initialColor ?? '') || '#6B57A0');
   const [enabled, setEnabled] = useState(!!initialColor);
@@ -34,10 +36,10 @@ export default function BrandingForm({
         body: JSON.stringify({ brandColor: enabled ? color : '', logoUrl }),
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) setStatus({ kind: 'error', msg: data.error ?? 'تعذّر الحفظ.' });
-      else { setStatus({ kind: 'ok', msg: 'تم حفظ الهوية البصرية.' }); router.refresh(); }
+      if (!res.ok) setStatus({ kind: 'error', msg: data.error ?? t('form.saveErr') });
+      else { setStatus({ kind: 'ok', msg: t('brand.saved') }); router.refresh(); }
     } catch {
-      setStatus({ kind: 'error', msg: 'تعذّر الاتصال بالخادم.' });
+      setStatus({ kind: 'error', msg: t('form.netErr') });
     } finally { setBusy(false); }
   }
 
@@ -56,22 +58,22 @@ export default function BrandingForm({
           ) : (
             <span className="brand-preview-mark">م</span>
           )}
-          <span className="brand-preview-name">هيئة الجهة</span>
+          <span className="brand-preview-name">{t('brand.previewName')}</span>
         </div>
         <div className="brand-preview-body">
-          <span className="brand-preview-btn">زر أساسي</span>
-          <span className="brand-preview-chip">وسم</span>
+          <span className="brand-preview-btn">{t('brand.previewBtn')}</span>
+          <span className="brand-preview-chip">{t('brand.previewChip')}</span>
         </div>
       </div>
 
       <label className="brand-toggle">
         <input type="checkbox" checked={enabled} onChange={(e) => setEnabled(e.target.checked)} />
-        استخدام لون هوية مخصّص للجهة
+        {t('brand.useCustom')}
       </label>
 
       {enabled && (
         <div className="org-field">
-          <label htmlFor="bc">اللون الأساسي</label>
+          <label htmlFor="bc">{t('brand.primaryColor')}</label>
           <div className="brand-color-row">
             <input id="bc" type="color" value={color} onChange={(e) => setColor(e.target.value)} />
             <input type="text" dir="ltr" value={color} onChange={(e) => setColor(e.target.value)} placeholder="#6B57A0" />
@@ -80,14 +82,14 @@ export default function BrandingForm({
       )}
 
       <div className="org-field">
-        <label htmlFor="lg">رابط الشعار</label>
+        <label htmlFor="lg">{t('brand.logo')}</label>
         <input id="lg" dir="ltr" value={logoUrl} onChange={(e) => setLogoUrl(e.target.value)} placeholder="https://example.com/logo.png" />
-        <span className="org-hint">يظهر في شريط الجهة الجانبي. اتركه فارغًا لاستخدام شعار مِداد.</span>
+        <span className="org-hint">{t('brand.logoHint2')}</span>
       </div>
 
       <div className="org-form-actions">
         <button type="submit" className="org-btn org-btn-primary" disabled={busy}>
-          {busy ? 'جارٍ الحفظ…' : 'حفظ الهوية البصرية'}
+          {busy ? t('form.saving') : t('brand.save')}
         </button>
       </div>
     </form>
