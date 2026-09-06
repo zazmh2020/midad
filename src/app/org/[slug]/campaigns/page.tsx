@@ -12,8 +12,8 @@ export default async function OrgCampaignsPage({ params }: { params: Promise<{ s
   const { user, org } = await requireOrgAccess(slug);
   const { t } = await getT();
 
-  if (!canViewCampaigns(user.role)) redirect(`/org/${org.slug}`);
-  const canManage = canManageCampaigns(user.role);
+  if (!canViewCampaigns(user)) redirect(`/org/${org.slug}`);
+  const canManage = canManageCampaigns(user);
 
   const [campaigns, departments] = await Promise.all([
     prisma.campaign.findMany({

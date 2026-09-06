@@ -7,7 +7,7 @@ import { canViewRequests, isRequestType } from '@/lib/permissions';
 /** تقديم طلب جديد — أي عضو في المؤسسة. */
 export async function POST(request: Request) {
   const actor = await getOrgActor();
-  if (!actor || !canViewRequests(actor.role)) {
+  if (!actor || !canViewRequests(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
 

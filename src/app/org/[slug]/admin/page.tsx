@@ -12,7 +12,7 @@ export default async function AdminHub({ params }: { params: Promise<{ slug: str
   const { user, org } = await requireOrgAccess(slug);
   const { t } = await getT();
 
-  if (!canManageUsers(user.role)) redirect(`/org/${org.slug}`);
+  if (!canManageUsers(user)) redirect(`/org/${org.slug}`);
   const base = `/org/${org.slug}`;
 
   const userCount = await prisma.user.count({ where: { organizationId: org.id } });

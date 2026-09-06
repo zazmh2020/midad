@@ -6,7 +6,7 @@ import { canManageEducation } from '@/lib/permissions';
 /** إضافة مشارك لمسابقة. */
 export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const actor = await getOrgActor();
-  if (!actor || !canManageEducation(actor.role)) return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
+  if (!actor || !canManageEducation(actor)) return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   const { id } = await params;
   const comp = await prisma.competition.findFirst({ where: { id, organizationId: actor.organization.id }, select: { id: true } });
   if (!comp) return NextResponse.json({ error: 'المسابقة غير موجودة.' }, { status: 404 });

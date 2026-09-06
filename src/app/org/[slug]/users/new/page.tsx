@@ -16,7 +16,7 @@ export default async function NewOrgUserPage({
   const { user, org } = await requireOrgAccess(slug);
   const { t } = await getT();
 
-  if (!canManageUsers(user.role)) redirect(`/org/${org.slug}`);
+  if (!canManageUsers(user)) redirect(`/org/${org.slug}`);
 
   return (
     <div className="org-page org-page-narrow">

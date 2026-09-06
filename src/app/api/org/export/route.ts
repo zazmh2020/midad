@@ -20,7 +20,7 @@ export async function GET(request: Request) {
   const type = new URL(request.url).searchParams.get('type') ?? '';
 
   if (type === 'students') {
-    if (!canViewEducation(actor.role)) return new Response('غير مصرّح.', { status: 403 });
+    if (!canViewEducation(actor)) return new Response('غير مصرّح.', { status: 403 });
     const students = await prisma.student.findMany({
       where: { organizationId: orgId }, orderBy: { name: 'asc' },
       select: { name: true, phone: true, guardianName: true, guardianPhone: true, guardianEmail: true, status: true, halaqa: { select: { name: true } } },
@@ -31,7 +31,7 @@ export async function GET(request: Request) {
   }
 
   if (type === 'donations') {
-    if (!canViewDonations(actor.role)) return new Response('غير مصرّح.', { status: 403 });
+    if (!canViewDonations(actor)) return new Response('غير مصرّح.', { status: 403 });
     const donations = await prisma.donation.findMany({
       where: { organizationId: orgId }, orderBy: { donatedAt: 'desc' },
       select: { donorName: true, amount: true, method: true, status: true, donatedAt: true, campaign: { select: { name: true } } },

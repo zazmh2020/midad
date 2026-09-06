@@ -5,7 +5,7 @@ import { canManageEducation } from '@/lib/permissions';
 
 export async function DELETE(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const actor = await getOrgActor();
-  if (!actor || !canManageEducation(actor.role)) return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
+  if (!actor || !canManageEducation(actor)) return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   const { id } = await params;
   const target = await prisma.memorizationEntry.findFirst({ where: { id, organizationId: actor.organization.id } });
   if (!target) return NextResponse.json({ error: 'السجل غير موجود.' }, { status: 404 });

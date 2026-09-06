@@ -6,7 +6,7 @@ import { canManageKnowledge } from '@/lib/permissions';
 /** إنشاء مقالة في قاعدة المعرفة */
 export async function POST(request: Request) {
   const actor = await getOrgActor();
-  if (!actor || !canManageKnowledge(actor.role)) {
+  if (!actor || !canManageKnowledge(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
 

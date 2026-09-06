@@ -16,8 +16,8 @@ export default async function OrgStructurePage({
   const { user, org } = await requireOrgAccess(slug);
   const { t } = await getT();
 
-  if (!canViewStructure(user.role)) redirect(`/org/${org.slug}`);
-  const canManage = canManageStructure(user.role);
+  if (!canViewStructure(user)) redirect(`/org/${org.slug}`);
+  const canManage = canManageStructure(user);
 
   const departments = await prisma.department.findMany({
     where: { organizationId: org.id },

@@ -7,7 +7,7 @@ import { canManageEducation, isAttendanceStatus } from '@/lib/permissions';
 /** يقرأ حضور حلقة في تاريخ محدّد (لتعبئة الكشف) */
 export async function GET(request: Request) {
   const actor = await getOrgActor();
-  if (!actor || !canManageEducation(actor.role)) return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
+  if (!actor || !canManageEducation(actor)) return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   const orgId = actor.organization.id;
 
   const url = new URL(request.url);
@@ -29,7 +29,7 @@ export async function GET(request: Request) {
 /** يحفظ حضور حلقة في تاريخ محدّد — يحدّث الموجود ويضيف الجديد */
 export async function POST(request: Request) {
   const actor = await getOrgActor();
-  if (!actor || !canManageEducation(actor.role)) return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
+  if (!actor || !canManageEducation(actor)) return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   const orgId = actor.organization.id;
 
   const body = await request.json().catch(() => null);

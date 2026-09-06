@@ -10,7 +10,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const actor = await getOrgActor();
-  if (!actor || !canManageUsers(actor.role)) {
+  if (!actor || !canManageUsers(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
 
@@ -35,7 +35,20 @@ export async function PATCH(
     );
   }
 
-  const data: { role?: Role; isActive?: boolean; departmentId?: string | null } = {};
+  const data: { role?: Role; isActive?: boolean; departmentId?: string | null; customRoleId?: string | null } = {};
+
+  if (body.customRoleId !== undefined) {
+    const customRoleId = body.customRoleId ? String(body.customRoleId) : null;
+    if (customRoleId) {
+      // عزل: الدور المخصّص يجب أن يكون ضمن نفس المؤسسة
+      const role = await prisma.customRole.findFirst({
+        where: { id: customRoleId, organizationId: actor.organization.id },
+        select: { id: true },
+      });
+      if (!role) return NextResponse.json({ error: 'الدور المخصّص غير موجود.' }, { status: 400 });
+    }
+    data.customRoleId = customRoleId;
+  }
 
   if (body.role !== undefined) {
     const nextRole = String(body.role);

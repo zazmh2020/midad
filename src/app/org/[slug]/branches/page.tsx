@@ -11,7 +11,7 @@ export default async function BranchesPage({ params }: { params: Promise<{ slug:
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
   const { t } = await getT();
-  if (!canViewBranches(user.role)) redirect(`/org/${org.slug}`);
+  if (!canViewBranches(user)) redirect(`/org/${org.slug}`);
 
   const branches = await prisma.branch.findMany({
     where: { organizationId: org.id },
@@ -28,7 +28,7 @@ export default async function BranchesPage({ params }: { params: Promise<{ slug:
           <p>{t('branch.pageSub', { n: branches.length, org: org.name })}</p>
         </div>
       </div>
-      <BranchesView branches={branches} canManage={canManageBranches(user.role)} />
+      <BranchesView branches={branches} canManage={canManageBranches(user)} />
     </div>
   );
 }

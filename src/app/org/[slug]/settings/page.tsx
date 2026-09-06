@@ -27,7 +27,7 @@ export default async function OrgSettingsPage({
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
   const { t, locale } = await getT();
-  const isAdmin = canManageSettings(user.role);
+  const isAdmin = canManageSettings(user);
   const plan = PLAN_BY_ID[org.plan];
   const planName = plan ? (locale === 'en' ? plan.en : plan.name) : org.plan;
 

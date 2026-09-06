@@ -25,7 +25,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   if (decision !== 'APPROVED' && decision !== 'REJECTED') {
     return NextResponse.json({ error: 'القرار غير صالح.' }, { status: 400 });
   }
-  if (!canDecideApprovals(actor.role)) {
+  if (!canDecideApprovals(actor)) {
     return NextResponse.json({ error: 'اعتماد الطلبات مقصور على مدير المؤسسة.' }, { status: 403 });
   }
 
@@ -44,7 +44,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 /** حذف طلب اعتماد — مقدّم الطلب (وهو قيد الاعتماد) أو مدير المؤسسة */
 export async function DELETE(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const actor = await getOrgActor();
-  if (!actor || !canViewApprovals(actor.role)) {
+  if (!actor || !canViewApprovals(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
 
@@ -53,7 +53,7 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
   if (!target) return NextResponse.json({ error: 'الطلب غير موجود.' }, { status: 404 });
 
   const isOwnerPending = target.requestedById === actor.id && target.status === 'PENDING';
-  if (!canDecideApprovals(actor.role) && !isOwnerPending) {
+  if (!canDecideApprovals(actor) && !isOwnerPending) {
     return NextResponse.json({ error: 'لا يمكنك حذف هذا الطلب.' }, { status: 403 });
   }
 

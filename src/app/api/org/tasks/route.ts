@@ -14,7 +14,7 @@ function parseDate(value: unknown): Date | null | undefined {
 /** إنشاء مهمة داخل مؤسسة الفاعل */
 export async function POST(request: Request) {
   const actor = await getOrgActor();
-  if (!actor || !canManageTasks(actor.role)) {
+  if (!actor || !canManageTasks(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
 

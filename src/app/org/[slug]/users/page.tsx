@@ -17,10 +17,10 @@ export default async function OrgUsersPage({
   const { user, org } = await requireOrgAccess(slug);
   const { t } = await getT();
 
-  if (!canViewUsers(user.role)) redirect(`/org/${org.slug}`);
-  const canManage = canManageUsers(user.role);
+  if (!canViewUsers(user)) redirect(`/org/${org.slug}`);
+  const canManage = canManageUsers(user);
 
-  const [users, departments] = await Promise.all([
+  const [users, departments, customRoles] = await Promise.all([
     prisma.user.findMany({
       where: { organizationId: org.id },
       orderBy: [{ isActive: 'desc' }, { createdAt: 'asc' }],
@@ -32,9 +32,15 @@ export default async function OrgUsersPage({
         isActive: true,
         lastLoginAt: true,
         departmentId: true,
+        customRoleId: true,
       },
     }),
     prisma.department.findMany({
+      where: { organizationId: org.id },
+      orderBy: { name: 'asc' },
+      select: { id: true, name: true },
+    }),
+    prisma.customRole.findMany({
       where: { organizationId: org.id },
       orderBy: { name: 'asc' },
       select: { id: true, name: true },
@@ -62,6 +68,7 @@ export default async function OrgUsersPage({
           lastLoginAt: u.lastLoginAt ? u.lastLoginAt.toISOString() : null,
         }))}
         departments={departments}
+        customRoles={customRoles}
         currentUserId={user.id}
         canManage={canManage}
       />

@@ -8,7 +8,7 @@ const STATUSES = ['UPCOMING', 'OPEN', 'CLOSED'];
 /** إنشاء مسابقة */
 export async function POST(request: Request) {
   const actor = await getOrgActor();
-  if (!actor || !canViewProjects(actor.role)) {
+  if (!actor || !canViewProjects(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
   const body = await request.json().catch(() => null);
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
 /** حذف مسابقة */
 export async function DELETE(request: Request) {
   const actor = await getOrgActor();
-  if (!actor || !canViewProjects(actor.role)) {
+  if (!actor || !canViewProjects(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
   const id = new URL(request.url).searchParams.get('id');

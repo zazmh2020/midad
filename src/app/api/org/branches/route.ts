@@ -6,7 +6,7 @@ import { canManageBranches } from '@/lib/permissions';
 /** إنشاء فرع داخل مؤسسة الفاعل */
 export async function POST(request: Request) {
   const actor = await getOrgActor();
-  if (!actor || !canManageBranches(actor.role)) {
+  if (!actor || !canManageBranches(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
 

@@ -15,7 +15,7 @@ export default async function BillingPage({
   const sp = await searchParams;
   const { user, org } = await requireOrgAccess(slug);
   const { t, locale } = await getT();
-  if (!canManageSettings(user.role)) redirect(`/org/${org.slug}`);
+  if (!canManageSettings(user)) redirect(`/org/${org.slug}`);
 
   const plans = PLANS.map((p) => ({
     id: p.id,

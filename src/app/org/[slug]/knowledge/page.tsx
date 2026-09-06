@@ -12,8 +12,8 @@ export default async function OrgKnowledgePage({ params }: { params: Promise<{ s
   const { user, org } = await requireOrgAccess(slug);
   const { t } = await getT();
 
-  if (!canViewKnowledge(user.role)) redirect(`/org/${org.slug}`);
-  const canManage = canManageKnowledge(user.role);
+  if (!canViewKnowledge(user)) redirect(`/org/${org.slug}`);
+  const canManage = canManageKnowledge(user);
 
   // غير المديرين يرون المنشور فقط
   const articles = await prisma.knowledgeArticle.findMany({

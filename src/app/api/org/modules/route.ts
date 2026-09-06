@@ -8,7 +8,7 @@ import { logAudit } from '@/lib/audit';
 /** تعيين الوحدات المعطّلة للمؤسسة (مدير المؤسسة فقط). */
 export async function PATCH(request: Request) {
   const actor = await getOrgActor();
-  if (!actor || !canManageSettings(actor.role)) {
+  if (!actor || !canManageSettings(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
 

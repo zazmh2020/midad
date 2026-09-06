@@ -11,7 +11,7 @@ export default async function AssessmentPage({ params }: { params: Promise<{ slu
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
   const { t } = await getT();
-  if (!canViewEducation(user.role)) redirect(`/org/${org.slug}`);
+  if (!canViewEducation(user)) redirect(`/org/${org.slug}`);
 
   const [rows, students] = await Promise.all([
     prisma.assessment.findMany({
@@ -37,7 +37,7 @@ export default async function AssessmentPage({ params }: { params: Promise<{ slu
       </div>
       <AssessmentsView
         students={students}
-        canManage={canManageEducation(user.role)}
+        canManage={canManageEducation(user)}
         assessments={rows.map((a) => ({
           id: a.id, title: a.title, kind: a.kind, score: a.score, maxScore: a.maxScore,
           result: a.result, notes: a.notes, studentName: a.student?.name ?? '—', date: a.date.toISOString().slice(0, 10),

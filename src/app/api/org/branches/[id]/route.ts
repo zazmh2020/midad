@@ -11,7 +11,7 @@ async function loadOwn(actorOrgId: string, id: string) {
 /** تعديل فرع */
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const actor = await getOrgActor();
-  if (!actor || !canManageBranches(actor.role)) {
+  if (!actor || !canManageBranches(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
 
@@ -44,7 +44,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 /** حذف فرع */
 export async function DELETE(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const actor = await getOrgActor();
-  if (!actor || !canManageBranches(actor.role)) {
+  if (!actor || !canManageBranches(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
 

@@ -11,7 +11,7 @@ export default async function HalaqatPage({ params }: { params: Promise<{ slug: 
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
   const { t } = await getT();
-  if (!canViewEducation(user.role)) redirect(`/org/${org.slug}`);
+  if (!canViewEducation(user)) redirect(`/org/${org.slug}`);
 
   const [halaqat, teachers] = await Promise.all([
     prisma.halaqa.findMany({

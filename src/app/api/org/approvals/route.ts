@@ -14,7 +14,7 @@ function parseAmount(value: unknown): number | null | undefined {
 /** تقديم طلب اعتماد جديد — أي عضو في المؤسسة */
 export async function POST(request: Request) {
   const actor = await getOrgActor();
-  if (!actor || !canViewApprovals(actor.role)) {
+  if (!actor || !canViewApprovals(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
 

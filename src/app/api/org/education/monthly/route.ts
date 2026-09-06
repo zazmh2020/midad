@@ -22,7 +22,7 @@ function strOrNull(v: unknown): string | null {
 /** إنشاء/تحديث سجل يوم واحد لطالب (upsert بمفتاح studentId+date). */
 export async function POST(request: Request) {
   const actor = await getOrgActor();
-  if (!actor || !canManageEducation(actor.role)) {
+  if (!actor || !canManageEducation(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
 

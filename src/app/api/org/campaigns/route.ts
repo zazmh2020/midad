@@ -19,7 +19,7 @@ function parseDate(value: unknown): Date | null | undefined {
 /** إنشاء حملة داخل مؤسسة الفاعل */
 export async function POST(request: Request) {
   const actor = await getOrgActor();
-  if (!actor || !canManageCampaigns(actor.role)) {
+  if (!actor || !canManageCampaigns(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
 

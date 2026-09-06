@@ -12,7 +12,7 @@ async function own(orgId: string, id: string) {
 /** اعتماد/رفض طلب — مدير المؤسسة فقط. */
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const actor = await getOrgActor();
-  if (!actor || !canManageRequests(actor.role)) {
+  if (!actor || !canManageRequests(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
   const { id } = await params;
@@ -41,7 +41,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 /** حذف طلب — مقدّمه (وهو قيد المراجعة) أو مدير المؤسسة. */
 export async function DELETE(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const actor = await getOrgActor();
-  if (!actor || !canViewRequests(actor.role)) {
+  if (!actor || !canViewRequests(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
   const { id } = await params;
@@ -49,7 +49,7 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
   if (!target) return NextResponse.json({ error: 'الطلب غير موجود.' }, { status: 404 });
 
   const isOwnerPending = target.requesterId === actor.id && target.status === 'PENDING';
-  if (!isOwnerPending && !canManageRequests(actor.role)) {
+  if (!isOwnerPending && !canManageRequests(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
 

@@ -6,7 +6,7 @@ import { canManageSettings } from '@/lib/permissions';
 /** تعديل بيانات المؤسسة العامة (الاسم) — على مؤسسة الفاعل حصراً */
 export async function PATCH(request: Request) {
   const actor = await getOrgActor();
-  if (!actor || !canManageSettings(actor.role)) {
+  if (!actor || !canManageSettings(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
 

@@ -5,7 +5,7 @@ import { canManageEducation } from '@/lib/permissions';
 
 export async function POST(request: Request) {
   const actor = await getOrgActor();
-  if (!actor || !canManageEducation(actor.role)) {
+  if (!actor || !canManageEducation(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
 

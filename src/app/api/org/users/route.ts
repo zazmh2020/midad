@@ -10,7 +10,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 /** إنشاء مستخدم داخل مؤسسة الفاعل — العزل مفروض بربط المستخدم بمؤسسة الفاعل حصراً */
 export async function POST(request: Request) {
   const actor = await getOrgActor();
-  if (!actor || !canManageUsers(actor.role)) {
+  if (!actor || !canManageUsers(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
 

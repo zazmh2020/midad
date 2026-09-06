@@ -7,7 +7,7 @@ import { isS3Configured, presignDownload } from '@/lib/s3';
 /** يعيد التوجيه إلى رابط تنزيل موقّع مؤقت — بعد التحقق من ملكية المؤسسة */
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const actor = await getOrgActor();
-  if (!actor || !canViewDocuments(actor.role)) {
+  if (!actor || !canViewDocuments(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
 

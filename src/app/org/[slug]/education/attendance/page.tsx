@@ -11,7 +11,7 @@ export default async function AttendancePage({ params }: { params: Promise<{ slu
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
   const { t } = await getT();
-  if (!canViewEducation(user.role)) redirect(`/org/${org.slug}`);
+  if (!canViewEducation(user)) redirect(`/org/${org.slug}`);
 
   const halaqat = await prisma.halaqa.findMany({
     where: { organizationId: org.id },

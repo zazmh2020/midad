@@ -12,8 +12,8 @@ export default async function OrgBeneficiariesPage({ params }: { params: Promise
   const { user, org } = await requireOrgAccess(slug);
   const { t } = await getT();
 
-  if (!canViewBeneficiaries(user.role)) redirect(`/org/${org.slug}`);
-  const canManage = canManageBeneficiaries(user.role);
+  if (!canViewBeneficiaries(user)) redirect(`/org/${org.slug}`);
+  const canManage = canManageBeneficiaries(user);
 
   const [beneficiaries, departments, programs] = await Promise.all([
     prisma.beneficiary.findMany({

@@ -14,7 +14,7 @@ function parseDate(value: unknown): Date | null | undefined {
 /** إنشاء مشروع داخل مؤسسة الفاعل */
 export async function POST(request: Request) {
   const actor = await getOrgActor();
-  if (!actor || !canManageProjects(actor.role)) {
+  if (!actor || !canManageProjects(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
 

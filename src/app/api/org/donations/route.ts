@@ -13,7 +13,7 @@ function parseDate(value: unknown): Date | undefined {
 /** تسجيل تبرع داخل مؤسسة الفاعل */
 export async function POST(request: Request) {
   const actor = await getOrgActor();
-  if (!actor || !canManageDonations(actor.role)) {
+  if (!actor || !canManageDonations(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
   const orgId = actor.organization.id;

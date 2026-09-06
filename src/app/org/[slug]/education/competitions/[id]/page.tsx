@@ -12,7 +12,7 @@ export default async function CompetitionDetailPage({ params }: { params: Promis
   const { slug, id } = await params;
   const { user, org } = await requireOrgAccess(slug);
   const { t } = await getT();
-  if (!canViewEducation(user.role)) redirect(`/org/${org.slug}`);
+  if (!canViewEducation(user)) redirect(`/org/${org.slug}`);
   const base = `/org/${org.slug}`;
 
   const comp = await prisma.competition.findFirst({
@@ -30,7 +30,7 @@ export default async function CompetitionDetailPage({ params }: { params: Promis
           <p>{comp.level ? `${comp.level} · ` : ''}{t(`status.competition.${comp.status}`)}</p>
         </div>
       </div>
-      <ParticipantsView competitionId={comp.id} canManage={canManageEducation(user.role)} participants={comp.entrants} />
+      <ParticipantsView competitionId={comp.id} canManage={canManageEducation(user)} participants={comp.entrants} />
     </div>
   );
 }

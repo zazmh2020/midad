@@ -10,7 +10,7 @@ async function own(orgId: string, pid: string) {
 /** تعديل درجة/ترتيب مشارك. */
 export async function PATCH(request: Request, { params }: { params: Promise<{ pid: string }> }) {
   const actor = await getOrgActor();
-  if (!actor || !canManageEducation(actor.role)) return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
+  if (!actor || !canManageEducation(actor)) return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   const { pid } = await params;
   const target = await own(actor.organization.id, pid);
   if (!target) return NextResponse.json({ error: 'المشارك غير موجود.' }, { status: 404 });
@@ -30,7 +30,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ pi
 
 export async function DELETE(_request: Request, { params }: { params: Promise<{ pid: string }> }) {
   const actor = await getOrgActor();
-  if (!actor || !canManageEducation(actor.role)) return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
+  if (!actor || !canManageEducation(actor)) return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   const { pid } = await params;
   const target = await own(actor.organization.id, pid);
   if (!target) return NextResponse.json({ error: 'المشارك غير موجود.' }, { status: 404 });

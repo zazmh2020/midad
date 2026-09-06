@@ -24,7 +24,8 @@ export default async function OrgLayout({
 }) {
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
-  const r = user.role;
+  // الفاعل بقدراته الفعّالة (الدور المخصّص إن وُجد) — لتعكس القائمة صلاحياته
+  const r = user;
   const base = `/org/${org.slug}`;
   const inbox = await getOrgInbox(org.id);
   const { t } = await getT();

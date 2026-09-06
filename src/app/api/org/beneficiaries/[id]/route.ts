@@ -10,7 +10,7 @@ async function loadOwn(orgId: string, id: string) {
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const actor = await getOrgActor();
-  if (!actor || !canManageBeneficiaries(actor.role)) return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
+  if (!actor || !canManageBeneficiaries(actor)) return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
 
   const orgId = actor.organization.id;
   const { id } = await params;
@@ -68,7 +68,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
 export async function DELETE(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const actor = await getOrgActor();
-  if (!actor || !canManageBeneficiaries(actor.role)) return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
+  if (!actor || !canManageBeneficiaries(actor)) return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
 
   const { id } = await params;
   const target = await loadOwn(actor.organization.id, id);

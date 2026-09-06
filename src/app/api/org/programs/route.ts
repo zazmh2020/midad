@@ -15,7 +15,7 @@ function parseCapacity(value: unknown): number | null | undefined {
 /** إنشاء برنامج داخل مؤسسة الفاعل */
 export async function POST(request: Request) {
   const actor = await getOrgActor();
-  if (!actor || !canManagePrograms(actor.role)) {
+  if (!actor || !canManagePrograms(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
 

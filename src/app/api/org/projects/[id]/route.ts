@@ -21,7 +21,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const actor = await getOrgActor();
-  if (!actor || !canManageProjects(actor.role)) {
+  if (!actor || !canManageProjects(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
 
@@ -113,7 +113,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const actor = await getOrgActor();
-  if (!actor || !canManageProjects(actor.role)) {
+  if (!actor || !canManageProjects(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
 

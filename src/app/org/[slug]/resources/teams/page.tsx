@@ -11,7 +11,7 @@ export default async function TeamsPage({ params }: { params: Promise<{ slug: st
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
   const { t } = await getT();
-  if (!canViewHR(user.role)) redirect(`/org/${org.slug}`);
+  if (!canViewHR(user)) redirect(`/org/${org.slug}`);
 
   const [teams, departments] = await Promise.all([
     prisma.team.findMany({

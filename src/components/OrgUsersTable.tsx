@@ -13,18 +13,22 @@ type Row = {
   isActive: boolean;
   lastLoginAt: string | null;
   departmentId: string | null;
+  customRoleId: string | null;
 };
 
 type Department = { id: string; name: string };
+type Ref = { id: string; name: string };
 
 export default function OrgUsersTable({
   users,
   departments,
+  customRoles,
   currentUserId,
   canManage,
 }: {
   users: Row[];
   departments: Department[];
+  customRoles: Ref[];
   currentUserId: string;
   canManage: boolean;
 }) {
@@ -71,6 +75,7 @@ export default function OrgUsersTable({
             <tr>
               <th>{t('ousers.th.user')}</th>
               <th>{t('ousers.th.role')}</th>
+              {customRoles.length > 0 && <th>{t('ousers.th.customRole')}</th>}
               <th>{t('ousers.th.unit')}</th>
               <th>{t('ousers.th.lastLogin')}</th>
               <th>{t('ousers.th.status')}</th>
@@ -104,6 +109,25 @@ export default function OrgUsersTable({
                       t(`role.${u.role}`)
                     )}
                   </td>
+                  {customRoles.length > 0 && (
+                    <td>
+                      {canManage ? (
+                        <select
+                          className="org-inline-select"
+                          value={u.customRoleId ?? ''}
+                          disabled={busy}
+                          onChange={(e) => patch(u.id, { customRoleId: e.target.value || null })}
+                        >
+                          <option value="">{t('ousers.baseRole')}</option>
+                          {customRoles.map((r) => (
+                            <option key={r.id} value={r.id}>{r.name}</option>
+                          ))}
+                        </select>
+                      ) : (
+                        customRoles.find((r) => r.id === u.customRoleId)?.name ?? '—'
+                      )}
+                    </td>
+                  )}
                   <td>
                     {canManage && departments.length > 0 ? (
                       <select

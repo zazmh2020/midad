@@ -9,7 +9,7 @@ async function own(orgId: string, id: string) {
 
 export async function DELETE(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const actor = await getOrgActor();
-  if (!actor || !canManageEvents(actor.role)) return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
+  if (!actor || !canManageEvents(actor)) return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   const { id } = await params;
   const target = await own(actor.organization.id, id);
   if (!target) return NextResponse.json({ error: 'الفعالية غير موجودة.' }, { status: 404 });

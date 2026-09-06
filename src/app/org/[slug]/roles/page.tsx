@@ -1,5 +1,7 @@
 import { redirect } from 'next/navigation';
 import { requireOrgAccess } from '@/lib/org';
+import { prisma } from '@/lib/prisma';
+import CustomRolesView from '@/components/CustomRolesView';
 import { getT } from '@/lib/i18n/server';
 import {
   canManageUsers, canManageSettings,
@@ -51,7 +53,13 @@ export default async function RolesPage({ params }: { params: Promise<{ slug: st
   const { t } = await getT();
 
   // تُعرض لمن يدير المستخدمين (مدير المؤسسة)
-  if (!canManageUsers(user.role)) redirect(`/org/${org.slug}`);
+  if (!canManageUsers(user)) redirect(`/org/${org.slug}`);
+
+  const customRoles = await prisma.customRole.findMany({
+    where: { organizationId: org.id },
+    orderBy: { createdAt: 'asc' },
+    select: { id: true, name: true, permissions: true, _count: { select: { members: true } } },
+  });
 
   return (
     <div className="org-page">
@@ -90,6 +98,10 @@ export default async function RolesPage({ params }: { params: Promise<{ slug: st
       </div>
 
       <p className="org-matrix-legend">{t('roles.legend')}</p>
+
+      <CustomRolesView
+        roles={customRoles.map((r) => ({ id: r.id, name: r.name, permissions: r.permissions, memberCount: r._count.members }))}
+      />
     </div>
   );
 }

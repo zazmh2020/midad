@@ -13,7 +13,7 @@ export default async function StudentProfilePage({ params }: { params: Promise<{
   const { slug, id } = await params;
   const { user, org } = await requireOrgAccess(slug);
   const { t, locale } = await getT();
-  if (!canViewEducation(user.role)) redirect(`/org/${org.slug}`);
+  if (!canViewEducation(user)) redirect(`/org/${org.slug}`);
   const base = `/org/${org.slug}`;
   const dateFmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar-u-nu-latn', { month: 'short', day: 'numeric' });
 

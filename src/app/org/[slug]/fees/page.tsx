@@ -11,7 +11,7 @@ export default async function OrgFeesPage({ params }: { params: Promise<{ slug: 
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
   const { t } = await getT();
-  if (!canViewEducation(user.role)) redirect(`/org/${org.slug}`);
+  if (!canViewEducation(user)) redirect(`/org/${org.slug}`);
 
   const [fees, students] = await Promise.all([
     prisma.studentFee.findMany({
@@ -31,7 +31,7 @@ export default async function OrgFeesPage({ params }: { params: Promise<{ slug: 
         </div>
       </div>
       <FeesView
-        canManage={canManageFees(user.role)}
+        canManage={canManageFees(user)}
         students={students}
         fees={fees.map((f) => ({ id: f.id, title: f.title, amount: f.amount, dueDate: f.dueDate ? f.dueDate.toISOString().slice(0, 10) : null, paid: f.paid, studentName: f.student.name }))}
       />

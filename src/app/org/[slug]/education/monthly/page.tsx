@@ -22,8 +22,8 @@ export default async function MonthlySheetPage({
   const { user, org } = await requireOrgAccess(slug);
   const { t } = await getT();
 
-  if (!canViewEducation(user.role)) redirect(`/org/${org.slug}`);
-  const canManage = canManageEducation(user.role);
+  if (!canViewEducation(user)) redirect(`/org/${org.slug}`);
+  const canManage = canManageEducation(user);
 
   const students = await prisma.student.findMany({
     where: { organizationId: org.id },

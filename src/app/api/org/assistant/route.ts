@@ -10,7 +10,7 @@ export const maxDuration = 60;
 /** يجيب عن سؤال ضمن حدود ما يحقّ للمستخدم رؤيته في مؤسسته */
 export async function POST(request: Request) {
   const actor = await getOrgActor();
-  if (!actor || !canUseAssistant(actor.role)) {
+  if (!actor || !canUseAssistant(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
   if (!isAssistantConfigured()) {

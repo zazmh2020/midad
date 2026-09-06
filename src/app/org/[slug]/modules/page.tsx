@@ -11,7 +11,7 @@ export default async function ModulesPage({ params }: { params: Promise<{ slug: 
   const { user, org } = await requireOrgAccess(slug);
   const { t } = await getT();
 
-  if (!canManageSettings(user.role)) redirect(`/org/${org.slug}`);
+  if (!canManageSettings(user)) redirect(`/org/${org.slug}`);
 
   return (
     <div className="org-page">

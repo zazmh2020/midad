@@ -10,7 +10,7 @@ export default async function MyHalaqatPage({ params }: { params: Promise<{ slug
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
   const { t } = await getT();
-  if (!canViewEducation(user.role)) redirect(`/org/${org.slug}`);
+  if (!canViewEducation(user)) redirect(`/org/${org.slug}`);
 
   const teacher = await prisma.teacher.findFirst({
     where: { userId: user.id, organizationId: org.id },

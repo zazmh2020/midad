@@ -11,7 +11,7 @@ export default async function OrgEventsPage({ params }: { params: Promise<{ slug
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
   const { t } = await getT();
-  if (!canViewEvents(user.role)) redirect(`/org/${org.slug}`);
+  if (!canViewEvents(user)) redirect(`/org/${org.slug}`);
 
   const events = await prisma.event.findMany({
     where: { organizationId: org.id },
@@ -29,7 +29,7 @@ export default async function OrgEventsPage({ params }: { params: Promise<{ slug
         </div>
       </div>
       <EventsView
-        canManage={canManageEvents(user.role)}
+        canManage={canManageEvents(user)}
         events={events.map((e) => ({
           id: e.id, title: e.title, details: e.details, location: e.location,
           startAt: e.startAt.toISOString(), endAt: e.endAt ? e.endAt.toISOString() : null,

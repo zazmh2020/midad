@@ -10,7 +10,7 @@ export default async function IdentityHub({ params }: { params: Promise<{ slug: 
   const { user, org } = await requireOrgAccess(slug);
   const { t } = await getT();
   const base = `/org/${org.slug}`;
-  const canCards = canViewHR(user.role);
+  const canCards = canViewHR(user);
 
   const items: HubItem[] = [
     { title: t('hub.id.cards'), desc: t('hub.id.cards.d'), ...(canCards ? { href: `${base}/identity/cards` } : {}) },

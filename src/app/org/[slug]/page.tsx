@@ -81,16 +81,16 @@ export default async function OrgDashboard({
     prisma.program.findFirst({ where: w, orderBy: { createdAt: 'desc' }, select: { name: true, createdAt: true } }),
   ]);
 
-  const canUsers = canViewUsers(user.role);
-  const canManage = canManageUsers(user.role);
-  const canProjects = canViewProjects(user.role);
-  const canStructure = canViewStructure(user.role);
-  const canPrograms = canViewPrograms(user.role);
-  const canCampaigns = canViewCampaigns(user.role);
-  const canBeneficiaries = canViewBeneficiaries(user.role);
-  const canReports = canViewReports(user.role);
-  const canDocuments = canViewDocuments(user.role);
-  const canAssistant = canUseAssistant(user.role);
+  const canUsers = canViewUsers(user);
+  const canManage = canManageUsers(user);
+  const canProjects = canViewProjects(user);
+  const canStructure = canViewStructure(user);
+  const canPrograms = canViewPrograms(user);
+  const canCampaigns = canViewCampaigns(user);
+  const canBeneficiaries = canViewBeneficiaries(user);
+  const canReports = canViewReports(user);
+  const canDocuments = canViewDocuments(user);
+  const canAssistant = canUseAssistant(user);
 
   const labels = days.map((d) => weekdayFmt.format(d));
   const usersSeries = bucketByDay(newUsers7.map((u) => u.createdAt), days);

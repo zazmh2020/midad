@@ -12,7 +12,7 @@ function parseDate(value: unknown): Date | null | undefined {
 
 export async function POST(request: Request) {
   const actor = await getOrgActor();
-  if (!actor || !canManageHR(actor.role)) return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
+  if (!actor || !canManageHR(actor)) return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   const orgId = actor.organization.id;
 
   const body = await request.json().catch(() => null);

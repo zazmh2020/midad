@@ -8,7 +8,7 @@ import { getStripe, priceIdForPlan } from '@/lib/stripe';
 /** ينشئ جلسة دفع Stripe لترقية اشتراك المؤسسة. */
 export async function POST(request: Request) {
   const actor = await getOrgActor();
-  if (!actor || !canManageSettings(actor.role)) {
+  if (!actor || !canManageSettings(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
   const stripe = getStripe();

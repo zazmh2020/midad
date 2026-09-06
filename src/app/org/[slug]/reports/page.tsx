@@ -105,7 +105,7 @@ export default async function OrgReportsPage({ params }: { params: Promise<{ slu
   const { user, org } = await requireOrgAccess(slug);
   const { t } = await getT();
 
-  if (!canViewReports(user.role)) redirect(`/org/${org.slug}`);
+  if (!canViewReports(user)) redirect(`/org/${org.slug}`);
   const locale = await getLocale();
   const where = { organizationId: org.id };
   const sLabel = (kind: string) => (s: string) => t(`status.${kind}.${s}`);

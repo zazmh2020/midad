@@ -6,7 +6,7 @@ import { canManageStructure } from '@/lib/permissions';
 /** إنشاء وحدة تنظيمية داخل مؤسسة الفاعل (إدارة/قسم/فرع) */
 export async function POST(request: Request) {
   const actor = await getOrgActor();
-  if (!actor || !canManageStructure(actor.role)) {
+  if (!actor || !canManageStructure(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
 

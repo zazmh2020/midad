@@ -12,8 +12,8 @@ export default async function OrgTasksPage({ params }: { params: Promise<{ slug:
   const { user, org } = await requireOrgAccess(slug);
   const { t } = await getT();
 
-  if (!canViewTasks(user.role)) redirect(`/org/${org.slug}`);
-  const canManage = canManageTasks(user.role);
+  if (!canViewTasks(user)) redirect(`/org/${org.slug}`);
+  const canManage = canManageTasks(user);
   const where = { organizationId: org.id };
 
   const [tasks, members, departments] = await Promise.all([

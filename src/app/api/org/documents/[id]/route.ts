@@ -7,7 +7,7 @@ import { isS3Configured, deleteObject } from '@/lib/s3';
 /** حذف وثيقة: الكائن من المخزن ثم السجل */
 export async function DELETE(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const actor = await getOrgActor();
-  if (!actor || !canManageDocuments(actor.role)) {
+  if (!actor || !canManageDocuments(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
 

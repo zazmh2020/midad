@@ -60,6 +60,7 @@ model Organization {
   branches            Branch[]
   approvals           Approval[]
   assessments         Assessment[]
+  customRoles         CustomRole[]
 
   @@map("organizations")
 }
@@ -598,6 +599,10 @@ model User {
   departmentId String?
   department   Department? @relation(fields: [departmentId], references: [id], onDelete: SetNull)
 
+  // دور مخصّص (اختياري) — إن وُجد فصلاحياته تتجاوز صلاحيات الدور الأساسي
+  customRoleId String?
+  customRole   CustomRole? @relation(fields: [customRoleId], references: [id], onDelete: SetNull)
+
   articles           KnowledgeArticle[]
   documents          Document[]
   tasks              Task[]             @relation("TaskAssignee")
@@ -609,7 +614,24 @@ model User {
   @@index([organizationId])
   @@index([departmentId])
   @@index([cardToken])
+  @@index([customRoleId])
   @@map("users")
+}
+
+/// دور مخصّص داخل الجهة — اسم + قائمة قدرات (capabilities) يحدّدها مدير الجهة
+model CustomRole {
+  id          String   @id @default(cuid())
+  name        String
+  permissions String[] @default([]) // مفاتيح القدرات، مثل: projects.view، education.manage
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  members        User[]
+
+  @@index([organizationId])
+  @@map("custom_roles")
 }
 
 /// الحملة — حملة خيرية/موسمية/توعوية بهدف مالي ومتابعة

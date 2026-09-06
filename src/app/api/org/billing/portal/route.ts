@@ -6,7 +6,7 @@ import { getStripe } from '@/lib/stripe';
 /** ينشئ رابط بوابة الفوترة (إدارة/إلغاء الاشتراك، الفواتير). */
 export async function POST(request: Request) {
   const actor = await getOrgActor();
-  if (!actor || !canManageSettings(actor.role)) {
+  if (!actor || !canManageSettings(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
   const stripe = getStripe();

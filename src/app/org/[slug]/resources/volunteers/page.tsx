@@ -11,7 +11,7 @@ export default async function VolunteersPage({ params }: { params: Promise<{ slu
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
   const { t } = await getT();
-  if (!canViewHR(user.role)) redirect(`/org/${org.slug}`);
+  if (!canViewHR(user)) redirect(`/org/${org.slug}`);
 
   const volunteers = await prisma.volunteer.findMany({
     where: { organizationId: org.id },

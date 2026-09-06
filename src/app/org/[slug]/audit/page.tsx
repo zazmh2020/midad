@@ -14,7 +14,7 @@ export default async function AuditPage({ params }: { params: Promise<{ slug: st
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
   const { t, locale } = await getT();
-  if (!canManageUsers(user.role)) redirect(`/org/${org.slug}`);
+  if (!canManageUsers(user)) redirect(`/org/${org.slug}`);
   const fmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar-u-nu-latn', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
   const logs = await prisma.auditLog.findMany({

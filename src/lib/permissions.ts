@@ -51,19 +51,88 @@ export function isAssignableRole(role: string): role is Role {
   return (ASSIGNABLE_ROLES as string[]).includes(role);
 }
 
+/* ============================================================
+   نظام القدرات (Capabilities)
+   كل دالة صلاحية تُختزل إلى قدرة واحدة. الأدوار الأساسية الثلاثة
+   لها مجموعات قدرات ثابتة (مطابقة للسلوك السابق تمامًا)، والدور
+   المخصّص يحمل قائمة قدراته الخاصّة التي تتجاوز الدور الأساسي.
+   ============================================================ */
+
+/** الفاعل: إمّا سلسلة دور، أو كائن يحمل الدور وقائمة قدرات مخصّصة (إن وُجد دور مخصّص). */
+export type Actor = { role: string; permissions?: string[] | null };
+
+/** مجموعات القدرات لعرضها في محرّر الأدوار (مفتاح ترجمة الوحدة + القدرات). */
+export const CAP_GROUPS: { labelKey: string; caps: { key: string; kind: 'view' | 'manage' }[] }[] = [
+  { labelKey: 'hub.ops.projects', caps: [{ key: 'projects.view', kind: 'view' }, { key: 'projects.manage', kind: 'manage' }] },
+  { labelKey: 'hub.ops.programs', caps: [{ key: 'programs.view', kind: 'view' }, { key: 'programs.manage', kind: 'manage' }] },
+  { labelKey: 'hub.ops.campaigns', caps: [{ key: 'campaigns.view', kind: 'view' }, { key: 'campaigns.manage', kind: 'manage' }] },
+  { labelKey: 'hub.ops.donations', caps: [{ key: 'donations.view', kind: 'view' }, { key: 'donations.manage', kind: 'manage' }] },
+  { labelKey: 'hub.ops.tasks', caps: [{ key: 'tasks.view', kind: 'view' }, { key: 'tasks.manage', kind: 'manage' }] },
+  { labelKey: 'hub.ops.workflow', caps: [{ key: 'approvals.view', kind: 'view' }, { key: 'approvals.decide', kind: 'manage' }] },
+  { labelKey: 'hub.ops.branches', caps: [{ key: 'branches.view', kind: 'view' }, { key: 'branches.manage', kind: 'manage' }] },
+  { labelKey: 'onav.education', caps: [{ key: 'education.view', kind: 'view' }, { key: 'education.manage', kind: 'manage' }] },
+  { labelKey: 'onav.resources', caps: [{ key: 'hr.view', kind: 'view' }, { key: 'hr.manage', kind: 'manage' }] },
+  { labelKey: 'hub.res.beneficiaries', caps: [{ key: 'beneficiaries.view', kind: 'view' }, { key: 'beneficiaries.manage', kind: 'manage' }] },
+  { labelKey: 'onav.documents', caps: [{ key: 'documents.view', kind: 'view' }, { key: 'documents.manage', kind: 'manage' }] },
+  { labelKey: 'onav.knowledge', caps: [{ key: 'knowledge.view', kind: 'view' }, { key: 'knowledge.manage', kind: 'manage' }] },
+  { labelKey: 'roles.mod.structure', caps: [{ key: 'structure.view', kind: 'view' }, { key: 'structure.manage', kind: 'manage' }] },
+  { labelKey: 'onav.reports', caps: [{ key: 'reports.view', kind: 'view' }] },
+  { labelKey: 'roles.mod.users', caps: [{ key: 'users.view', kind: 'view' }, { key: 'users.manage', kind: 'manage' }] },
+  { labelKey: 'onav.assistant', caps: [{ key: 'assistant.use', kind: 'view' }] },
+];
+
+/** كل القدرات المتاحة (تُشتقّ من المجموعات) + قدرات إضافية غير معروضة في المحرّر. */
+export const ALL_CAPS: string[] = [
+  ...CAP_GROUPS.flatMap((g) => g.caps.map((c) => c.key)),
+  'events.view', 'events.manage', 'fees.manage', 'requests.view', 'requests.manage', 'settings.manage',
+];
+
+// قدرات العضو الأساسي (اطّلاع على ما يخصّ جميع الأعضاء)
+const MEMBER_CAPS = [
+  'projects.view', 'programs.view', 'campaigns.view', 'tasks.view', 'approvals.view',
+  'requests.view', 'events.view', 'structure.view', 'documents.view', 'knowledge.view', 'assistant.use',
+];
+// قدرات الموظّف = قدرات العضو + إدارة تشغيلية واطّلاع على الحسّاس
+const STAFF_CAPS = [
+  ...MEMBER_CAPS, 'users.view', 'branches.view', 'projects.manage', 'programs.manage', 'campaigns.manage',
+  'donations.view', 'donations.manage', 'beneficiaries.view', 'beneficiaries.manage', 'tasks.manage',
+  'events.manage', 'fees.manage', 'education.view', 'education.manage', 'hr.view', 'hr.manage',
+  'documents.manage', 'knowledge.manage', 'reports.view',
+];
+
+/** قدرات كل دور أساسي — مطابقة لسلوك الدوال السابق. */
+export const BASE_CAPS: Record<string, string[]> = {
+  PLATFORM_OWNER: [],
+  ORG_ADMIN: [...ALL_CAPS],
+  STAFF: STAFF_CAPS,
+  MEMBER: MEMBER_CAPS,
+};
+
+/** القدرات الفعّالة للفاعل: قدرات الدور المخصّص إن وُجد، وإلا قدرات الدور الأساسي. */
+export function actorCaps(a: string | Actor): string[] {
+  if (typeof a === 'string') return BASE_CAPS[a] ?? [];
+  if (Array.isArray(a.permissions)) return a.permissions; // دور مخصّص (حتى لو فارغًا = بلا صلاحيات)
+  return BASE_CAPS[a.role] ?? [];
+}
+
+/** هل يملك الفاعل هذه القدرة؟ */
+export function can(a: string | Actor, cap: string): boolean {
+  return actorCaps(a).includes(cap);
+}
+
 /** من يدير حسابات المؤسسة (إضافة، تعديل دور، إيقاف) */
-export function canManageUsers(role: string): boolean {
-  return role === 'ORG_ADMIN';
+export function canManageUsers(a: string | Actor): boolean {
+  return can(a, 'users.manage');
 }
 
 /** من يطّلع على قائمة المستخدمين */
-export function canViewUsers(role: string): boolean {
-  return role === 'ORG_ADMIN' || role === 'STAFF';
+export function canViewUsers(a: string | Actor): boolean {
+  return can(a, 'users.view');
 }
 
 /** من يعدّل إعدادات المؤسسة */
-export function canManageSettings(role: string): boolean {
-  return role === 'ORG_ADMIN';
+export function canManageSettings(a: string | Actor): boolean {
+  return can(a, 'settings.manage');
 }
 
 /* ---------- المشاريع ---------- */
@@ -87,13 +156,13 @@ export function isProjectStatus(value: string): value is ProjectStatus {
 }
 
 /** من يطّلع على مشاريع المؤسسة — جميع أعضائها */
-export function canViewProjects(role: string): boolean {
-  return role === 'ORG_ADMIN' || role === 'STAFF' || role === 'MEMBER';
+export function canViewProjects(a: string | Actor): boolean {
+  return can(a, 'projects.view');
 }
 
 /** من ينشئ ويعدّل ويحذف المشاريع */
-export function canManageProjects(role: string): boolean {
-  return role === 'ORG_ADMIN' || role === 'STAFF';
+export function canManageProjects(a: string | Actor): boolean {
+  return can(a, 'projects.manage');
 }
 
 /* ---------- المهام ---------- */
@@ -109,24 +178,24 @@ export function isTaskPriority(value: string): value is TaskPriority {
 }
 
 /** من يطّلع على مهام المؤسسة — جميع أعضائها */
-export function canViewTasks(role: string): boolean {
-  return role === 'ORG_ADMIN' || role === 'STAFF' || role === 'MEMBER';
+export function canViewTasks(a: string | Actor): boolean {
+  return can(a, 'tasks.view');
 }
 
 /** من ينشئ ويعدّل ويحذف المهام */
-export function canManageTasks(role: string): boolean {
-  return role === 'ORG_ADMIN' || role === 'STAFF';
+export function canManageTasks(a: string | Actor): boolean {
+  return can(a, 'tasks.manage');
 }
 
 /* ---------- الفروع ---------- */
 
 /** يطّلع على فروع المؤسسة: الإدارة والموظفون */
-export function canViewBranches(role: string): boolean {
-  return role === 'ORG_ADMIN' || role === 'STAFF';
+export function canViewBranches(a: string | Actor): boolean {
+  return can(a, 'branches.view');
 }
 /** يدير الفروع (إضافة/تعديل/حذف): مدير المؤسسة */
-export function canManageBranches(role: string): boolean {
-  return role === 'ORG_ADMIN';
+export function canManageBranches(a: string | Actor): boolean {
+  return can(a, 'branches.manage');
 }
 
 /* ---------- الاعتمادات / سير العمل ---------- */
@@ -146,12 +215,12 @@ export const APPROVAL_STATUSES = ['PENDING', 'APPROVED', 'REJECTED'] as Approval
 export const isApprovalStatus = (v: string): v is ApprovalStatus => (APPROVAL_STATUSES as string[]).includes(v);
 
 /** يقدّم طلب اعتماد ويطّلع على الاعتمادات — جميع الأعضاء */
-export function canViewApprovals(role: string): boolean {
-  return role === 'ORG_ADMIN' || role === 'STAFF' || role === 'MEMBER';
+export function canViewApprovals(a: string | Actor): boolean {
+  return can(a, 'approvals.view');
 }
 /** يعتمد/يرفض الطلبات — مدير المؤسسة */
-export function canDecideApprovals(role: string): boolean {
-  return role === 'ORG_ADMIN';
+export function canDecideApprovals(a: string | Actor): boolean {
+  return can(a, 'approvals.decide');
 }
 
 /* ---------- الطلبات ---------- */
@@ -162,36 +231,36 @@ export const isRequestType = (v: string): v is RequestType => (REQUEST_TYPES as 
 export const isRequestStatus = (v: string): v is RequestStatus => (REQUEST_STATUSES as string[]).includes(v);
 
 /** من يطّلع على طلبات المؤسسة ويقدّمها — جميع الأعضاء */
-export function canViewRequests(role: string): boolean {
-  return role === 'ORG_ADMIN' || role === 'STAFF' || role === 'MEMBER';
+export function canViewRequests(a: string | Actor): boolean {
+  return can(a, 'requests.view');
 }
 /** من يعتمد/يرفض الطلبات — مدير المؤسسة */
-export function canManageRequests(role: string): boolean {
-  return role === 'ORG_ADMIN';
+export function canManageRequests(a: string | Actor): boolean {
+  return can(a, 'requests.manage');
 }
 
 /* ---------- الفعاليات والرسوم ---------- */
 
-export function canViewEvents(role: string): boolean {
-  return role === 'ORG_ADMIN' || role === 'STAFF' || role === 'MEMBER';
+export function canViewEvents(a: string | Actor): boolean {
+  return can(a, 'events.view');
 }
-export function canManageEvents(role: string): boolean {
-  return role === 'ORG_ADMIN' || role === 'STAFF';
+export function canManageEvents(a: string | Actor): boolean {
+  return can(a, 'events.manage');
 }
-export function canManageFees(role: string): boolean {
-  return role === 'ORG_ADMIN' || role === 'STAFF';
+export function canManageFees(a: string | Actor): boolean {
+  return can(a, 'fees.manage');
 }
 
 /* ---------- الهيكل المؤسسي ---------- */
 
 /** من يطّلع على الهيكل التنظيمي — جميع أعضاء المؤسسة */
-export function canViewStructure(role: string): boolean {
-  return role === 'ORG_ADMIN' || role === 'STAFF' || role === 'MEMBER';
+export function canViewStructure(a: string | Actor): boolean {
+  return can(a, 'structure.view');
 }
 
 /** من يبني الهيكل ويسند الأعضاء إليه */
-export function canManageStructure(role: string): boolean {
-  return role === 'ORG_ADMIN';
+export function canManageStructure(a: string | Actor): boolean {
+  return can(a, 'structure.manage');
 }
 
 /* ---------- البرامج ---------- */
@@ -226,13 +295,13 @@ export function isProgramStatus(v: string): v is ProgramStatus {
 }
 
 /** من يطّلع على برامج المؤسسة — جميع أعضائها */
-export function canViewPrograms(role: string): boolean {
-  return role === 'ORG_ADMIN' || role === 'STAFF' || role === 'MEMBER';
+export function canViewPrograms(a: string | Actor): boolean {
+  return can(a, 'programs.view');
 }
 
 /** من ينشئ ويعدّل ويحذف البرامج */
-export function canManagePrograms(role: string): boolean {
-  return role === 'ORG_ADMIN' || role === 'STAFF';
+export function canManagePrograms(a: string | Actor): boolean {
+  return can(a, 'programs.manage');
 }
 
 /* ---------- الحملات ---------- */
@@ -264,11 +333,11 @@ export function isCampaignStatus(v: string): v is CampaignStatus {
   return (CAMPAIGN_STATUSES as string[]).includes(v);
 }
 
-export function canViewCampaigns(role: string): boolean {
-  return role === 'ORG_ADMIN' || role === 'STAFF' || role === 'MEMBER';
+export function canViewCampaigns(a: string | Actor): boolean {
+  return can(a, 'campaigns.view');
 }
-export function canManageCampaigns(role: string): boolean {
-  return role === 'ORG_ADMIN' || role === 'STAFF';
+export function canManageCampaigns(a: string | Actor): boolean {
+  return can(a, 'campaigns.manage');
 }
 
 /* ---------- المستفيدون ---------- */
@@ -302,11 +371,11 @@ export function isBeneficiaryStatus(v: string): v is BeneficiaryStatus {
 }
 
 /** بيانات المستفيدين حسّاسة — تُقصر على من يديرها */
-export function canViewBeneficiaries(role: string): boolean {
-  return role === 'ORG_ADMIN' || role === 'STAFF';
+export function canViewBeneficiaries(a: string | Actor): boolean {
+  return can(a, 'beneficiaries.view');
 }
-export function canManageBeneficiaries(role: string): boolean {
-  return role === 'ORG_ADMIN' || role === 'STAFF';
+export function canManageBeneficiaries(a: string | Actor): boolean {
+  return can(a, 'beneficiaries.manage');
 }
 
 /* ---------- التبرعات ---------- */
@@ -338,38 +407,38 @@ export function isDonationStatus(v: string): v is DonationStatus {
 }
 
 /** التبرعات مالية — للإدارة والموظفين */
-export function canViewDonations(role: string): boolean {
-  return role === 'ORG_ADMIN' || role === 'STAFF';
+export function canViewDonations(a: string | Actor): boolean {
+  return can(a, 'donations.view');
 }
-export function canManageDonations(role: string): boolean {
-  return role === 'ORG_ADMIN' || role === 'STAFF';
+export function canManageDonations(a: string | Actor): boolean {
+  return can(a, 'donations.manage');
 }
 
 /* ---------- قاعدة المعرفة ---------- */
 
 /** يرى المنشور جميع الأعضاء؛ والمسودّات لمن يدير */
-export function canViewKnowledge(role: string): boolean {
-  return role === 'ORG_ADMIN' || role === 'STAFF' || role === 'MEMBER';
+export function canViewKnowledge(a: string | Actor): boolean {
+  return can(a, 'knowledge.view');
 }
-export function canManageKnowledge(role: string): boolean {
-  return role === 'ORG_ADMIN' || role === 'STAFF';
+export function canManageKnowledge(a: string | Actor): boolean {
+  return can(a, 'knowledge.manage');
 }
 
 /* ---------- التقارير ---------- */
 
-export function canViewReports(role: string): boolean {
-  return role === 'ORG_ADMIN' || role === 'STAFF';
+export function canViewReports(a: string | Actor): boolean {
+  return can(a, 'reports.view');
 }
 
 /* ---------- الوثائق ---------- */
 
 /** يطّلع على وثائق المؤسسة جميع الأعضاء */
-export function canViewDocuments(role: string): boolean {
-  return role === 'ORG_ADMIN' || role === 'STAFF' || role === 'MEMBER';
+export function canViewDocuments(a: string | Actor): boolean {
+  return can(a, 'documents.view');
 }
 /** يرفع ويحذف الوثائق: الإدارة والموظفون */
-export function canManageDocuments(role: string): boolean {
-  return role === 'ORG_ADMIN' || role === 'STAFF';
+export function canManageDocuments(a: string | Actor): boolean {
+  return can(a, 'documents.manage');
 }
 
 /* ---------- التعليم / الحلقات ---------- */
@@ -429,11 +498,11 @@ export function computeAssessmentResult(score: number | null, maxScore: number):
 }
 
 /** يطّلع على التعليم: الإدارة والموظفون */
-export function canViewEducation(role: string): boolean {
-  return role === 'ORG_ADMIN' || role === 'STAFF';
+export function canViewEducation(a: string | Actor): boolean {
+  return can(a, 'education.view');
 }
-export function canManageEducation(role: string): boolean {
-  return role === 'ORG_ADMIN' || role === 'STAFF';
+export function canManageEducation(a: string | Actor): boolean {
+  return can(a, 'education.manage');
 }
 
 /* ---------- الموارد البشرية ---------- */
@@ -451,16 +520,16 @@ export const volunteerStatusLabel = (v: string) => VOLUNTEER_STATUS_LABELS[v as 
 export const isVolunteerStatus = (v: string): v is VolunteerStatus => (VOLUNTEER_STATUSES as string[]).includes(v);
 
 /** الموارد البشرية حسّاسة — للإدارة والموظفين */
-export function canViewHR(role: string): boolean {
-  return role === 'ORG_ADMIN' || role === 'STAFF';
+export function canViewHR(a: string | Actor): boolean {
+  return can(a, 'hr.view');
 }
-export function canManageHR(role: string): boolean {
-  return role === 'ORG_ADMIN' || role === 'STAFF';
+export function canManageHR(a: string | Actor): boolean {
+  return can(a, 'hr.manage');
 }
 
 /* ---------- المساعد الذكي ---------- */
 
 /** يستخدم المساعد جميع أعضاء المؤسسة — لكن ضمن حدود ما يحقّ لهم رؤيته */
-export function canUseAssistant(role: string): boolean {
-  return role === 'ORG_ADMIN' || role === 'STAFF' || role === 'MEMBER';
+export function canUseAssistant(a: string | Actor): boolean {
+  return can(a, 'assistant.use');
 }

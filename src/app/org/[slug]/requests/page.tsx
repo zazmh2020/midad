@@ -12,8 +12,8 @@ export default async function OrgRequestsPage({ params }: { params: Promise<{ sl
   const { user, org } = await requireOrgAccess(slug);
   const { t } = await getT();
 
-  if (!canViewRequests(user.role)) redirect(`/org/${org.slug}`);
-  const canManage = canManageRequests(user.role);
+  if (!canViewRequests(user)) redirect(`/org/${org.slug}`);
+  const canManage = canManageRequests(user);
 
   // المدير يرى كل الطلبات؛ غيره يرى طلباته فقط
   const requests = await prisma.memberRequest.findMany({

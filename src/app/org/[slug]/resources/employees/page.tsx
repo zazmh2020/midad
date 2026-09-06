@@ -11,7 +11,7 @@ export default async function EmployeesPage({ params }: { params: Promise<{ slug
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
   const { t } = await getT();
-  if (!canViewHR(user.role)) redirect(`/org/${org.slug}`);
+  if (!canViewHR(user)) redirect(`/org/${org.slug}`);
 
   const [employees, departments] = await Promise.all([
     prisma.employee.findMany({

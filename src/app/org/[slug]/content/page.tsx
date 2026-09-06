@@ -15,7 +15,7 @@ export default async function ContentPage({ params }: { params: Promise<{ slug: 
   const { t } = await getT();
   const base = `/org/${org.slug}`;
 
-  if (!canManageSettings(user.role)) {
+  if (!canManageSettings(user)) {
     return (
       <div className="org-page">
         <div className="org-page-head"><div><h1>{t('pg.content.title')}</h1><p>{t('pg.content.denied')}</p></div></div>

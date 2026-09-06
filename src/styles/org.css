@@ -1680,3 +1680,30 @@ a.org-module:hover {
 }
 .pf-phone-row input { flex: 1; min-width: 0; }
 .pf-phone-row .pf-dial:focus { outline: none; border-color: var(--purple-500); }
+
+/* ---------- الأدوار المخصّصة ---------- */
+.crole-wrap { margin-top: 2rem; padding-top: 1.6rem; border-top: 1px solid var(--line); }
+.crole-h { margin: 0; font-family: var(--font-display); font-size: 1.05rem; color: var(--text-strong); }
+.crole-intro { margin: 0 0 1rem; color: var(--text-muted); font-size: 0.86rem; line-height: 1.7; }
+.crole-form { margin-bottom: 1rem; }
+.crole-caps { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 0.7rem; margin: 0.4rem 0 0.2rem; }
+.crole-group { border: 1px solid var(--line); border-radius: 12px; padding: 0.7rem 0.8rem; background: var(--surface, #fff); }
+.crole-group-name { display: block; font-weight: 700; font-size: 0.86rem; color: var(--text-strong); margin-bottom: 0.5rem; }
+.crole-group-caps { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.crole-cap {
+  display: inline-flex; align-items: center; gap: 0.32rem; cursor: pointer;
+  font-size: 0.78rem; padding: 0.28rem 0.6rem; border-radius: 999px;
+  border: 1px solid var(--line); color: var(--text-muted); background: transparent; user-select: none;
+}
+.crole-cap input { accent-color: var(--purple-500, #6b57a0); margin: 0; }
+.crole-cap.is-on { background: var(--purple-100, #efeaf6); color: var(--purple-700, #6b57a0); border-color: var(--purple-300, #8873af); }
+.crole-list { display: flex; flex-direction: column; gap: 0.55rem; }
+.crole-item {
+  display: flex; align-items: center; justify-content: space-between; gap: 0.8rem;
+  border: 1px solid var(--line); border-radius: 12px; padding: 0.7rem 0.9rem; background: var(--surface, #fff);
+}
+.crole-item-main { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
+.crole-item-main strong { color: var(--text-strong); font-size: 0.95rem; }
+.crole-item-meta { font-size: 0.75rem; color: var(--text-muted); }
+.crole-item-actions { display: flex; gap: 0.4rem; flex-shrink: 0; }
+.crole-item-actions .org-btn { font-size: 0.78rem; padding: 0.35rem 0.7rem; }

@@ -12,7 +12,7 @@ export default async function EducationHub({ params }: { params: Promise<{ slug:
   const { user, org } = await requireOrgAccess(slug);
   const { t } = await getT();
 
-  if (!canViewEducation(user.role)) redirect(`/org/${org.slug}`);
+  if (!canViewEducation(user)) redirect(`/org/${org.slug}`);
   const base = `/org/${org.slug}/education`;
   const w = { organizationId: org.id };
   const quran = org.type === 'MOSQUE';

@@ -7,7 +7,7 @@ import { logAudit } from '@/lib/audit';
 /** نشر/إلغاء نشر الموقع العام للمؤسسة — مدير المؤسسة فقط. */
 export async function PATCH(request: Request) {
   const actor = await getOrgActor();
-  if (!actor || !canManageSettings(actor.role)) {
+  if (!actor || !canManageSettings(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
   const body = await request.json().catch(() => null);

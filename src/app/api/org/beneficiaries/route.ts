@@ -7,7 +7,7 @@ import { canManageBeneficiaries, isBeneficiaryCategory, isBeneficiaryStatus } fr
 /** إنشاء ملف مستفيد داخل مؤسسة الفاعل */
 export async function POST(request: Request) {
   const actor = await getOrgActor();
-  if (!actor || !canManageBeneficiaries(actor.role)) {
+  if (!actor || !canManageBeneficiaries(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
   const orgId = actor.organization.id;

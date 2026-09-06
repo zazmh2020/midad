@@ -12,7 +12,7 @@ export default async function OrgAssistantPage({ params }: { params: Promise<{ s
   const { user, org } = await requireOrgAccess(slug);
   const { t } = await getT();
 
-  if (!canUseAssistant(user.role)) redirect(`/org/${org.slug}`);
+  if (!canUseAssistant(user)) redirect(`/org/${org.slug}`);
 
   return (
     <div className="org-page org-page-narrow">

@@ -14,8 +14,11 @@ import { getSession } from '@/lib/session';
      3) أن المستخدم ومؤسسته نشطان في قاعدة البيانات (لا نثق بالكوكي وحده).
    ============================================================ */
 
+/** المستخدم الفاعل مع قدراته الفعّالة (من الدور المخصّص إن وُجد). */
+export type Actor = User & { permissions?: string[] | null };
+
 export type OrgContext = {
-  user: User;
+  user: Actor;
   org: Organization;
 };
 
@@ -30,7 +33,7 @@ export const getOrgContext = cache(
 
     const user = await prisma.user.findUnique({
       where: { id: session.userId },
-      include: { organization: true },
+      include: { organization: true, customRole: { select: { permissions: true } } },
     });
 
     if (!user || !user.isActive) return null;
@@ -39,8 +42,9 @@ export const getOrgContext = cache(
       return null;
     }
 
-    const { organization, ...rest } = user;
-    return { user: rest as User, org: organization };
+    const { organization, customRole, ...rest } = user;
+    // قدرات مخصّصة إن وُجد دور مخصّص، وإلا null → يُطبَّق الدور الأساسي
+    return { user: { ...rest, permissions: customRole?.permissions ?? null } as Actor, org: organization };
   },
 );
 
@@ -56,18 +60,22 @@ export async function requireOrgAccess(slug: string): Promise<OrgContext> {
  * (لا slug من المسار)، ويعيد المستخدم الفاعل بعد التحقق من نشاطه.
  */
 export async function getOrgActor(): Promise<
-  (User & { organization: Organization }) | null
+  (Actor & { organization: Organization }) | null
 > {
   const session = await getSession();
   if (!session?.organizationId) return null;
 
   const user = await prisma.user.findUnique({
     where: { id: session.userId },
-    include: { organization: true },
+    include: { organization: true, customRole: { select: { permissions: true } } },
   });
 
   if (!user || !user.isActive) return null;
   if (!user.organization || !user.organization.isActive) return null;
 
-  return user as User & { organization: Organization };
+  // أرفق القدرات الفعّالة (من الدور المخصّص إن وُجد)
+  return {
+    ...user,
+    permissions: user.customRole?.permissions ?? null,
+  } as Actor & { organization: Organization };
 }

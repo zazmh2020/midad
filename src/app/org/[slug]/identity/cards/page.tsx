@@ -16,7 +16,7 @@ export default async function CardsPage({ params }: { params: Promise<{ slug: st
   const { user, org } = await requireOrgAccess(slug);
   const { t } = await getT();
   // البطاقات تكشف بيانات الأعضاء — تُقصر على الإدارة والموظفين
-  if (!canViewHR(user.role)) redirect(`/org/${org.slug}`);
+  if (!canViewHR(user)) redirect(`/org/${org.slug}`);
 
   const members = await prisma.user.findMany({
     where: { organizationId: org.id, isActive: true },

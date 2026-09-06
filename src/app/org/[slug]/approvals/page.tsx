@@ -11,7 +11,7 @@ export default async function ApprovalsPage({ params }: { params: Promise<{ slug
   const { slug } = await params;
   const { user, org } = await requireOrgAccess(slug);
   const { t } = await getT();
-  if (!canViewApprovals(user.role)) redirect(`/org/${org.slug}`);
+  if (!canViewApprovals(user)) redirect(`/org/${org.slug}`);
 
   const rows = await prisma.approval.findMany({
     where: { organizationId: org.id },
@@ -44,7 +44,7 @@ export default async function ApprovalsPage({ params }: { params: Promise<{ slug
           <p>{t('approval.pageSub', { n: approvals.length, org: org.name })}</p>
         </div>
       </div>
-      <ApprovalsView approvals={approvals} canDecide={canDecideApprovals(user.role)} canCreate={canViewApprovals(user.role)} />
+      <ApprovalsView approvals={approvals} canDecide={canDecideApprovals(user)} canCreate={canViewApprovals(user)} />
     </div>
   );
 }

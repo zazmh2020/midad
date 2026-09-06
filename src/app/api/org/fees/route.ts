@@ -11,7 +11,7 @@ function parseDate(v: unknown): Date | null {
 
 export async function POST(request: Request) {
   const actor = await getOrgActor();
-  if (!actor || !canManageFees(actor.role)) return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
+  if (!actor || !canManageFees(actor)) return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   const orgId = actor.organization.id;
 
   const body = await request.json().catch(() => null);

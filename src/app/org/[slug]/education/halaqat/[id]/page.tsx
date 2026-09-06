@@ -11,7 +11,7 @@ export default async function HalaqaDetailPage({ params }: { params: Promise<{ s
   const { slug, id } = await params;
   const { user, org } = await requireOrgAccess(slug);
   const { t } = await getT();
-  if (!canViewEducation(user.role)) redirect(`/org/${org.slug}`);
+  if (!canViewEducation(user)) redirect(`/org/${org.slug}`);
   const base = `/org/${org.slug}`;
 
   const halaqa = await prisma.halaqa.findFirst({

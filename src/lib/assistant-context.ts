@@ -25,7 +25,7 @@ export async function buildAssistantContext(
   lines.push('');
 
   // الهيكل التنظيمي
-  if (canViewStructure(actor.role)) {
+  if (canViewStructure(actor)) {
     const depts = await prisma.department.findMany({
       where, orderBy: { name: 'asc' },
       select: { name: true, parent: { select: { name: true } }, _count: { select: { members: true } } },
@@ -41,7 +41,7 @@ export async function buildAssistantContext(
   }
 
   // المستخدمون
-  if (canViewUsers(actor.role)) {
+  if (canViewUsers(actor)) {
     const users = await prisma.user.findMany({
       where, orderBy: { createdAt: 'asc' },
       select: { name: true, role: true, isActive: true, department: { select: { name: true } } },
@@ -57,7 +57,7 @@ export async function buildAssistantContext(
   }
 
   // المشاريع
-  if (canViewProjects(actor.role)) {
+  if (canViewProjects(actor)) {
     const projects = await prisma.project.findMany({
       where, orderBy: { createdAt: 'desc' },
       select: { name: true, status: true, department: { select: { name: true } } },
@@ -73,7 +73,7 @@ export async function buildAssistantContext(
   }
 
   // البرامج
-  if (canViewPrograms(actor.role)) {
+  if (canViewPrograms(actor)) {
     const programs = await prisma.program.findMany({
       where, orderBy: { createdAt: 'desc' },
       select: { name: true, status: true, capacity: true },
@@ -89,7 +89,7 @@ export async function buildAssistantContext(
   }
 
   // الحملات
-  if (canViewCampaigns(actor.role)) {
+  if (canViewCampaigns(actor)) {
     const campaigns = await prisma.campaign.findMany({
       where, orderBy: { createdAt: 'desc' },
       select: { name: true, status: true, goalAmount: true },
@@ -105,7 +105,7 @@ export async function buildAssistantContext(
   }
 
   // التبرعات (حسّاسة)
-  if (canViewDonations(actor.role)) {
+  if (canViewDonations(actor)) {
     const [count, received] = await Promise.all([
       prisma.donation.count({ where }),
       prisma.donation.aggregate({ where: { ...where, status: 'RECEIVED' }, _sum: { amount: true } }),
@@ -117,7 +117,7 @@ export async function buildAssistantContext(
   }
 
   // المستفيدون (حسّاسة)
-  if (canViewBeneficiaries(actor.role)) {
+  if (canViewBeneficiaries(actor)) {
     const byStatus = await prisma.beneficiary.groupBy({ by: ['status'], where, _count: true });
     const byCat = await prisma.beneficiary.groupBy({ by: ['category'], where, _count: true });
     const total = byStatus.reduce((s, r) => s + r._count, 0);
@@ -131,7 +131,7 @@ export async function buildAssistantContext(
   }
 
   // قاعدة المعرفة — المنشور للجميع، والمسودّات لمن يدير
-  if (canViewKnowledge(actor.role)) {
+  if (canViewKnowledge(actor)) {
     const canDrafts = actor.role === 'ORG_ADMIN' || actor.role === 'STAFF';
     const articles = await prisma.knowledgeArticle.findMany({
       where: { ...where, ...(canDrafts ? {} : { isPublished: true }) },
@@ -152,7 +152,7 @@ export async function buildAssistantContext(
   }
 
   // الوثائق — البيانات الوصفية فقط
-  if (canViewDocuments(actor.role)) {
+  if (canViewDocuments(actor)) {
     const docs = await prisma.document.findMany({
       where, orderBy: { createdAt: 'desc' },
       select: { name: true, category: true, fileName: true },

@@ -9,7 +9,7 @@ const MAX_SIZE = 25 * 1024 * 1024; // 25 ميغابايت
 /** يطلب رابط رفع موقّعًا؛ المفتاح معزول بالمؤسسة */
 export async function POST(request: Request) {
   const actor = await getOrgActor();
-  if (!actor || !canManageDocuments(actor.role)) {
+  if (!actor || !canManageDocuments(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
   if (!isS3Configured()) {
