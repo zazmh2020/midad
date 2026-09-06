@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Reveal from '@/components/Reveal';
 import Icon from '@/components/Icon';
 import { LogoMark } from '@/components/Logo';
+import WelcomeIntro from '@/components/WelcomeIntro';
 import MidadHeader from '@/components/landing/MidadHeader';
 import Mockup from '@/components/landing/Mockup';
 import SystemsShowcase from '@/components/landing/SystemsShowcase';
@@ -50,6 +51,7 @@ export default async function HomePage() {
   const { t } = await getT();
   return (
     <div className="mdl">
+      <WelcomeIntro />
       <MidadHeader />
 
       <main>
