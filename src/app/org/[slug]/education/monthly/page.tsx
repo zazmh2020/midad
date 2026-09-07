@@ -72,7 +72,7 @@ export default async function MonthlySheetPage({
 
   const selectedStudent = students.find((s) => s.id === selectedId) ?? null;
   const locale = await getLocale();
-  const monthLabel = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar-u-nu-latn', { year: 'numeric', month: 'long' }).format(monthStart);
+  const monthName = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar', { month: 'long' }).format(monthStart);
 
   return (
     <div className="org-page qm-page">
@@ -81,7 +81,7 @@ export default async function MonthlySheetPage({
           <span className="org-eyebrow">{t('pg.eyeQuran')}</span>
           <h1>{t('qm.title')}</h1>
           <p>{selectedStudent
-            ? t('qm.subStudent', { student: selectedStudent.name, org: org.name, month: monthLabel })
+            ? t('qm.subStudent', { student: selectedStudent.name, month: monthName, year: String(year) })
             : t('qm.sub', { org: org.name })}</p>
         </div>
       </div>

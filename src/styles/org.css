@@ -96,10 +96,10 @@
 
 /* حالة الطيّ — يظهر الشريط بأيقونات واضحة ويتوسّع المحتوى (سطح المكتب فقط) */
 @media (min-width: 961px) {
-  .org-app.is-collapsed .org-sidebar { width: 80px; padding-inline: 0.6rem; }
+  .org-app.is-collapsed .org-sidebar { width: 56px; padding-inline: 0.3rem; }
   .org-app.is-collapsed .org-fold-toggle { align-self: center; }
   .org-app.is-collapsed .org-nav-item {
-    justify-content: center; padding: 0.6rem 0; gap: 0;
+    justify-content: center; padding: 0.55rem 0; gap: 0;
   }
   .org-app.is-collapsed .org-nav-item span:not(.app-icon) { display: none; }
   /* أيقونات أوضح وأكبر قليلًا عند الطيّ */
@@ -114,7 +114,7 @@
   .org-app.is-collapsed .org-user-role,
   .org-app.is-collapsed .org-user-chev { display: none; }
   .org-app.is-collapsed .org-user-stacked { padding: 0.35rem 0; }
-  .org-app.is-collapsed .org-user-avatar-lg { width: 44px; height: 44px; font-size: 1.05rem; }
+  .org-app.is-collapsed .org-user-avatar-lg { width: 38px; height: 38px; font-size: 0.95rem; }
 }
 
 /* ملف مستخدم مكدّس أعلى الشريط (أفاتار كبير موسّط) */
@@ -1063,7 +1063,7 @@ a.org-module:hover {
 /* توسيط ترويسة الصفحة فقط (العنوان والوصف) */
 .qm-page .org-page-head { justify-content: center; text-align: center; }
 .qm-toolbar {
-  display: flex; flex-wrap: wrap; align-items: flex-end; gap: 1rem;
+  display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: center; gap: 1rem;
   margin-bottom: 0.8rem;
 }
 .qm-tool { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.78rem; color: var(--text-muted); }
@@ -1071,7 +1071,7 @@ a.org-module:hover {
   padding: 0.5rem 0.7rem; border: 1px solid var(--line); border-radius: 10px;
   background: #fff; color: var(--text); font-family: inherit; font-size: 0.86rem; min-width: 180px;
 }
-.qm-summary { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-inline-start: auto; }
+.qm-summary { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; flex-basis: 100%; }
 .qm-summary span {
   background: var(--p-08, rgba(107,87,160,0.08)); color: var(--purple-700, #6b57a0);
   font-weight: 700; font-size: 0.78rem; padding: 0.4rem 0.75rem; border-radius: 100px;

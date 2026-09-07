@@ -1,6 +1,7 @@
 'use client';
 
-import { createContext, useCallback, useContext, useMemo, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useMemo, useEffect, useState, type ReactNode } from 'react';
+import { useRouter } from 'next/navigation';
 import { DEFAULT_LOCALE, LOCALE_COOKIE, dirFor, type Locale } from './config';
 import { translate } from './dictionaries';
 
@@ -43,19 +44,29 @@ export function persistLocale(next: Locale) {
 }
 
 export function LocaleProvider({ initialLocale, children }: { initialLocale: Locale; children: ReactNode }) {
+  const router = useRouter();
+  // حالة محلية للتبديل الفوري بلا إعادة تحميل الصفحة
+  const [locale, setLocaleState] = useState<Locale>(initialLocale);
+  useEffect(() => { setLocaleState(initialLocale); }, [initialLocale]);
+
   const setLocale = useCallback((next: Locale) => {
     persistLocale(next);
-    window.location.reload();
-  }, []);
+    setLocaleState(next); // تحديث فوري لمكوّنات العميل (t)
+    try {
+      document.documentElement.lang = next;
+      document.documentElement.dir = dirFor(next);
+    } catch { /* تجاهل */ }
+    router.refresh(); // تحديث محتوى الخادم بسلاسة (بلا وميض ولا شاشة ترحيب)
+  }, [router]);
 
   const value = useMemo<LocaleContextValue>(
     () => ({
-      locale: initialLocale,
-      dir: dirFor(initialLocale),
-      t: (key, vars) => translate(initialLocale, key, vars),
+      locale,
+      dir: dirFor(locale),
+      t: (key, vars) => translate(locale, key, vars),
       setLocale,
     }),
-    [initialLocale, setLocale],
+    [locale, setLocale],
   );
 
   return <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>;
