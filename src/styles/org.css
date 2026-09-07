@@ -1115,8 +1115,8 @@ a.org-module:hover {
   font-size: 0.68rem; background: #fbfafe; top: 27px; z-index: 2;
 }
 /* عمودا التاريخ واليوم مثبّتان أثناء التمرير الأفقي */
-.qm-table th:first-child, .qm-table td:first-child { position: sticky; inset-inline-start: 0; z-index: 3; min-width: 42px; }
-.qm-table th:nth-child(2), .qm-table td:nth-child(2) { position: sticky; inset-inline-start: 42px; z-index: 3; min-width: 62px; }
+.qm-table th:first-child, .qm-table td:first-child { position: sticky; inset-inline-start: 0; z-index: 3; min-width: 34px; width: 34px; }
+.qm-table th:nth-child(2), .qm-table td:nth-child(2) { position: sticky; inset-inline-start: 34px; z-index: 3; min-width: 46px; width: 46px; }
 .qm-table thead th:first-child, .qm-table thead th:nth-child(2) { z-index: 4; }
 .qm-table tbody td:first-child, .qm-table tbody td:nth-child(2) { background: #fff; box-shadow: 1px 0 0 var(--line); }
 .qm-date { font-family: var(--font-display); font-weight: 700; color: var(--purple-900, #2b1a4e); }
@@ -1132,11 +1132,16 @@ a.org-module:hover {
   font-size: 0.8rem; color: var(--text); padding: 0.3rem 0.25rem; border-radius: 7px; text-align: center;
 }
 .qm-in:focus { outline: none; border-color: var(--purple-300, #8873af); background: #fff; box-shadow: 0 0 0 3px rgba(107, 87, 160, 0.12); }
-.qm-num { width: 44px; text-align: center; }
-.qm-txt { width: 128px; text-align: center; }
-.qm-att { width: 84px; font-family: inherit; text-align: center; text-align-last: center; }
-.qm-surah { width: 118px; font-family: inherit; text-align: center; text-align-last: center; }
-.qm-seg { width: 92px; font-family: inherit; text-align: center; text-align-last: center; }
+.qm-num { width: 38px; text-align: center; }
+.qm-txt { width: 92px; text-align: center; }
+.qm-att { width: 66px; font-family: inherit; text-align: center; text-align-last: center; }
+.qm-surah { width: 94px; font-family: inherit; text-align: center; text-align-last: center; }
+/* قوائم المراجعة (الكبرى/الصغرى): أعرض ليظهر المحتوى كاملًا من النظرة الأولى */
+.qm-seg { width: 172px; font-family: inherit; text-align: start; text-align-last: start; }
+.qm-notes { width: 168px; font-family: inherit; text-align: start; text-align-last: start; }
+/* الدرجات في جدول منفصل */
+.qm-grades-title { margin: 1.6rem 0 0.6rem; font-family: var(--font-display); font-size: 1rem; color: var(--text-strong); }
+.qm-grades .qm-num { width: 46px; }
 .qm-in:disabled { color: var(--text-muted); }
 
 .qm-status { width: 20px; }

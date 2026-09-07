@@ -381,8 +381,11 @@ model QuranDailyRecord {
   pages        Float? // عدد الصفحات
   errors       Int? // الأخطاء
   alerts       Int? // التنبيهات
+  lessonScore  Int? // درجة الدرس
   reviewScore  Int? // درجة المراجعة اليومية
-  conductScore Int? // درجة السلوك والأخرى
+  minorScore   Int? // درجة المراجعة الصغرى
+  conductScore Int? // درجة السلوك
+  otherScore   Int? // درجة أخرى
   notes        String? // ملاحظات المعلم
 
   createdAt DateTime @default(now())

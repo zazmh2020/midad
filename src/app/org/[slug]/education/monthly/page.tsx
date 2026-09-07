@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { requireOrgAccess } from '@/lib/org';
 import { prisma } from '@/lib/prisma';
 import { canViewEducation, canManageEducation } from '@/lib/permissions';
-import { getT } from '@/lib/i18n/server';
+import { getT, getLocale } from '@/lib/i18n/server';
 import MonthlySheetView from '@/components/education/MonthlySheetView';
 
 export const dynamic = 'force-dynamic';
@@ -62,13 +62,17 @@ export default async function MonthlySheetPage({
       last5From: r?.last5From ?? null, last5To: r?.last5To ?? null,
       listener: r?.listener ?? null, pages: r?.pages ?? null,
       errors: r?.errors ?? null, alerts: r?.alerts ?? null,
-      reviewScore: r?.reviewScore ?? null, conductScore: r?.conductScore ?? null,
+      lessonScore: r?.lessonScore ?? null, reviewScore: r?.reviewScore ?? null,
+      minorScore: r?.minorScore ?? null, conductScore: r?.conductScore ?? null,
+      otherScore: r?.otherScore ?? null,
       notes: r?.notes ?? null,
       exists: !!r,
     };
   });
 
   const selectedStudent = students.find((s) => s.id === selectedId) ?? null;
+  const locale = await getLocale();
+  const monthLabel = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar-u-nu-latn', { year: 'numeric', month: 'long' }).format(monthStart);
 
   return (
     <div className="org-page qm-page">
@@ -76,7 +80,9 @@ export default async function MonthlySheetPage({
         <div>
           <span className="org-eyebrow">{t('pg.eyeQuran')}</span>
           <h1>{t('qm.title')}</h1>
-          <p>{t('qm.sub', { org: org.name })}</p>
+          <p>{selectedStudent
+            ? t('qm.subStudent', { student: selectedStudent.name, org: org.name, month: monthLabel })
+            : t('qm.sub', { org: org.name })}</p>
         </div>
       </div>
 

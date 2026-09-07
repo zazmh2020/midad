@@ -14,12 +14,25 @@ type Row = {
   last5From: number | null; last5To: number | null;
   listener: string | null; pages: number | null;
   errors: number | null; alerts: number | null;
-  reviewScore: number | null; conductScore: number | null;
+  lessonScore: number | null; reviewScore: number | null; minorScore: number | null;
+  conductScore: number | null; otherScore: number | null;
   notes: string | null; exists: boolean;
 };
 type Student = { id: string; name: string; halaqa: string | null };
 
-const NUM_FIELDS = ['newFrom', 'newTo', 'reviewFrom', 'reviewTo', 'last5From', 'last5To', 'pages', 'errors', 'alerts', 'reviewScore', 'conductScore'] as const;
+const NUM_FIELDS = [
+  'newFrom', 'newTo', 'reviewFrom', 'reviewTo', 'last5From', 'last5To', 'pages', 'errors', 'alerts',
+  'lessonScore', 'reviewScore', 'minorScore', 'conductScore', 'otherScore',
+] as const;
+
+const SCORE_FIELDS = ['lessonScore', 'reviewScore', 'minorScore', 'conductScore', 'otherScore'] as const;
+
+// عبارات ملاحظات جاهزة مصنّفة (تُترجَم بالمفاتيح)
+const NOTE_PRESETS: { group: string; keys: string[] }[] = [
+  { group: 'qm.note.grp.detailed', keys: ['qm.note.d1', 'qm.note.d2', 'qm.note.d3', 'qm.note.d4'] },
+  { group: 'qm.note.grp.discipline', keys: ['qm.note.p1', 'qm.note.p2', 'qm.note.p3'] },
+  { group: 'qm.note.grp.guardian', keys: ['qm.note.g1', 'qm.note.g2', 'qm.note.g3'] },
+];
 
 export default function MonthlySheetView({
   students, selectedId, studentName, halaqaName, ym, rows, canManage,
@@ -43,7 +56,8 @@ export default function MonthlySheetView({
         last5From: toStr(r.last5From), last5To: toStr(r.last5To),
         listener: toStr(r.listener), pages: toStr(r.pages),
         errors: toStr(r.errors), alerts: toStr(r.alerts),
-        reviewScore: toStr(r.reviewScore), conductScore: toStr(r.conductScore),
+        lessonScore: toStr(r.lessonScore), reviewScore: toStr(r.reviewScore), minorScore: toStr(r.minorScore),
+        conductScore: toStr(r.conductScore), otherScore: toStr(r.otherScore),
         notes: toStr(r.notes),
       };
     }
@@ -52,7 +66,7 @@ export default function MonthlySheetView({
   const [saved, setSaved] = useState<Record<string, 'saving' | 'ok' | 'err'>>({});
   const timers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
   const dataRef = useRef(data);
-  useEffect(() => { dataRef.current = data; }, [data]); // أحدث نسخة للحفظ المؤجَّل
+  useEffect(() => { dataRef.current = data; }, [data]);
   const [sending, setSending] = useState<'month' | 'day' | null>(null);
   const [sendMsg, setSendMsg] = useState<{ ok: boolean; text: string } | null>(null);
 
@@ -79,7 +93,7 @@ export default function MonthlySheetView({
 
   async function save(dateStr: string) {
     if (!canManage) return;
-    const row = dataRef.current[dateStr]; // أحدث حالة (يتفادى إغلاقًا قديمًا عند التعديل السريع)
+    const row = dataRef.current[dateStr];
     setSaved((s) => ({ ...s, [dateStr]: 'saving' }));
     try {
       const res = await fetch('/api/org/education/monthly', {
@@ -96,7 +110,6 @@ export default function MonthlySheetView({
     timers.current[dateStr] = setTimeout(() => save(dateStr), 600);
   }
 
-  // تعيين حقلين معًا (لمقاطع المراجعة: من/إلى)
   function setRange(dateStr: string, fromField: string, toField: string, encoded: string) {
     const [from, to] = encoded ? encoded.split('-') : ['', ''];
     setData((d) => ({ ...d, [dateStr]: { ...d[dateStr], [fromField]: from, [toField]: to } }));
@@ -108,7 +121,6 @@ export default function MonthlySheetView({
     return f && t2 ? `${f}-${t2}` : '';
   };
 
-  // خلية قائمة السور (الدرس) — تُخزَّن رقم السورة في newFrom
   const surahCell = (r: Row) => (
     <select className="qm-in qm-surah" disabled={!canManage}
       value={data[r.dateStr]?.newFrom ?? ''} onChange={(e) => set(r.dateStr, 'newFrom', e.target.value)}>
@@ -116,7 +128,6 @@ export default function MonthlySheetView({
       {SURAHS.map((name, i) => <option key={i} value={i + 1}>{i + 1}. {name}</option>)}
     </select>
   );
-  // خلية مقطع المراجعة (كبرى/صغرى)
   const segCell = (r: Row, segs: typeof MAJOR_SEGMENTS, fromField: string, toField: string) => (
     <select className="qm-in qm-seg" disabled={!canManage}
       value={rangeVal(r.dateStr, fromField, toField)} onChange={(e) => setRange(r.dateStr, fromField, toField, e.target.value)}>
@@ -125,21 +136,36 @@ export default function MonthlySheetView({
     </select>
   );
 
-  const total = (dateStr: string) =>
-    (Number(data[dateStr]?.reviewScore) || 0) + (Number(data[dateStr]?.conductScore) || 0);
+  // خلية الملاحظات: قائمة عبارات جاهزة (مع إبقاء أي ملاحظة موجودة كخيار محدَّد)
+  const notesCell = (r: Row) => {
+    const cur = data[r.dateStr]?.notes ?? '';
+    const known = NOTE_PRESETS.some((g) => g.keys.some((k) => t(k) === cur));
+    return (
+      <select className="qm-in qm-notes" disabled={!canManage}
+        value={cur} onChange={(e) => set(r.dateStr, 'notes', e.target.value)}>
+        <option value="">—</option>
+        {cur && !known && <option value={cur}>{cur}</option>}
+        {NOTE_PRESETS.map((g) => (
+          <optgroup key={g.group} label={t(g.group)}>
+            {g.keys.map((k) => <option key={k} value={t(k)}>{t(k)}</option>)}
+          </optgroup>
+        ))}
+      </select>
+    );
+  };
 
-  // ملخّص الشهر
+  const total = (dateStr: string) =>
+    SCORE_FIELDS.reduce((s, f) => s + (Number(data[dateStr]?.[f]) || 0), 0);
+
   const presentDays = rows.filter((r) => (data[r.dateStr]?.attendance ?? 'PRESENT') !== 'ABSENT' && (data[r.dateStr]?.newFrom || data[r.dateStr]?.reviewFrom || data[r.dateStr]?.pages)).length;
   const activeDays = rows.filter((r) => data[r.dateStr]?.newFrom || data[r.dateStr]?.reviewFrom || data[r.dateStr]?.pages || data[r.dateStr]?.attendance === 'ABSENT').length;
   const totalPages = rows.reduce((s, r) => s + (Number(data[r.dateStr]?.pages) || 0), 0);
   const totalScore = rows.reduce((s, r) => s + total(r.dateStr), 0);
   const attendancePct = activeDays ? Math.round((presentDays / activeDays) * 100) : 0;
 
-  const numCell = (r: Row, field: (typeof NUM_FIELDS)[number]) => (
-    <input
-      type="number" className="qm-in qm-num" disabled={!canManage}
-      value={data[r.dateStr]?.[field] ?? ''} onChange={(e) => set(r.dateStr, field, e.target.value)}
-    />
+  const numCell = (r: Row, field: (typeof NUM_FIELDS)[number], cls = 'qm-num') => (
+    <input type="number" className={`qm-in ${cls}`} disabled={!canManage}
+      value={data[r.dateStr]?.[field] ?? ''} onChange={(e) => set(r.dateStr, field, e.target.value)} />
   );
 
   return (
@@ -179,24 +205,22 @@ export default function MonthlySheetView({
       </div>
       {sendMsg && <div className={`qm-sendmsg ${sendMsg.ok ? 'is-ok' : 'is-err'}`}>{sendMsg.text}</div>}
 
+      {/* ===== الجدول الأساسي: المتابعة اليومية ===== */}
       <div className="qm-wrap">
         <table className="qm-table">
           <thead>
             <tr>
-              <th>{t('qm.col.date')}</th>
-              <th>{t('qm.col.day')}</th>
-              <th>{t('qm.col.attendance')}</th>
-              <th className="qm-g-new">{t('qm.col.lesson')}</th>
-              <th className="qm-g-review">{t('qm.col.major')}</th>
-              <th className="qm-g-last5">{t('qm.col.minor')}</th>
-              <th>{t('qm.col.pages')}</th>
-              <th>{t('qm.col.errors')}</th>
-              <th>{t('qm.col.alerts')}</th>
-              <th>{t('qm.col.listener')}</th>
-              <th>{t('qm.col.reviewScore')}</th>
-              <th>{t('qm.col.conduct')}</th>
-              <th>{t('qm.col.total')}</th>
-              <th>{t('qm.col.notes')}</th>
+              <th className="qm-c-date">{t('qm.col.date')}</th>
+              <th className="qm-c-day">{t('qm.col.day')}</th>
+              <th className="qm-c-att">{t('qm.col.attendance')}</th>
+              <th className="qm-g-new qm-c-lesson">{t('qm.col.lesson')}</th>
+              <th className="qm-g-review qm-c-seg">{t('qm.col.major')}</th>
+              <th className="qm-g-last5 qm-c-seg">{t('qm.col.minor')}</th>
+              <th className="qm-c-sm">{t('qm.col.pages')}</th>
+              <th className="qm-c-sm">{t('qm.col.errors')}</th>
+              <th className="qm-c-sm">{t('qm.col.alerts')}</th>
+              <th className="qm-c-listener">{t('qm.col.listener')}</th>
+              <th className="qm-c-notes">{t('qm.col.notes')}</th>
               <th aria-label="status" />
             </tr>
           </thead>
@@ -226,13 +250,7 @@ export default function MonthlySheetView({
                     <input className="qm-in qm-txt" disabled={!canManage}
                       value={data[r.dateStr]?.listener ?? ''} onChange={(e) => set(r.dateStr, 'listener', e.target.value)} />
                   </td>
-                  <td>{numCell(r, 'reviewScore')}</td>
-                  <td>{numCell(r, 'conductScore')}</td>
-                  <td className="qm-total">{total(r.dateStr) || ''}</td>
-                  <td>
-                    <input className="qm-in qm-txt" disabled={!canManage}
-                      value={data[r.dateStr]?.notes ?? ''} onChange={(e) => set(r.dateStr, 'notes', e.target.value)} />
-                  </td>
+                  <td>{notesCell(r)}</td>
                   <td className="qm-status">
                     {st === 'saving' && <span className="qm-dot qm-dot-saving" title={t('qm.saving')} />}
                     {st === 'ok' && <span className="qm-dot qm-dot-ok" title={t('form.saved')} />}
@@ -244,6 +262,38 @@ export default function MonthlySheetView({
           </tbody>
         </table>
       </div>
+
+      {/* ===== جدول منفصل: الدرجات ===== */}
+      <h3 className="qm-grades-title">{t('qm.grades')}</h3>
+      <div className="qm-wrap">
+        <table className="qm-table qm-grades">
+          <thead>
+            <tr>
+              <th className="qm-c-date">{t('qm.col.date')}</th>
+              <th>{t('qm.col.lessonScore')}</th>
+              <th>{t('qm.col.reviewScore')}</th>
+              <th>{t('qm.col.minorScore')}</th>
+              <th>{t('qm.col.conduct')}</th>
+              <th>{t('qm.col.other')}</th>
+              <th>{t('qm.col.total')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr key={r.dateStr} className={data[r.dateStr]?.attendance === 'ABSENT' ? 'qm-absent' : ''}>
+                <td className="qm-date">{r.day}</td>
+                <td>{numCell(r, 'lessonScore')}</td>
+                <td>{numCell(r, 'reviewScore')}</td>
+                <td>{numCell(r, 'minorScore')}</td>
+                <td>{numCell(r, 'conductScore')}</td>
+                <td>{numCell(r, 'otherScore')}</td>
+                <td className="qm-total">{total(r.dateStr) || ''}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
       {canManage && <p className="qm-hint">{t('qm.autosave')}</p>}
     </>
   );

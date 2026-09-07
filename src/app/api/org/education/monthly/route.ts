@@ -64,8 +64,11 @@ export async function POST(request: Request) {
     pages: floatOrNull(body.pages),
     errors: intOrNull(body.errors),
     alerts: intOrNull(body.alerts),
+    lessonScore: intOrNull(body.lessonScore),
     reviewScore: intOrNull(body.reviewScore),
+    minorScore: intOrNull(body.minorScore),
     conductScore: intOrNull(body.conductScore),
+    otherScore: intOrNull(body.otherScore),
     notes: strOrNull(body.notes),
     halaqaId: student.halaqaId,
   };
