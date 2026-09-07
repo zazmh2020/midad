@@ -63,6 +63,7 @@ model Organization {
   customRoles         CustomRole[]
   guardians           Guardian[]
   financeTransactions FinanceTransaction[]
+  messages            Message[]
 
   @@map("organizations")
 }
@@ -266,6 +267,28 @@ enum FinanceCategory {
   DONATIONS // تبرعات
   GRANT // منح/دعم
   OTHER // أخرى
+}
+
+/// رسالة مباشرة بين عضوين في نفس الجهة
+model Message {
+  id        String    @id @default(cuid())
+  body      String
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  senderId String
+  sender   User   @relation("MessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+
+  recipientId String
+  recipient   User   @relation("MessageRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([senderId])
+  @@index([recipientId])
+  @@map("messages")
 }
 
 /// فعالية/حدث في تقويم المؤسسة
@@ -679,6 +702,8 @@ model User {
   approvalsRequested Approval[]           @relation("ApprovalRequester")
   approvalsDecided   Approval[]           @relation("ApprovalDecider")
   financeEntries     FinanceTransaction[] @relation("FinanceCreator")
+  sentMessages       Message[]            @relation("MessageSender")
+  receivedMessages   Message[]            @relation("MessageRecipient")
 
   @@index([organizationId])
   @@index([departmentId])
