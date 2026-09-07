@@ -61,6 +61,7 @@ model Organization {
   approvals           Approval[]
   assessments         Assessment[]
   customRoles         CustomRole[]
+  guardians           Guardian[]
 
   @@map("organizations")
 }
@@ -190,6 +191,10 @@ model Student {
 
   guardianEmail String? // بريد وليّ الأمر — لإرسال التقارير
 
+  // ربط الطالب بسجلّ وليّ أمر له حساب متابعة (اختياري)
+  guardianId  String?
+  guardianRef Guardian? @relation(fields: [guardianId], references: [id], onDelete: SetNull)
+
   attendance   AttendanceRecord[]
   memorization MemorizationEntry[]
   quranRecords QuranDailyRecord[]
@@ -198,6 +203,7 @@ model Student {
 
   @@index([organizationId])
   @@index([halaqaId])
+  @@index([guardianId])
   @@map("students")
 }
 
@@ -239,6 +245,28 @@ model Event {
 
   @@index([organizationId])
   @@map("events")
+}
+
+/// وليّ الأمر — سجلّ يربط بحساب متابعة (اختياري) وبأبنائه الطلاب
+model Guardian {
+  id        String   @id @default(cuid())
+  fullName  String
+  phone     String?
+  email     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  // حساب دخول وليّ الأمر (اختياري) — لبوابة المتابعة
+  userId String? @unique
+  user   User?   @relation("GuardianAccount", fields: [userId], references: [id], onDelete: SetNull)
+
+  students Student[]
+
+  @@index([organizationId])
+  @@map("guardians")
 }
 
 enum StudentStatus {
@@ -608,6 +636,7 @@ model User {
   tasks              Task[]             @relation("TaskAssignee")
   requests           MemberRequest[]    @relation("RequestRequester")
   teacherProfile     Teacher?           @relation("TeacherAccount")
+  guardianProfile    Guardian?          @relation("GuardianAccount")
   approvalsRequested Approval[]         @relation("ApprovalRequester")
   approvalsDecided   Approval[]         @relation("ApprovalDecider")
 

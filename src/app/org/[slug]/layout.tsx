@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { requireOrgAccess } from '@/lib/org';
+import { prisma } from '@/lib/prisma';
 import {
   canViewUsers, canManageSettings, canViewProjects, canViewStructure,
   canViewCampaigns, canViewBeneficiaries, canViewKnowledge, canViewReports,
@@ -32,6 +33,8 @@ export default async function OrgLayout({
 
   // الوحدات المفعّلة لهذه المؤسسة
   const md = org.disabledModules;
+  // هل هذا الحساب وليّ أمر مرتبط؟ (لإظهار بوّابة المتابعة)
+  const isGuardian = (await prisma.guardian.count({ where: { userId: user.id, organizationId: org.id } })) > 0;
 
   // الطبقة الأولى — العمل المؤسسي (الصلاحية + تفعيل الوحدة)
   const orgSection = canViewStructure(r) || canViewUsers(r) || canManageSettings(r);
@@ -61,7 +64,11 @@ export default async function OrgLayout({
           { kind: 'link', href: `${base}/education/plans`, label: t('onav.plans'), icon: 'plans' },
           { kind: 'link', href: `${base}/education/competitions`, label: t('onav.competitions'), icon: 'competitions' },
           { kind: 'link', href: `${base}/education/certificates`, label: t('onav.certificates'), icon: 'certificates' },
+          { kind: 'link', href: `${base}/education/guardians`, label: t('onav.guardians'), icon: 'users' },
         ] as NavEntry[])
+      : []),
+    ...(isGuardian
+      ? ([{ kind: 'link', href: `${base}/guardian`, label: t('onav.guardianPortal'), icon: 'users', match: [`${base}/guardian`] }] as NavEntry[])
       : []),
     ...(canViewRequests(r)
       ? ([{ kind: 'link', href: `${base}/requests`, label: t('onav.requests'), icon: 'documents',

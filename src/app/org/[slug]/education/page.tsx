@@ -17,12 +17,13 @@ export default async function EducationHub({ params }: { params: Promise<{ slug:
   const w = { organizationId: org.id };
   const quran = org.type === 'MOSQUE';
 
-  const [teachers, students, halaqat, memos, assessments] = await Promise.all([
+  const [teachers, students, halaqat, memos, assessments, guardians] = await Promise.all([
     prisma.teacher.count({ where: w }),
     prisma.student.count({ where: w }),
     prisma.halaqa.count({ where: w }),
     prisma.memorizationEntry.count({ where: w }),
     prisma.assessment.count({ where: w }),
+    prisma.guardian.count({ where: w }),
   ]);
 
   const items: HubItem[] = [
@@ -33,6 +34,7 @@ export default async function EducationHub({ params }: { params: Promise<{ slug:
     { title: t('hub.edu.attendance'), desc: t('hub.edu.attendance.d'), href: `${base}/attendance` },
     { title: quran ? t('hub.edu.memo') : t('hub.edu.homework'), desc: quran ? t('hub.edu.memo.d') : t('hub.edu.homework.d'), href: `${base}/memorization`, count: memos },
     { title: t('hub.edu.assessment'), desc: t('hub.edu.assessment.d'), href: `${base}/assessment`, count: assessments },
+    { title: t('hub.edu.guardians'), desc: t('hub.edu.guardians.d'), href: `${base}/guardians`, count: guardians },
   ];
 
   return (

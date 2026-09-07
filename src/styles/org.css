@@ -1707,3 +1707,28 @@ a.org-module:hover {
 .crole-item-meta { font-size: 0.75rem; color: var(--text-muted); }
 .crole-item-actions { display: flex; gap: 0.4rem; flex-shrink: 0; }
 .crole-item-actions .org-btn { font-size: 0.78rem; padding: 0.35rem 0.7rem; }
+
+/* ---------- بوّابة وليّ الأمر ---------- */
+.gp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+.gp-card { border: 1px solid var(--line); border-radius: 16px; padding: 1.1rem; background: var(--surface, #fff); display: flex; flex-direction: column; gap: 0.9rem; }
+.gp-card-head { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; }
+.gp-card-head h3 { margin: 0; font-family: var(--font-display); font-size: 1.1rem; color: var(--text-strong); }
+.gp-halaqa { font-size: 0.74rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 999px; background: var(--purple-100, #efeaf6); color: var(--purple-700, #6b57a0); }
+.gp-stats { display: flex; gap: 0.7rem; }
+.gp-stat { flex: 1; text-align: center; border: 1px solid var(--line); border-radius: 12px; padding: 0.6rem 0.4rem; }
+.gp-stat-val { display: block; font-family: var(--font-display); font-weight: 800; font-size: 1.25rem; color: var(--purple-700, #6b57a0); }
+.gp-stat-lbl { font-size: 0.72rem; color: var(--text-muted); }
+.gp-memo h4 { margin: 0 0 0.5rem; font-size: 0.9rem; color: var(--text-strong); }
+.gp-memo-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+.gp-memo-list li { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; font-size: 0.82rem; }
+.gp-memo-date { color: var(--text-muted); font-size: 0.74rem; min-width: 48px; }
+.gp-badge { font-size: 0.7rem; font-weight: 700; padding: 0.12rem 0.5rem; border-radius: 999px; }
+.gp-kind-new { background: #efeaf7; color: #5a47a0; }
+.gp-kind-review { background: #e7f3ee; color: #1d7a55; }
+.gp-memo-content { flex: 1; color: var(--text-strong); font-weight: 600; }
+.gp-memo-rating { font-size: 0.74rem; color: var(--text-muted); }
+.gp-att-legend { display: flex; flex-wrap: wrap; gap: 0.4rem; padding-top: 0.6rem; border-top: 1px dashed var(--line); }
+.gp-att { font-size: 0.72rem; font-weight: 600; padding: 0.15rem 0.5rem; border-radius: 999px; background: var(--gray-100, #f3f0f8); color: var(--text-muted); }
+.gp-att-present { background: #e7f3ee; color: #1d7a55; }
+.gp-att-absent { background: #fdecec; color: #b3372a; }
+.gp-att-late { background: #fbf0e0; color: #a5750c; }
