@@ -1,21 +1,25 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { persistLocale } from '@/lib/i18n/LocaleProvider';
 import { translate } from '@/lib/i18n/dictionaries';
 import type { Locale } from '@/lib/i18n/config';
 
-/** نافذة اختيار اللغة عند أول زيارة (يُمرَّر hasChosen من الخادم). */
+/** نافذة اختيار اللغة عند أول زيارة — على الصفحة الرئيسية فقط، لا داخل المنصّة. */
 export default function LangGate({ hasChosen }: { hasChosen: boolean }) {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  // لا تظهر إلا على الموقع التعريفي (الجذر) — لا في الدخول أو لوحات الجهات أو الإدارة
+  const onLanding = pathname === '/';
 
   useEffect(() => {
-    if (hasChosen) return;
+    if (hasChosen || !onLanding) return;
     const id = requestAnimationFrame(() => setOpen(true));
     return () => cancelAnimationFrame(id);
-  }, [hasChosen]);
+  }, [hasChosen, onLanding]);
 
-  if (!open) return null;
+  if (!open || !onLanding) return null;
 
   function choose(locale: Locale) {
     persistLocale(locale);

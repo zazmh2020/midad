@@ -24,21 +24,51 @@ function secret(): string {
   return value;
 }
 
+/** نطاقات الجذر التي يُفعَّل عليها التوجيه بالنطاق الفرعي (مطابقة للـ proxy). */
+function rootDomains(): string[] {
+  return (process.env.APP_ROOT_DOMAINS ?? 'midad.localhost,midad.app')
+    .split(',').map((s) => s.trim()).filter(Boolean);
+}
+
+/** نطاق الجذر الذي يقع تحته المضيف (أو null إن لم يكن ضمن نطاق معروف مثل *.vercel.app). */
+export function matchedRoot(host: string | null | undefined): string | null {
+  if (!host) return null;
+  const hostname = host.split(':')[0];
+  for (const root of rootDomains()) {
+    if (hostname === root || hostname.endsWith(`.${root}`)) return root;
+  }
+  return null;
+}
+
 /**
- * النطاق الأب المشترك بين كل الدومينات الفرعية، ليُقرأ الكوكي على
- * الموقع التعريفي ولوحة الإدارة ومساحات المؤسسات معًا.
- *
- *   midad.localhost           →  midad.localhost
- *   testco.midad.localhost    →  midad.localhost
- *   admin.midad.app           →  midad.app
- *   localhost                 →  undefined (كوكي مربوط بالمضيف)
+ * نطاق الكوكي: نطاق الجذر المعروف فقط (ليُشارَك عبر النطاقات الفرعية admin.* و<slug>.*).
+ * على المضيفات غير المعروفة (مثل *.vercel.app أو IP) نعيد undefined = كوكي مربوط بالمضيف
+ * — لأن ضبط domain=vercel.app لاحقة عامة يرفضه المتصفّح فتضيع الجلسة.
  */
 export function sessionCookieDomain(host: string | null | undefined): string | undefined {
-  if (!host) return undefined;
+  return matchedRoot(host) ?? undefined;
+}
+
+/**
+ * وجهة ما بعد الدخول:
+ * - ضمن نطاق جذر معروف → نطاق فرعي: admin.<root> أو <slug>.<root>.
+ * - خارجه (vercel.app، localhost بلا نطاق فرعي، IP) → مسار على نفس المضيف: /admin أو /org/<slug>.
+ */
+export function tenantDestination(host: string, proto: string, role: string, slug: string | null): string {
   const hostname = host.split(':')[0];
-  const parts = hostname.split('.');
-  if (parts.length < 2) return undefined; // مثل localhost وحده
-  return parts.slice(-2).join('.'); // آخر جزأين: النطاق الأب
+  const port = host.includes(':') ? `:${host.split(':')[1]}` : '';
+  const root = matchedRoot(host);
+  const p = proto.endsWith(':') ? proto : `${proto}:`;
+
+  if (root) {
+    let targetHost = hostname;
+    if (role === 'PLATFORM_OWNER') targetHost = `admin.${root}`;
+    else if (slug) targetHost = `${slug}.${root}`;
+    return `${p}//${targetHost}${port}/`;
+  }
+  // بديل قائم على المسار — يعمل على أي استضافة
+  const path = role === 'PLATFORM_OWNER' ? '/admin' : slug ? `/org/${slug}` : '/';
+  return `${p}//${host}${path}`;
 }
 
 function sign(payload: string): string {

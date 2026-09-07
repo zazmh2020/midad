@@ -2,25 +2,13 @@ import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
-import { createSession, sessionCookieDomain } from '@/lib/session';
+import { createSession, sessionCookieDomain, tenantDestination } from '@/lib/session';
 
 /** يبني وجهة ما بعد الدخول على المضيف الصحيح لكل دور */
-function destinationFor(
-  request: Request,
-  role: string,
-  slug: string | null,
-): string {
+function destinationFor(request: Request, role: string, slug: string | null): string {
   const host = request.headers.get('host') ?? '';
-  const hostname = host.split(':')[0];
-  const port = host.includes(':') ? `:${host.split(':')[1]}` : '';
   const proto = new URL(request.url).protocol; // http: أو https:
-  const base = sessionCookieDomain(host) ?? hostname;
-
-  let targetHost = hostname;
-  if (role === 'PLATFORM_OWNER') targetHost = `admin.${base}`;
-  else if (slug) targetHost = `${slug}.${base}`;
-
-  return `${proto}//${targetHost}${port}/`;
+  return tenantDestination(host, proto, role, slug);
 }
 
 export async function POST(request: Request) {

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
-import { createSession, sessionCookieDomain } from '@/lib/session';
+import { createSession, sessionCookieDomain, tenantDestination } from '@/lib/session';
 
 /* ============================================================
    دخول تجريبي (Dev only) — بدون كلمة مرور.
@@ -11,16 +11,8 @@ import { createSession, sessionCookieDomain } from '@/lib/session';
 
 function destinationFor(request: Request, role: string, slug: string | null): string {
   const host = request.headers.get('host') ?? '';
-  const hostname = host.split(':')[0];
-  const port = host.includes(':') ? `:${host.split(':')[1]}` : '';
   const proto = new URL(request.url).protocol;
-  const base = sessionCookieDomain(host) ?? hostname;
-
-  let targetHost = hostname;
-  if (role === 'PLATFORM_OWNER') targetHost = `admin.${base}`;
-  else if (slug) targetHost = `${slug}.${base}`;
-
-  return `${proto}//${targetHost}${port}/`;
+  return tenantDestination(host, proto, role, slug);
 }
 
 export async function GET(request: Request) {
