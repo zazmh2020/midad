@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import type { ReactNode } from 'react';
 import { cookies } from 'next/headers';
 import { LOCALE_COOKIE, isLocale, DEFAULT_LOCALE, dirFor } from '@/lib/i18n/config';
@@ -6,12 +6,23 @@ import { LocaleProvider } from '@/lib/i18n/LocaleProvider';
 import { CurrencyProvider } from '@/components/CurrencyProvider';
 import { CURRENCY_COOKIE, DEFAULT_CURRENCY, isCurrency } from '@/lib/currency';
 import LangGate from '@/components/LangGate';
+import PWARegister from '@/components/PWARegister';
 import './globals.css';
 
 export const metadata: Metadata = {
   title: 'مِداد | MIDAD — منظومة مِداد الرقمية',
   description:
     'منظومة رقمية متكاملة تُدير أفراد المؤسسة ومشاريعها وبرامجها ووثائقها ومعرفتها من مكان واحد.',
+  applicationName: 'مِداد',
+  appleWebApp: { capable: true, statusBarStyle: 'default', title: 'مِداد' },
+  icons: {
+    icon: '/favicon.svg',
+    apple: '/icons/pwa/apple-touch-icon.png',
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: '#6b57a0',
 };
 
 const themeScript = `(function(){try{var t=localStorage.getItem('midad_theme');document.documentElement.dataset.theme=(t==='dark')?'dark':'light';}catch(e){document.documentElement.dataset.theme='light';}})();`;
@@ -34,6 +45,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           <CurrencyProvider initialCurrency={currency}>
             {children}
             <LangGate hasChosen={hasChosen} />
+            <PWARegister />
           </CurrencyProvider>
         </LocaleProvider>
       </body>
