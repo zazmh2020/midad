@@ -9,6 +9,7 @@ import {
 import OrgShell, { type NavEntry } from '@/components/OrgShell';
 import { getOrgInbox } from '@/lib/inbox';
 import { moduleEnabled } from '@/lib/modules';
+import { isAssistantConfigured } from '@/lib/anthropic';
 import { getT } from '@/lib/i18n/server';
 import '@/styles/org.css';
 
@@ -57,15 +58,19 @@ export default async function OrgLayout({
           match: [`${base}/resources`, `${base}/beneficiaries`] }] as NavEntry[])
       : []),
     ...(educationSection
-      ? ([
-          { kind: 'link', href: `${base}/education`, label: t('onav.education'), icon: 'education', match: [`${base}/education`] },
-          { kind: 'link', href: `${base}/education/my-halaqat`, label: t('onav.myHalaqat'), icon: 'education' },
-          { kind: 'link', href: `${base}/fees`, label: t('onav.fees'), icon: 'operations', match: [`${base}/fees`] },
-          { kind: 'link', href: `${base}/education/plans`, label: t('onav.plans'), icon: 'plans' },
-          { kind: 'link', href: `${base}/education/competitions`, label: t('onav.competitions'), icon: 'competitions' },
-          { kind: 'link', href: `${base}/education/certificates`, label: t('onav.certificates'), icon: 'certificates' },
-          { kind: 'link', href: `${base}/education/guardians`, label: t('onav.guardians'), icon: 'users' },
-        ] as NavEntry[])
+      ? ([{
+          kind: 'group', label: t('onav.education'), icon: 'education',
+          children: [
+            { href: `${base}/education`, label: t('onav.eduOverview'), match: [`${base}/education`] },
+            { href: `${base}/education/my-halaqat`, label: t('onav.myHalaqat') },
+            { href: `${base}/education/plans`, label: t('onav.plans') },
+            { href: `${base}/education/competitions`, label: t('onav.competitions') },
+            { href: `${base}/education/certificates`, label: t('onav.certificates') },
+            { href: `${base}/education/guardians`, label: t('onav.guardians') },
+            { href: `${base}/education/statistics`, label: t('onav.statistics') },
+            { href: `${base}/fees`, label: t('onav.fees'), match: [`${base}/fees`] },
+          ],
+        }] as NavEntry[])
       : []),
     ...(isGuardian
       ? ([{ kind: 'link', href: `${base}/guardian`, label: t('onav.guardianPortal'), icon: 'users', match: [`${base}/guardian`] }] as NavEntry[])
@@ -93,13 +98,7 @@ export default async function OrgLayout({
     ...(canViewReports(r) && moduleEnabled(md, 'reports')
       ? ([{ kind: 'link', href: `${base}/reports`, label: t('onav.reports'), icon: 'reports' }] as NavEntry[])
       : []),
-    ...(educationSection
-      ? ([{ kind: 'link', href: `${base}/education/statistics`, label: t('onav.statistics'), icon: 'statistics' }] as NavEntry[])
-      : []),
     { kind: 'link', href: `${base}/identity`, label: t('onav.identity'), icon: 'identity' },
-    ...(canUseAssistant(r) && moduleEnabled(md, 'assistant')
-      ? ([{ kind: 'link', href: `${base}/assistant`, label: t('onav.assistant'), icon: 'assistant' }] as NavEntry[])
-      : []),
 
     // الطبقة الثالثة — إدارة النظام
     { kind: 'divider', label: t('onav.div.system') },
@@ -124,6 +123,7 @@ export default async function OrgLayout({
       user={{ name: user.name, role: user.role, email: user.email, avatarUrl: user.avatarUrl, jobTitle: user.jobTitle }}
       nav={nav}
       inbox={inbox}
+      assistant={{ show: canUseAssistant(r) && moduleEnabled(md, 'assistant'), ready: isAssistantConfigured() }}
     >
       {children}
     </OrgShell>

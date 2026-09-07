@@ -1819,3 +1819,45 @@ a.org-module:hover {
 .msg-compose { display: flex; gap: 0.5rem; padding: 0.7rem; border-top: 1px solid var(--line); }
 .msg-compose input { flex: 1; font-family: inherit; }
 @media (max-width: 720px) { .msg-wrap { grid-template-columns: 1fr; } }
+
+/* ---------- مجموعات التنقّل القابلة للطيّ ---------- */
+.org-nav-group { display: flex; flex-direction: column; }
+.org-nav-grouphd { width: 100%; background: none; border: none; cursor: pointer; font: inherit; text-align: inherit; }
+.org-nav-grouphd.is-parent-active { color: var(--purple-700, #6b57a0); }
+.org-nav-chev { margin-inline-start: auto; transition: transform 0.2s var(--ease, ease); opacity: 0.6; flex-shrink: 0; }
+.org-nav-group.is-open .org-nav-chev { transform: rotate(180deg); }
+.org-nav-children { display: flex; flex-direction: column; gap: 1px; margin: 0.1rem 0 0.3rem; padding-inline-start: 0.6rem; }
+.org-nav-child {
+  display: flex; align-items: center; gap: 0.55rem; padding: 0.42rem 0.7rem; border-radius: 9px;
+  font-size: 0.83rem; color: var(--text-muted, #6c6780); position: relative;
+}
+.org-nav-child:hover { background: var(--gray-100, #f5f3fa); color: var(--text-strong, #2b1a4e); }
+.org-nav-child.is-active { background: var(--purple-100, #efeaf6); color: var(--purple-700, #6b57a0); font-weight: 700; }
+.org-nav-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: 0.5; flex-shrink: 0; margin-inline-start: 0.35rem; }
+.org-app.is-collapsed .org-nav-children { display: none; }
+
+/* ---------- المساعد العائم على كل الصفحات ---------- */
+.oaf { position: fixed; inset-block-end: 1.4rem; inset-inline-end: 1.4rem; z-index: 90; display: flex; flex-direction: column; align-items: flex-end; gap: 0.7rem; }
+.oaf-fab {
+  width: 56px; height: 56px; border-radius: 50%; border: none; cursor: pointer; flex-shrink: 0;
+  background: linear-gradient(140deg, var(--purple-300, #8873af), var(--purple-500, #6b57a0) 55%, var(--purple-900, #3d2879));
+  color: #fff; display: grid; place-items: center; box-shadow: 0 16px 38px -14px rgba(61, 40, 121, 0.7);
+  transition: transform 0.22s var(--ease, ease), box-shadow 0.22s;
+}
+.oaf-fab:hover { transform: translateY(-3px) scale(1.04); }
+.oaf-fab-spark { font-size: 1.5rem; line-height: 1; }
+.oaf-panel {
+  width: 370px; max-width: calc(100vw - 2rem); height: 520px; max-height: calc(100vh - 7rem);
+  background: var(--surface, #fff); border: 1px solid var(--line); border-radius: 20px; overflow: hidden;
+  display: flex; flex-direction: column; box-shadow: 0 30px 70px -24px rgba(20, 12, 40, 0.55);
+  animation: oafIn 0.24s var(--ease, ease) both;
+}
+@keyframes oafIn { from { opacity: 0; transform: translateY(16px) scale(0.98); } to { opacity: 1; transform: none; } }
+.oaf-head { display: flex; align-items: center; gap: 0.6rem; padding: 0.85rem 1rem; background: linear-gradient(140deg, var(--purple-900, #3d2879), var(--purple-500, #6b57a0)); color: #fff; }
+.oaf-title { display: flex; align-items: center; gap: 0.5rem; font-weight: 800; font-family: var(--font-display); }
+.oaf-spark { color: #ffd97a; }
+.oaf-x { margin-inline-start: auto; width: 28px; height: 28px; border-radius: 50%; border: none; background: rgba(255,255,255,0.16); color: #fff; cursor: pointer; display: grid; place-items: center; }
+.oaf-x:hover { background: rgba(255,255,255,0.28); }
+.oaf-body { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+.oaf-body > * { flex: 1; min-height: 0; }
+@media (max-width: 560px) { .oaf { inset-inline: 1rem; align-items: stretch; } .oaf-panel { width: 100%; max-width: 100%; } .oaf-fab { align-self: flex-end; } }

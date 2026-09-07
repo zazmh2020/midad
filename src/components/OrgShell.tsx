@@ -7,6 +7,7 @@ import { LogoMark } from '@/components/Logo';
 import TopbarTools, { type SearchItem } from '@/components/TopbarTools';
 import WelcomeBack from '@/components/WelcomeBack';
 import PageTransition from '@/components/PageTransition';
+import OrgAssistantFab from '@/components/OrgAssistantFab';
 import { useT } from '@/lib/i18n/LocaleProvider';
 import type { OrgInbox } from '@/lib/inbox';
 import '@/styles/welcome.css';
@@ -39,9 +40,11 @@ function brandVars(hex?: string | null): CSSProperties | undefined {
   }
 }
 
+export type NavChild = { href: string; label: string; match?: string[] };
 export type NavEntry =
   | { kind: 'divider'; label: string }
-  | { kind: 'link'; href: string; label: string; icon: keyof typeof ICONS; match?: string[] };
+  | { kind: 'link'; href: string; label: string; icon: keyof typeof ICONS; match?: string[] }
+  | { kind: 'group'; label: string; icon: keyof typeof ICONS; children: NavChild[] };
 
 interface Props {
   children: ReactNode;
@@ -49,6 +52,7 @@ interface Props {
   user: { name: string; role: string; email?: string; avatarUrl?: string | null; jobTitle?: string | null };
   nav: NavEntry[];
   inbox: OrgInbox;
+  assistant?: { show: boolean; ready: boolean };
 }
 
 // ربط مفاتيح التنقّل بنظام أيقونات مِداد (public/icons)
@@ -105,7 +109,7 @@ function Avatar({ url }: { url?: string | null }) {
   );
 }
 
-export default function OrgShell({ children, org, user, nav, inbox }: Props) {
+export default function OrgShell({ children, org, user, nav, inbox, assistant }: Props) {
   const t = useT();
   const pathname = usePathname();
   const router = useRouter();
@@ -146,7 +150,9 @@ export default function OrgShell({ children, org, user, nav, inbox }: Props) {
   let section: string | undefined;
   for (const entry of nav) {
     if (entry.kind === 'divider') section = entry.label;
-    else searchItems.push({ label: entry.label, href: entry.href, section });
+    else if (entry.kind === 'group') {
+      for (const c of entry.children) searchItems.push({ label: `${entry.label} · ${c.label}`, href: c.href, section });
+    } else searchItems.push({ label: entry.label, href: entry.href, section });
   }
 
   return (
@@ -182,6 +188,8 @@ export default function OrgShell({ children, org, user, nav, inbox }: Props) {
           {nav.map((entry, i) =>
             entry.kind === 'divider' ? (
               <div key={`d-${i}`} className="org-nav-divider">{entry.label}</div>
+            ) : entry.kind === 'group' ? (
+              <NavGroup key={`g-${entry.label}`} entry={entry} isActive={isActive} onNavigate={() => setOpen(false)} collapsed={collapsed} />
             ) : (
               <Link
                 key={entry.href}
@@ -270,6 +278,54 @@ export default function OrgShell({ children, org, user, nav, inbox }: Props) {
         </header>
         <main className="org-content"><PageTransition>{children}</PageTransition></main>
       </div>
+      {assistant?.show && <OrgAssistantFab ready={assistant.ready} />}
+    </div>
+  );
+}
+
+/** مجموعة تنقّل قابلة للطيّ — تُفتح تلقائيًا إن كان أحد عناصرها نشطًا. */
+function NavGroup({
+  entry, isActive, onNavigate, collapsed,
+}: {
+  entry: Extract<NavEntry, { kind: 'group' }>;
+  isActive: (href: string, match?: string[]) => boolean;
+  onNavigate: () => void;
+  collapsed: boolean;
+}) {
+  const anyActive = entry.children.some((c) => isActive(c.href, c.match));
+  const [open, setOpen] = useState(anyActive);
+  const expanded = open || anyActive;
+
+  return (
+    <div className={`org-nav-group ${expanded ? 'is-open' : ''}`}>
+      <button
+        type="button"
+        className={`org-nav-item org-nav-grouphd ${anyActive ? 'is-parent-active' : ''}`}
+        onClick={() => setOpen((v) => !v)}
+        title={entry.label}
+        aria-expanded={expanded}
+      >
+        <Icon name={entry.icon} />
+        <span>{entry.label}</span>
+        {!collapsed && (
+          <svg className="org-nav-chev" width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8l4 4 4-4" /></svg>
+        )}
+      </button>
+      {expanded && !collapsed && (
+        <div className="org-nav-children">
+          {entry.children.map((c) => (
+            <Link
+              key={c.href}
+              href={c.href}
+              className={`org-nav-child ${isActive(c.href, c.match) ? 'is-active' : ''}`}
+              onClick={onNavigate}
+            >
+              <span className="org-nav-dot" aria-hidden="true" />
+              <span>{c.label}</span>
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
