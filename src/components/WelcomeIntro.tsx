@@ -4,14 +4,21 @@ import { useEffect, useState } from 'react';
 import '@/styles/intro.css';
 
 /**
- * مقدّمة ترحيبية تظهر عند كل دخول للموقع ثم تتلاشى تلقائيًا،
- * أو تُغلق فورًا عند النقر. تبدأ ظاهرة لتفادي وميض المحتوى خلفها.
+ * مقدّمة ترحيبية تظهر مرّة واحدة عند دخول الموقع في الجلسة، ثم لا تتكرّر
+ * مع التنقّل أو التحديث حتى تُغلق نافذة المتصفّح وتُفتح من جديد.
+ * (تُحفظ في sessionStorage.) تبدأ ظاهرة لتفادي وميض المحتوى خلفها.
  */
 export default function WelcomeIntro() {
   const [show, setShow] = useState(true);
   const [leaving, setLeaving] = useState(false);
 
   useEffect(() => {
+    // ظهرت مسبقًا في هذه الجلسة؟ لا تكرّرها
+    let seen = false;
+    try { seen = sessionStorage.getItem('midad_intro_seen') === '1'; } catch { seen = false; }
+    if (seen) { setShow(false); return; }
+    try { sessionStorage.setItem('midad_intro_seen', '1'); } catch { /* تجاهل */ }
+
     const reduce =
       typeof window !== 'undefined' &&
       window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
