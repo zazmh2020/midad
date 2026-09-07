@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { requireOrgAccess } from '@/lib/org';
 import { prisma } from '@/lib/prisma';
 import { canViewReports } from '@/lib/permissions';
+import ReportToolbar from '@/components/ReportToolbar';
 import { getT, getLocale } from '@/lib/i18n/server';
 
 export const dynamic = 'force-dynamic';
@@ -160,14 +161,23 @@ export default async function OrgReportsPage({ params }: { params: Promise<{ slu
     { label: t('rep.m.received'), value: numFmt.format(totalReceived) },
   ];
 
+  const printedAt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar-u-nu-latn', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date());
+
   return (
-    <div className="org-page">
+    <div className="org-page rep-print-root">
+      {/* ترويسة تظهر عند الطباعة/التصدير فقط */}
+      <div className="rep-print-header" aria-hidden="true">
+        <strong>{org.name}</strong>
+        <span>{t('rep.title')} · {printedAt}</span>
+      </div>
+
       <div className="org-page-head">
         <div>
           <span className="org-eyebrow">{t('rep.eyebrow')}</span>
           <h1>{t('rep.title')}</h1>
           <p>{t('rep.intro', { org: org.name })}</p>
         </div>
+        <ReportToolbar />
       </div>
 
       <div className="org-stats">

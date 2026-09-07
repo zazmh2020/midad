@@ -1157,7 +1157,7 @@ const ar: Dict = {
   'status.beneficiary.ACTIVE': 'نشط', 'status.beneficiary.PENDING': 'قيد المراجعة', 'status.beneficiary.INACTIVE': 'موقوف',
   // التقارير
   'rep.eyebrow': 'لوحة القياس',
-  'rep.title': 'التقارير والتحليلات',
+  'rep.title': 'التقارير والتحليلات', 'rep.export': 'طباعة / حفظ PDF',
   'rep.intro': 'قراءة موحّدة لأداء {org}.',
   'rep.noData': 'لا بيانات بعد.',
   'rep.trends.title': 'الاتجاهات — آخر ٦ أشهر',
@@ -2400,7 +2400,7 @@ const en: Dict = {
   'status.campaign.PLANNED': 'Planned', 'status.campaign.ACTIVE': 'Active', 'status.campaign.COMPLETED': 'Ended', 'status.campaign.CANCELLED': 'Cancelled',
   'status.beneficiary.ACTIVE': 'Active', 'status.beneficiary.PENDING': 'Under review', 'status.beneficiary.INACTIVE': 'Inactive',
   'rep.eyebrow': 'Dashboard',
-  'rep.title': 'Reports & analytics',
+  'rep.title': 'Reports & analytics', 'rep.export': 'Print / Save PDF',
   'rep.intro': 'A unified view of {org}’s performance.',
   'rep.noData': 'No data yet.',
   'rep.trends.title': 'Trends — last 6 months',

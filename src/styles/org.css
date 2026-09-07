@@ -1769,3 +1769,22 @@ a.org-module:hover {
 .fin-pill-ex { background: #fdecec; color: #b3372a; }
 .fin-amt-in { color: #1d7a55; font-weight: 700; font-variant-numeric: tabular-nums; }
 .fin-amt-ex { color: #b3372a; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* ---------- تصدير التقارير (طباعة / PDF) ---------- */
+.rep-toolbar { display: flex; align-items: flex-start; }
+.rep-print-header { display: none; }
+@media print {
+  .org-sidebar, .org-topbar, .rep-toolbar { display: none !important; }
+  .org-main, .org-content, .org-page { margin: 0 !important; padding: 0 !important; max-width: none !important; }
+  .org-app { display: block !important; }
+  body, .org-app, .org-main { background: #fff !important; }
+  .rep-print-header {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
+    border-bottom: 2px solid #6b57a0; padding-bottom: 0.5rem; margin-bottom: 1rem;
+  }
+  .rep-print-header strong { font-size: 1.15rem; color: #2b1a4e; }
+  .rep-print-header span { font-size: 0.85rem; color: #6c6780; }
+  .org-panel, .org-stat, .org-report-grid > * { break-inside: avoid; }
+  .org-page-head p, .org-eyebrow { display: none; }
+  @page { margin: 14mm; }
+}
