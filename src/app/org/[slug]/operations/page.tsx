@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { requireOrgAccess } from '@/lib/org';
 import { prisma } from '@/lib/prisma';
-import { canViewProjects, canViewPrograms, canViewCampaigns, canViewDonations, canViewTasks, canViewApprovals, canViewBranches } from '@/lib/permissions';
+import { canViewProjects, canViewPrograms, canViewCampaigns, canViewDonations, canViewTasks, canViewApprovals, canViewBranches, canViewFinance } from '@/lib/permissions';
 import SectionHub, { type HubItem } from '@/components/SectionHub';
 import { getT } from '@/lib/i18n/server';
 
@@ -48,6 +48,9 @@ export default async function OperationsHub({ params }: { params: Promise<{ slug
       : []),
     ...(canViewBranches(r)
       ? [{ title: t('hub.ops.branches'), desc: t('hub.ops.branches.d'), href: `${base}/branches`, count: branches }]
+      : []),
+    ...(canViewFinance(r)
+      ? [{ title: t('onav.finance'), desc: t('hub.ops.finance.d'), href: `${base}/finance` }]
       : []),
   ];
 

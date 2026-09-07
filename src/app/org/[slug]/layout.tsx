@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 import {
   canViewUsers, canManageSettings, canViewProjects, canViewStructure,
   canViewCampaigns, canViewBeneficiaries, canViewKnowledge, canViewReports,
-  canViewDocuments, canUseAssistant, canManageUsers, canViewRequests,
+  canViewDocuments, canUseAssistant, canManageUsers, canViewRequests, canViewFinance,
 } from '@/lib/permissions';
 import OrgShell, { type NavEntry } from '@/components/OrgShell';
 import { getOrgInbox } from '@/lib/inbox';
@@ -69,6 +69,9 @@ export default async function OrgLayout({
       : []),
     ...(isGuardian
       ? ([{ kind: 'link', href: `${base}/guardian`, label: t('onav.guardianPortal'), icon: 'users', match: [`${base}/guardian`] }] as NavEntry[])
+      : []),
+    ...(canViewFinance(r)
+      ? ([{ kind: 'link', href: `${base}/finance`, label: t('onav.finance'), icon: 'donations', match: [`${base}/finance`] }] as NavEntry[])
       : []),
     ...(canViewRequests(r)
       ? ([{ kind: 'link', href: `${base}/requests`, label: t('onav.requests'), icon: 'documents',

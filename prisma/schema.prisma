@@ -62,6 +62,7 @@ model Organization {
   assessments         Assessment[]
   customRoles         CustomRole[]
   guardians           Guardian[]
+  financeTransactions FinanceTransaction[]
 
   @@map("organizations")
 }
@@ -227,6 +228,44 @@ model StudentFee {
   @@index([organizationId])
   @@index([studentId])
   @@map("student_fees")
+}
+
+/// حركة مالية — دخل أو مصروف ضمن دفتر الجهة الموحّد
+model FinanceTransaction {
+  id          String          @id @default(cuid())
+  kind        FinanceKind
+  category    FinanceCategory @default(OTHER)
+  amount      Decimal         @db.Decimal(12, 2)
+  date        DateTime        @default(now())
+  description String?
+  createdAt   DateTime        @default(now())
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  createdById String?
+  createdBy   User?   @relation("FinanceCreator", fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([date])
+  @@map("finance_transactions")
+}
+
+enum FinanceKind {
+  INCOME // دخل
+  EXPENSE // مصروف
+}
+
+enum FinanceCategory {
+  SALARY // رواتب
+  RENT // إيجار
+  UTILITIES // خدمات (كهرباء/ماء/إنترنت)
+  SUPPLIES // مستلزمات
+  MAINTENANCE // صيانة
+  FEES // رسوم/اشتراكات
+  DONATIONS // تبرعات
+  GRANT // منح/دعم
+  OTHER // أخرى
 }
 
 /// فعالية/حدث في تقويم المؤسسة
@@ -633,12 +672,13 @@ model User {
 
   articles           KnowledgeArticle[]
   documents          Document[]
-  tasks              Task[]             @relation("TaskAssignee")
-  requests           MemberRequest[]    @relation("RequestRequester")
-  teacherProfile     Teacher?           @relation("TeacherAccount")
-  guardianProfile    Guardian?          @relation("GuardianAccount")
-  approvalsRequested Approval[]         @relation("ApprovalRequester")
-  approvalsDecided   Approval[]         @relation("ApprovalDecider")
+  tasks              Task[]               @relation("TaskAssignee")
+  requests           MemberRequest[]      @relation("RequestRequester")
+  teacherProfile     Teacher?             @relation("TeacherAccount")
+  guardianProfile    Guardian?            @relation("GuardianAccount")
+  approvalsRequested Approval[]           @relation("ApprovalRequester")
+  approvalsDecided   Approval[]           @relation("ApprovalDecider")
+  financeEntries     FinanceTransaction[] @relation("FinanceCreator")
 
   @@index([organizationId])
   @@index([departmentId])

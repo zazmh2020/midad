@@ -26,6 +26,8 @@ import type {
   ApprovalStatus,
   AssessmentKind,
   AssessmentResult,
+  FinanceKind,
+  FinanceCategory,
 } from '@/generated/prisma/client';
 
 /* ============================================================
@@ -70,6 +72,7 @@ export const CAP_GROUPS: { labelKey: string; caps: { key: string; kind: 'view' |
   { labelKey: 'hub.ops.tasks', caps: [{ key: 'tasks.view', kind: 'view' }, { key: 'tasks.manage', kind: 'manage' }] },
   { labelKey: 'hub.ops.workflow', caps: [{ key: 'approvals.view', kind: 'view' }, { key: 'approvals.decide', kind: 'manage' }] },
   { labelKey: 'hub.ops.branches', caps: [{ key: 'branches.view', kind: 'view' }, { key: 'branches.manage', kind: 'manage' }] },
+  { labelKey: 'onav.finance', caps: [{ key: 'finance.view', kind: 'view' }, { key: 'finance.manage', kind: 'manage' }] },
   { labelKey: 'onav.education', caps: [{ key: 'education.view', kind: 'view' }, { key: 'education.manage', kind: 'manage' }] },
   { labelKey: 'onav.resources', caps: [{ key: 'hr.view', kind: 'view' }, { key: 'hr.manage', kind: 'manage' }] },
   { labelKey: 'hub.res.beneficiaries', caps: [{ key: 'beneficiaries.view', kind: 'view' }, { key: 'beneficiaries.manage', kind: 'manage' }] },
@@ -97,7 +100,7 @@ const STAFF_CAPS = [
   ...MEMBER_CAPS, 'users.view', 'branches.view', 'projects.manage', 'programs.manage', 'campaigns.manage',
   'donations.view', 'donations.manage', 'beneficiaries.view', 'beneficiaries.manage', 'tasks.manage',
   'events.manage', 'fees.manage', 'education.view', 'education.manage', 'hr.view', 'hr.manage',
-  'documents.manage', 'knowledge.manage', 'reports.view',
+  'documents.manage', 'knowledge.manage', 'reports.view', 'finance.view', 'finance.manage',
 ];
 
 /** قدرات كل دور أساسي — مطابقة لسلوك الدوال السابق. */
@@ -249,6 +252,29 @@ export function canManageEvents(a: string | Actor): boolean {
 }
 export function canManageFees(a: string | Actor): boolean {
   return can(a, 'fees.manage');
+}
+
+/* ---------- المالية ---------- */
+
+export const FINANCE_KIND_LABELS: Record<FinanceKind, string> = { INCOME: 'دخل', EXPENSE: 'مصروف' };
+export const FINANCE_KINDS = Object.keys(FINANCE_KIND_LABELS) as FinanceKind[];
+export const financeKindLabel = (v: string) => FINANCE_KIND_LABELS[v as FinanceKind] ?? v;
+export const isFinanceKind = (v: string): v is FinanceKind => (FINANCE_KINDS as string[]).includes(v);
+
+export const FINANCE_CATEGORY_LABELS: Record<FinanceCategory, string> = {
+  SALARY: 'رواتب', RENT: 'إيجار', UTILITIES: 'خدمات', SUPPLIES: 'مستلزمات', MAINTENANCE: 'صيانة',
+  FEES: 'رسوم واشتراكات', DONATIONS: 'تبرعات', GRANT: 'منح ودعم', OTHER: 'أخرى',
+};
+export const FINANCE_CATEGORIES = Object.keys(FINANCE_CATEGORY_LABELS) as FinanceCategory[];
+export const financeCategoryLabel = (v: string) => FINANCE_CATEGORY_LABELS[v as FinanceCategory] ?? v;
+export const isFinanceCategory = (v: string): v is FinanceCategory => (FINANCE_CATEGORIES as string[]).includes(v);
+
+/** المالية حسّاسة — للإدارة والموظّفين (أو دور مخصّص يمنح finance) */
+export function canViewFinance(a: string | Actor): boolean {
+  return can(a, 'finance.view');
+}
+export function canManageFinance(a: string | Actor): boolean {
+  return can(a, 'finance.manage');
 }
 
 /* ---------- الهيكل المؤسسي ---------- */
