@@ -1110,7 +1110,7 @@ a.org-module:hover {
 }
 .qm-table th, .qm-table td {
   border-bottom: 1px solid var(--line); border-inline-end: 1px solid var(--line);
-  padding: 0.32rem 0.45rem; text-align: center;
+  padding: 0.3rem 0.28rem; text-align: center;
 }
 .qm-table thead th {
   background: var(--gray-100, #f3f0f8); color: var(--purple-900, #2b1a4e);
@@ -1146,16 +1146,29 @@ a.org-module:hover {
 
 .qm-in {
   font-family: inherit; border: 1px solid transparent; background: transparent;
-  font-size: 0.8rem; color: var(--text); padding: 0.3rem 0.25rem; border-radius: 7px; text-align: center;
+  font-size: 0.8rem; color: var(--text); padding: 0.3rem 0.2rem; border-radius: 7px; text-align: center;
+  box-sizing: border-box; max-width: 100%;
 }
 .qm-in:focus { outline: none; border-color: var(--purple-300, #8873af); background: #fff; box-shadow: 0 0 0 3px rgba(107, 87, 160, 0.12); }
-.qm-num { width: 38px; text-align: center; }
-.qm-txt { width: 92px; text-align: center; }
-.qm-att { width: 66px; font-family: inherit; text-align: center; text-align-last: center; }
-.qm-surah { width: 94px; font-family: inherit; text-align: center; text-align-last: center; }
-/* قوائم المراجعة (الكبرى/الصغرى): أعرض ليظهر المحتوى كاملًا من النظرة الأولى */
-.qm-seg { width: 172px; font-family: inherit; text-align: start; text-align-last: start; }
-.qm-notes { width: 168px; font-family: inherit; text-align: start; text-align-last: start; }
+/* كل الحقول تملأ خليتها؛ التوسيط لكل المحتوى */
+.qm-num { width: 100%; text-align: center; }
+.qm-txt { width: 100%; text-align: center; }
+.qm-att { width: 100%; font-family: inherit; text-align: center; text-align-last: center; }
+.qm-surah { width: 100%; font-family: inherit; text-align: center; text-align-last: center; }
+.qm-seg { width: 100%; font-family: inherit; text-align: center; text-align-last: center; }
+.qm-notes { width: 100%; font-family: inherit; text-align: center; text-align-last: center; }
+/* الجدول الأساسي بتخطيط ثابت ليتّسع كامل الجدول ضمن الصفحة بلا تمرير أفقي */
+.qm-sheet-main .qm-table { table-layout: fixed; }
+.qm-c-date { width: 34px; }
+.qm-c-day { width: 46px; }
+.qm-c-att { width: 58px; }
+.qm-c-lesson { width: 82px; }
+.qm-c-seg { width: 128px; }
+.qm-c-sm { width: 42px; }
+.qm-c-listener { width: 74px; }
+.qm-c-status { width: 22px; }
+/* السماح بلَفّ عناوين الأعمدة الطويلة حتى لا تفرض عرضًا زائدًا */
+.qm-sheet-main .qm-table thead th { white-space: normal; line-height: 1.15; }
 /* الدرجات في جدول منفصل بجانب الجدول الأساسي */
 .qm-grades .qm-num { width: 46px; }
 .qm-sheets { display: flex; gap: 0.9rem; align-items: flex-start; }

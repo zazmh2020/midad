@@ -221,7 +221,7 @@ export default function MonthlySheetView({
               <th className="qm-c-sm">{t('qm.col.errors')}</th>
               <th className="qm-c-sm">{t('qm.col.alerts')}</th>
               <th className="qm-c-listener">{t('qm.col.listener')}</th>
-              <th aria-label="status" />
+              <th className="qm-c-status" aria-label="status" />
             </tr>
           </thead>
           <tbody>
