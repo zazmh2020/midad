@@ -157,6 +157,20 @@ export default function MonthlySheetView({
   const total = (dateStr: string) =>
     SCORE_FIELDS.reduce((s, f) => s + (Number(data[dateStr]?.[f]) || 0), 0);
 
+  // عنوان من كلمتين يُعرض على سطرين (فوق بعض) لتضييق العمود
+  const stackedLabel = (key: string) => {
+    const label = t(key);
+    const sp = label.indexOf(' ');
+    if (sp < 0) return label;
+    return (
+      <>
+        {label.slice(0, sp)}
+        <br />
+        {label.slice(sp + 1)}
+      </>
+    );
+  };
+
   const presentDays = rows.filter((r) => (data[r.dateStr]?.attendance ?? 'PRESENT') !== 'ABSENT' && (data[r.dateStr]?.newFrom || data[r.dateStr]?.reviewFrom || data[r.dateStr]?.pages)).length;
   const activeDays = rows.filter((r) => data[r.dateStr]?.newFrom || data[r.dateStr]?.reviewFrom || data[r.dateStr]?.pages || data[r.dateStr]?.attendance === 'ABSENT').length;
   const totalPages = rows.reduce((s, r) => s + (Number(data[r.dateStr]?.pages) || 0), 0);
@@ -270,10 +284,9 @@ export default function MonthlySheetView({
           <thead>
             <tr>
               <th>{t('qm.col.lessonScore')}</th>
-              <th className="qm-hd-wrap">{t('qm.col.reviewScore')}</th>
-              <th className="qm-hd-wrap">{t('qm.col.minorScore')}</th>
-              <th>{t('qm.col.conduct')}</th>
-              <th>{t('qm.col.other')}</th>
+              <th className="qm-hd-wrap">{stackedLabel('qm.col.reviewScore')}</th>
+              <th className="qm-hd-wrap">{stackedLabel('qm.col.minorScore')}</th>
+              <th className="qm-hd-wrap">{stackedLabel('qm.col.conductOther')}</th>
               <th>{t('qm.col.total')}</th>
               <th className="qm-c-notes">{t('qm.col.notes')}</th>
             </tr>
@@ -284,8 +297,12 @@ export default function MonthlySheetView({
                 <td>{numCell(r, 'lessonScore')}</td>
                 <td>{numCell(r, 'reviewScore')}</td>
                 <td>{numCell(r, 'minorScore')}</td>
-                <td>{numCell(r, 'conductScore')}</td>
-                <td>{numCell(r, 'otherScore')}</td>
+                <td>
+                  <div className="qm-dual">
+                    {numCell(r, 'conductScore')}
+                    {numCell(r, 'otherScore')}
+                  </div>
+                </td>
                 <td className="qm-total">{total(r.dateStr) || ''}</td>
                 <td>{notesCell(r)}</td>
               </tr>

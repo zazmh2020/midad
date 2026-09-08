@@ -1171,6 +1171,9 @@ a.org-module:hover {
 .qm-sheet-main .qm-table thead th { white-space: normal; line-height: 1.15; }
 /* الدرجات في جدول منفصل بجانب الجدول الأساسي */
 .qm-grades .qm-num { width: 46px; }
+/* عمود "السلوك وأخرى": حقلان جنبًا إلى جنب داخل خلية واحدة */
+.qm-dual { display: flex; align-items: center; justify-content: center; gap: 2px; }
+.qm-dual .qm-num { width: 40px; }
 .qm-sheets { display: flex; gap: 0.9rem; align-items: flex-start; }
 .qm-sheet-main { flex: 1 1 auto; min-width: 0; }
 .qm-grades-col { flex: 0 0 auto; max-width: 100%; }
