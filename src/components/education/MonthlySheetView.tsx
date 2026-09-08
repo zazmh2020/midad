@@ -265,8 +265,9 @@ export default function MonthlySheetView({
       </div>
       {sendMsg && <div className={`qm-sendmsg ${sendMsg.ok ? 'is-ok' : 'is-err'}`}>{sendMsg.text}</div>}
 
-      {/* ===== جدول المتابعة اليومي (كامل العرض) ===== */}
-      <div className="qm-wrap qm-main-full" lang="en">
+      {/* ===== الجدولان جنبًا إلى جنب: المتابعة + الدرجات المستقلة ===== */}
+      <div className="qm-sheets">
+      <div className="qm-wrap qm-sheet-main" lang="en">
         <table className="qm-table qm-main">
           <thead>
             <tr>
@@ -314,52 +315,46 @@ export default function MonthlySheetView({
         </table>
       </div>
 
-      {/* ===== مربع الدرجات والحضور وملاحظات المعلم ===== */}
-      <section className="qm-grades-box">
-        <h3 className="qm-box-title">{t('qm.grades')}</h3>
-        <div className="qm-wrap" lang="en">
-          <table className="qm-table qm-grades">
-            <thead>
-              <tr>
-                <th className="qm-c-date">{t('qm.col.date')}</th>
-                <th className="qm-c-day">{t('qm.col.day')}</th>
-                <th>{t('qm.col.lessonScore')}</th>
-                <th className="qm-hd-wrap">{stackedLabel('qm.col.reviewScore')}</th>
-                <th className="qm-hd-wrap">{stackedLabel('qm.col.minorScore')}</th>
-                <th className="qm-hd-wrap">{stackedLabel('qm.col.conductOther')}</th>
-                <th>{t('qm.col.total')}</th>
-                <th className="qm-c-att">{t('qm.col.attendance')}</th>
-                <th className="qm-c-notes">{t('qm.col.notes')}</th>
+      {/* ===== جدول الدرجات: مستقل، بجانب الجدول الأساسي ===== */}
+      <div className="qm-grades-col">
+      <div className="qm-wrap" lang="en">
+        <table className="qm-table qm-grades">
+          <thead>
+            <tr>
+              <th>{t('qm.col.lessonScore')}</th>
+              <th className="qm-hd-wrap">{stackedLabel('qm.col.reviewScore')}</th>
+              <th className="qm-hd-wrap">{stackedLabel('qm.col.minorScore')}</th>
+              <th className="qm-hd-wrap">{stackedLabel('qm.col.conductOther')}</th>
+              <th>{t('qm.col.total')}</th>
+              <th className="qm-c-notes">{t('qm.col.notes')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr key={r.dateStr} className={`${data[r.dateStr]?.attendance === 'ABSENT' ? 'qm-absent' : ''} ${r.weekday === 5 || r.weekday === 6 ? 'qm-weekend' : ''}`}>
+                <td>{numCell(r, 'lessonScore')}</td>
+                <td>{numCell(r, 'reviewScore')}</td>
+                <td>{numCell(r, 'minorScore')}</td>
+                <td>
+                  <div className="qm-dual">
+                    {numCell(r, 'conductScore')}
+                    {numCell(r, 'otherScore')}
+                  </div>
+                </td>
+                <td className="qm-total">{total(r.dateStr) || ''}</td>
+                <td>
+                  <div className="qm-notecell">
+                    {attCell(r)}
+                    {notesCell(r)}
+                  </div>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {rows.map((r) => {
-                const wd = wdFmt.format(new Date(`${r.dateStr}T00:00:00Z`));
-                const absent = data[r.dateStr]?.attendance === 'ABSENT';
-                const weekend = r.weekday === 5 || r.weekday === 6;
-                return (
-                  <tr key={r.dateStr} className={`${absent ? 'qm-absent' : ''} ${weekend ? 'qm-weekend' : ''}`}>
-                    <td className="qm-date">{r.day}</td>
-                    <td className="qm-wd">{wd}</td>
-                    <td>{numCell(r, 'lessonScore')}</td>
-                    <td>{numCell(r, 'reviewScore')}</td>
-                    <td>{numCell(r, 'minorScore')}</td>
-                    <td>
-                      <div className="qm-dual">
-                        {numCell(r, 'conductScore')}
-                        {numCell(r, 'otherScore')}
-                      </div>
-                    </td>
-                    <td className="qm-total">{total(r.dateStr) || ''}</td>
-                    <td>{attCell(r)}</td>
-                    <td>{notesCell(r)}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </section>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      </div>
+      </div>
 
       {canManage && <p className="qm-hint">{t('qm.autosave')}</p>}
 
