@@ -528,9 +528,6 @@ a.org-module:hover {
 .org-table tbody tr:last-child td { border-bottom: none; }
 .org-table tbody tr:hover { background: #faf9fc; }
 .org-table tr.is-inactive { opacity: 0.6; }
-/* عمود الرقم التسلسلي للطالب */
-.org-th-serial, .org-td-serial { width: 48px; text-align: center; }
-.org-td-serial { font-family: var(--font-display); font-weight: 700; color: var(--text-muted); }
 
 .org-table td strong {
   color: var(--purple-900);
