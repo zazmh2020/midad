@@ -841,7 +841,7 @@ const ar: Dict = {
   'shell.logout.confirm.body': 'هل تريد بالتأكيد تسجيل الخروج من حسابك؟',
   'shell.cancel': 'إلغاء',
   'shell.loggingOut': 'جارٍ الخروج…',
-  'shell.menu': 'القائمة',
+  'shell.menu': 'القائمة', 'shell.back': 'رجوع',
   'shell.foldSidebar': 'طيّ/فرد الشريط الجانبي',
 
   // أنواع الجهات
@@ -2120,7 +2120,7 @@ const en: Dict = {
   'shell.logout.confirm.body': 'Are you sure you want to sign out of your account?',
   'shell.cancel': 'Cancel',
   'shell.loggingOut': 'Signing out…',
-  'shell.menu': 'Menu',
+  'shell.menu': 'Menu', 'shell.back': 'Back',
   'shell.foldSidebar': 'Collapse / expand sidebar',
 
   'type.association': 'Association / Organization',

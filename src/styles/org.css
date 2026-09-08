@@ -273,6 +273,17 @@
   color: var(--gray-700);
 }
 
+/* سهم العودة للصفحة السابقة */
+.org-back {
+  display: inline-grid; place-items: center; flex-shrink: 0;
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 1px solid var(--line, #e6e3ee); background: transparent; color: var(--gray-700, #4b4660);
+  cursor: pointer; transition: color 0.16s, border-color 0.16s, background 0.16s;
+}
+.org-back:hover { color: var(--purple-700, #6b57a0); border-color: var(--purple-300, #8873af); background: var(--purple-100, #efeaf6); }
+/* السهم يشير لليمين في الواجهة العربية (رجوع)، ولليسار في الإنجليزية */
+:root[dir="rtl"] .org-back-ic, [dir="rtl"] .org-back-ic { transform: scaleX(-1); }
+
 /* الشعار داخل الشريط العلوي */
 .org-topbar-brand {
   display: inline-flex;
@@ -1077,10 +1088,10 @@ a.org-module:hover {
   font-weight: 700; font-size: 0.78rem; padding: 0.4rem 0.75rem; border-radius: 100px;
 }
 .qm-meta {
-  display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
-  font-size: 0.9rem; color: var(--text-strong); margin-bottom: 0.6rem;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.6rem; flex-wrap: wrap;
+  font-size: 0.9rem; color: var(--text-strong); margin-bottom: 0.6rem; text-align: center;
 }
-.qm-send { display: flex; gap: 0.5rem; }
+.qm-send { display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
 .qm-send .org-btn { font-size: 0.82rem; padding: 0.45rem 0.9rem; }
 .qm-sendmsg {
   margin-bottom: 0.7rem; padding: 0.6rem 0.9rem; border-radius: 10px; font-size: 0.84rem;
@@ -1126,6 +1137,12 @@ a.org-module:hover {
 .qm-table tbody tr:hover td:first-child, .qm-table tbody tr:hover td:nth-child(2) { background: #f4f1fb; }
 .qm-absent td { background: #fdecec !important; }
 .qm-absent .qm-date, .qm-absent .qm-wd { color: #c0392b; }
+/* أيام الجمعة والسبت بلون فضّي فاتح */
+.qm-weekend td { background: #eef0f4; }
+.qm-weekend td:first-child, .qm-weekend td:nth-child(2) { background: #e5e8ee; }
+.qm-weekend .qm-date, .qm-weekend .qm-wd { color: #5a6072; }
+:root[data-theme="dark"] .qm-weekend td { background: #262233; }
+:root[data-theme="dark"] .qm-weekend td:first-child, :root[data-theme="dark"] .qm-weekend td:nth-child(2) { background: #2b2740; }
 
 .qm-in {
   font-family: inherit; border: 1px solid transparent; background: transparent;
@@ -1139,9 +1156,19 @@ a.org-module:hover {
 /* قوائم المراجعة (الكبرى/الصغرى): أعرض ليظهر المحتوى كاملًا من النظرة الأولى */
 .qm-seg { width: 172px; font-family: inherit; text-align: start; text-align-last: start; }
 .qm-notes { width: 168px; font-family: inherit; text-align: start; text-align-last: start; }
-/* الدرجات في جدول منفصل */
-.qm-grades-title { margin: 1.6rem 0 0.6rem; font-family: var(--font-display); font-size: 1rem; color: var(--text-strong); }
+/* الدرجات في جدول منفصل بجانب الجدول الأساسي */
+.qm-grades-title { margin: 0 0 0.5rem; font-family: var(--font-display); font-size: 1rem; color: var(--text-strong); }
 .qm-grades .qm-num { width: 46px; }
+.qm-sheets { display: flex; gap: 1rem; align-items: flex-start; }
+.qm-sheet-main { flex: 1 1 auto; min-width: 0; }
+.qm-grades-col { flex: 0 0 auto; max-width: 100%; }
+/* محاذاة أعلى جدول الدرجات مع رأس الجدول الأساسي (ارتفاع العنوان) */
+.qm-grades-col .qm-grades-title { height: 1.4rem; display: flex; align-items: center; }
+@media (max-width: 1100px) {
+  .qm-sheets { flex-direction: column; }
+  .qm-grades-col { width: 100%; }
+  .qm-grades-col .qm-grades-title { height: auto; margin-top: 1rem; }
+}
 .qm-in:disabled { color: var(--text-muted); }
 
 .qm-status { width: 20px; }

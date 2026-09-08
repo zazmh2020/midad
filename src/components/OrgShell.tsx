@@ -231,6 +231,13 @@ export default function OrgShell({ children, org, user, nav, inbox, assistant }:
               <path d="M1 1h18M1 7h18M1 13h18" />
             </svg>
           </button>
+          {pathname !== base && (
+            <button className="org-back" onClick={() => router.back()} aria-label={t('shell.back')} title={t('shell.back')}>
+              <svg className="org-back-ic" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 4l-6 6 6 6" />
+              </svg>
+            </button>
+          )}
           <Link href={base} className="org-topbar-brand" onClick={() => setOpen(false)}>
             {org.logoUrl ? (
               // eslint-disable-next-line @next/next/no-img-element

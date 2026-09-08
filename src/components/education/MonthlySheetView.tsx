@@ -181,7 +181,7 @@ export default function MonthlySheetView({
         </label>
         <label className="qm-tool">
           <span>{t('qm.month')}</span>
-          <input type="month" value={ym} onChange={(e) => e.target.value && navigate({ ym: e.target.value })} />
+          <input type="month" lang="en" value={ym} onChange={(e) => e.target.value && navigate({ ym: e.target.value })} />
         </label>
         <div className="qm-summary">
           <span>{t('qm.sumPages', { n: totalPages })}</span>
@@ -205,8 +205,9 @@ export default function MonthlySheetView({
       </div>
       {sendMsg && <div className={`qm-sendmsg ${sendMsg.ok ? 'is-ok' : 'is-err'}`}>{sendMsg.text}</div>}
 
-      {/* ===== الجدول الأساسي: المتابعة اليومية ===== */}
-      <div className="qm-wrap">
+      {/* ===== الجدولان جنبًا إلى جنب: المتابعة + الدرجات المستقلة ===== */}
+      <div className="qm-sheets">
+      <div className="qm-wrap qm-sheet-main" lang="en">
         <table className="qm-table">
           <thead>
             <tr>
@@ -228,9 +229,10 @@ export default function MonthlySheetView({
             {rows.map((r) => {
               const wd = wdFmt.format(new Date(`${r.dateStr}T00:00:00Z`));
               const absent = data[r.dateStr]?.attendance === 'ABSENT';
+              const weekend = r.weekday === 5 || r.weekday === 6; // الجمعة/السبت
               const st = saved[r.dateStr];
               return (
-                <tr key={r.dateStr} className={absent ? 'qm-absent' : ''}>
+                <tr key={r.dateStr} className={`${absent ? 'qm-absent' : ''} ${weekend ? 'qm-weekend' : ''}`}>
                   <td className="qm-date">{r.day}</td>
                   <td className="qm-wd">{wd}</td>
                   <td>
@@ -263,9 +265,10 @@ export default function MonthlySheetView({
         </table>
       </div>
 
-      {/* ===== جدول منفصل: الدرجات ===== */}
+      {/* ===== جدول الدرجات: مستقل، بجانب الملاحظات ===== */}
+      <div className="qm-grades-col">
       <h3 className="qm-grades-title">{t('qm.grades')}</h3>
-      <div className="qm-wrap">
+      <div className="qm-wrap" lang="en">
         <table className="qm-table qm-grades">
           <thead>
             <tr>
@@ -280,7 +283,7 @@ export default function MonthlySheetView({
           </thead>
           <tbody>
             {rows.map((r) => (
-              <tr key={r.dateStr} className={data[r.dateStr]?.attendance === 'ABSENT' ? 'qm-absent' : ''}>
+              <tr key={r.dateStr} className={`${data[r.dateStr]?.attendance === 'ABSENT' ? 'qm-absent' : ''} ${r.weekday === 5 || r.weekday === 6 ? 'qm-weekend' : ''}`}>
                 <td className="qm-date">{r.day}</td>
                 <td>{numCell(r, 'lessonScore')}</td>
                 <td>{numCell(r, 'reviewScore')}</td>
@@ -292,6 +295,8 @@ export default function MonthlySheetView({
             ))}
           </tbody>
         </table>
+      </div>
+      </div>
       </div>
 
       {canManage && <p className="qm-hint">{t('qm.autosave')}</p>}
