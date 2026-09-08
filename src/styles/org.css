@@ -1765,7 +1765,7 @@ a.org-module:hover {
 /* حقل الهاتف: مفتاح دولة + رقم */
 .pf-phone-row { display: flex; gap: 0.5rem; align-items: stretch; }
 .pf-phone-row .pf-dial {
-  flex: 0 0 auto; width: 120px; min-width: 0; text-overflow: ellipsis;
+  flex: 0 0 auto; width: 150px; min-width: 0; text-overflow: ellipsis;
   background: #fff; border: 1.5px solid var(--gray-300); border-radius: 11px;
   padding: 0.6rem 0.5rem; font-family: var(--font-body); font-size: 0.85rem; color: var(--gray-900);
 }

@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
-import { useT } from '@/lib/i18n/LocaleProvider';
+import { useLocale } from '@/lib/i18n/LocaleProvider';
 import { COUNTRIES } from '@/lib/countries';
 
 /** يفصل رقمًا مخزّنًا "+966 5xxxx" إلى مفتاح دولة ورقم محلّي. */
@@ -19,8 +19,9 @@ export default function ProfileForm({
   name: initialName, email, role, avatarUrl: initialAvatar = '',
   jobTitle: initialJob = '', phone: initialPhone = '',
 }: { name: string; email: string; role: string; avatarUrl?: string | null; jobTitle?: string | null; phone?: string | null }) {
-  const t = useT();
+  const { t, locale } = useLocale();
   const router = useRouter();
+  const countryName = (c: (typeof COUNTRIES)[number]) => (locale === 'en' ? c.name : c.nameAr);
 
   const [name, setName] = useState(initialName);
   const [avatarUrl, setAvatarUrl] = useState(initialAvatar ?? '');
@@ -114,10 +115,10 @@ export default function ProfileForm({
             <div className="pf-phone-row" dir="ltr">
               <select className="pf-dial" value={dial} onChange={(e) => setDial(e.target.value)} aria-label={t('pf.phoneHint')}>
                 {COUNTRIES.map((c) => (
-                  <option key={c.code} value={c.dial}>{c.flag} {c.dial} {c.name}</option>
+                  <option key={c.code} value={c.dial}>{c.flag} {c.dial} — {countryName(c)}</option>
                 ))}
               </select>
-              <input id="pf-phone" type="tel" value={phoneNum} onChange={(e) => setPhoneNum(e.target.value)} placeholder="5X XXX XXXX" />
+              <input id="pf-phone" type="tel" lang="en" inputMode="tel" value={phoneNum} onChange={(e) => setPhoneNum(e.target.value)} placeholder="5X XXX XXXX" />
             </div>
           </div>
         </div>
