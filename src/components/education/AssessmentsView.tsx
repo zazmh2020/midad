@@ -7,13 +7,14 @@ import { useLocale } from '@/lib/i18n/LocaleProvider';
 
 type Assessment = {
   id: string; title: string; kind: string; score: number | null; maxScore: number;
+  errors: number | null; alerts: number | null;
   result: string; notes: string | null; studentName: string; date: string;
 };
 type Student = { id: string; name: string };
 
 export default function AssessmentsView({
-  assessments, students, canManage,
-}: { assessments: Assessment[]; students: Student[]; canManage: boolean }) {
+  assessments, students, canManage, orgName,
+}: { assessments: Assessment[]; students: Student[]; canManage: boolean; orgName: string }) {
   const { t, locale } = useLocale();
   const dateFmt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar-u-nu-latn', { year: 'numeric', month: 'short', day: 'numeric' });
   const fmtDate = (d: string) => dateFmt.format(new Date(d));
@@ -30,8 +31,13 @@ export default function AssessmentsView({
   const [kind, setKind] = useState('MEMORIZATION_TEST');
   const [score, setScore] = useState('');
   const [maxScore, setMaxScore] = useState('100');
+  const [errorsN, setErrorsN] = useState('');
+  const [alertsN, setAlertsN] = useState('');
   const [date, setDate] = useState('');
   const [notes, setNotes] = useState('');
+  const [preview, setPreview] = useState(false);
+
+  const printedAt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar-u-nu-latn', { year: 'numeric', month: 'long', day: 'numeric' }).format(new Date());
 
   async function create(e: FormEvent) {
     e.preventDefault();
@@ -39,11 +45,11 @@ export default function AssessmentsView({
     try {
       const res = await fetch('/api/org/education/assessments', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ studentId, title, kind, score: score || null, maxScore, date, notes }),
+        body: JSON.stringify({ studentId, title, kind, score: score || null, maxScore, errors: errorsN || null, alerts: alertsN || null, date, notes }),
       });
       const d = await res.json().catch(() => ({}));
       if (!res.ok) setError(d.error ?? t('form.createErr'));
-      else { setStudentId(''); setTitle(''); setKind('MEMORIZATION_TEST'); setScore(''); setMaxScore('100'); setDate(''); setNotes(''); setCreating(false); router.refresh(); }
+      else { setStudentId(''); setTitle(''); setKind('MEMORIZATION_TEST'); setScore(''); setMaxScore('100'); setErrorsN(''); setAlertsN(''); setDate(''); setNotes(''); setCreating(false); router.refresh(); }
     } catch { setError(t('form.netErr')); } finally { setBusyId(null); }
   }
 
@@ -59,14 +65,17 @@ export default function AssessmentsView({
 
   return (
     <>
-      {canManage && students.length > 0 && (
-        <div className="org-toolbar">
-          <span className="org-toolbar-spacer" />
+      <div className="org-toolbar">
+        <span className="org-toolbar-spacer" />
+        {assessments.length > 0 && (
+          <button className="org-btn org-btn-outline" onClick={() => setPreview(true)}>{t('assess.exportPdf')}</button>
+        )}
+        {canManage && students.length > 0 && (
           <button className="org-btn org-btn-primary" onClick={() => { setCreating((v) => !v); setError(''); }}>
             {creating ? t('shell.cancel') : t('assess.new')}
           </button>
-        </div>
-      )}
+        )}
+      </div>
 
       {error && <div className="org-alert">{error}</div>}
       {students.length === 0 && <div className="org-empty">{t('assess.needStudents')}</div>}
@@ -106,6 +115,16 @@ export default function AssessmentsView({
               <input id="as-date" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
             </div>
           </div>
+          <div className="org-field-row">
+            <div className="org-field">
+              <label htmlFor="as-errors">{t('assess.errors')} <span className="org-hint">{t('view.optional')}</span></label>
+              <input id="as-errors" type="number" min="0" dir="ltr" lang="en" value={errorsN} onChange={(e) => setErrorsN(e.target.value)} />
+            </div>
+            <div className="org-field">
+              <label htmlFor="as-alerts">{t('assess.alerts')} <span className="org-hint">{t('view.optional')}</span></label>
+              <input id="as-alerts" type="number" min="0" dir="ltr" lang="en" value={alertsN} onChange={(e) => setAlertsN(e.target.value)} />
+            </div>
+          </div>
           <div className="org-field">
             <label htmlFor="as-notes">{t('assess.notes')} <span className="org-hint">{t('view.optional')}</span></label>
             <textarea id="as-notes" rows={2} value={notes} onChange={(e) => setNotes(e.target.value)} />
@@ -125,6 +144,7 @@ export default function AssessmentsView({
           <table className="org-table">
             <thead><tr>
               <th>{t('assess.student')}</th><th>{t('assess.colTest')}</th><th>{t('assess.score')}</th>
+              <th dir="ltr">{t('assess.errors')} / {t('assess.alerts')}</th>
               <th>{t('view.status')}</th><th>{t('assess.date')}</th>{canManage && <th></th>}
             </tr></thead>
             <tbody>
@@ -133,6 +153,7 @@ export default function AssessmentsView({
                   <td><strong>{a.studentName}</strong></td>
                   <td>{a.title}<small>{kindLabel(a.kind)}</small></td>
                   <td dir="ltr">{a.score === null ? '—' : `${a.score} / ${a.maxScore}`}</td>
+                  <td dir="ltr">{a.errors ?? 0} / {a.alerts ?? 0}</td>
                   <td><span className={`org-pill apr-badge-${a.result === 'PASS' ? 'approved' : a.result === 'FAIL' ? 'rejected' : 'pending'}`}>{resultLabel(a.result)}</span></td>
                   <td>{fmtDate(a.date)}</td>
                   {canManage && (
@@ -144,6 +165,59 @@ export default function AssessmentsView({
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* ===== معاينة قبل تصدير PDF ===== */}
+      {preview && (
+        <div className="qm-preview" role="dialog" aria-modal="true">
+          <div className="qm-preview-bar">
+            <span className="qm-preview-name">{t('assess.pageTitle')}</span>
+            <div className="qm-preview-actions">
+              <button className="org-btn org-btn-primary" onClick={() => window.print()}>{t('assess.exportPdf')}</button>
+              <button className="org-btn org-btn-outline" onClick={() => setPreview(false)}>{t('qm.close')}</button>
+            </div>
+          </div>
+          <div className="qm-preview-scroll">
+            <article className="qm-doc" lang="en">
+              <header className="qm-doc-head">
+                <div className="qm-doc-org">{orgName}</div>
+                <h1 className="qm-doc-title">{t('assess.pageTitle')}</h1>
+                <div className="qm-doc-sub">{t('assess.reportCount', { n: assessments.length })}</div>
+              </header>
+              <table className="qm-doc-table">
+                <thead>
+                  <tr>
+                    <th>{t('assess.student')}</th>
+                    <th>{t('assess.colTest')}</th>
+                    <th>{t('assess.kind')}</th>
+                    <th>{t('assess.score')}</th>
+                    <th>{t('assess.errors')}</th>
+                    <th>{t('assess.alerts')}</th>
+                    <th>{t('view.status')}</th>
+                    <th>{t('assess.date')}</th>
+                    <th>{t('assess.notes')}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {assessments.map((a) => (
+                    <tr key={a.id}>
+                      <td>{a.studentName}</td>
+                      <td>{a.title}</td>
+                      <td>{kindLabel(a.kind)}</td>
+                      <td dir="ltr">{a.score === null ? '—' : `${a.score} / ${a.maxScore}`}</td>
+                      <td dir="ltr">{a.errors ?? 0}</td>
+                      <td dir="ltr">{a.alerts ?? 0}</td>
+                      <td>{resultLabel(a.result)}</td>
+                      <td dir="ltr">{a.date}</td>
+                      <td className="qm-doc-notes">{a.notes ?? ''}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div className="qm-doc-foot">{t('qm.generatedAt', { date: printedAt })}</div>
+            </article>
+          </div>
         </div>
       )}
     </>

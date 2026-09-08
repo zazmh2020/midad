@@ -42,6 +42,11 @@ export async function POST(request: Request) {
   if (score === undefined) return NextResponse.json({ error: 'الدرجة غير صالحة.' }, { status: 400 });
   if (score !== null && score > maxScore) return NextResponse.json({ error: 'الدرجة أكبر من القصوى.' }, { status: 400 });
 
+  const errors = parseNum(body.errors, null);
+  if (errors === undefined) return NextResponse.json({ error: 'عدد الأخطاء غير صالح.' }, { status: 400 });
+  const alerts = parseNum(body.alerts, null);
+  if (alerts === undefined) return NextResponse.json({ error: 'عدد التنبيهات غير صالح.' }, { status: 400 });
+
   const date = parseDate(body.date);
   if (date === undefined) return NextResponse.json({ error: 'التاريخ غير صالح.' }, { status: 400 });
 
@@ -52,7 +57,8 @@ export async function POST(request: Request) {
   const a = await prisma.assessment.create({
     data: {
       studentId, title, kind: kind as AssessmentKind,
-      score, maxScore, result: computeAssessmentResult(score, maxScore),
+      score, maxScore, errors: errors ?? null, alerts: alerts ?? null,
+      result: computeAssessmentResult(score, maxScore),
       notes: notes || null, date, organizationId: orgId,
     },
     select: { id: true },

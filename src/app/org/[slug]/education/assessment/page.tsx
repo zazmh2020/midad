@@ -19,7 +19,7 @@ export default async function AssessmentPage({ params }: { params: Promise<{ slu
       orderBy: { date: 'desc' },
       take: 200,
       select: {
-        id: true, title: true, kind: true, score: true, maxScore: true,
+        id: true, title: true, kind: true, score: true, maxScore: true, errors: true, alerts: true,
         result: true, notes: true, date: true, student: { select: { name: true } },
       },
     }),
@@ -38,8 +38,10 @@ export default async function AssessmentPage({ params }: { params: Promise<{ slu
       <AssessmentsView
         students={students}
         canManage={canManageEducation(user)}
+        orgName={org.name}
         assessments={rows.map((a) => ({
           id: a.id, title: a.title, kind: a.kind, score: a.score, maxScore: a.maxScore,
+          errors: a.errors, alerts: a.alerts,
           result: a.result, notes: a.notes, studentName: a.student?.name ?? '—', date: a.date.toISOString().slice(0, 10),
         }))}
       />

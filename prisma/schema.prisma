@@ -505,6 +505,8 @@ model Assessment {
   kind      AssessmentKind   @default(MEMORIZATION_TEST)
   score     Float? // الدرجة المحصّلة
   maxScore  Float            @default(100) // الدرجة القصوى
+  errors    Int? // عدد الأخطاء
+  alerts    Int? // عدد التنبيهات
   result    AssessmentResult @default(PENDING)
   date      DateTime         @default(now())
   notes     String?
