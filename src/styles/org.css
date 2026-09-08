@@ -322,6 +322,15 @@
 }
 
 /* ---------- Page ---------- */
+/* توسيط محتوى كل الصفحات في عمود مريح يملأ الشاشة ويتوسّط على الشاشات العريضة */
+.org-page {
+  max-width: 1280px;
+  margin-inline: auto;
+}
+/* الدليل الشهري يبقى بكامل العرض (جدولان جنبًا إلى جنب) */
+.qm-page {
+  max-width: none;
+}
 .org-page-narrow {
   max-width: 780px;
   margin-inline: auto;
