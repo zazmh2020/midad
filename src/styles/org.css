@@ -1951,16 +1951,16 @@ a.org-module:hover {
 /* ---------- مجموعات التنقّل القابلة للطيّ ---------- */
 .org-nav-group { display: flex; flex-direction: column; }
 .org-nav-grouphd { width: 100%; background: none; border: none; cursor: pointer; font: inherit; text-align: inherit; }
-.org-nav-grouphd.is-parent-active { color: var(--purple-700, #6b57a0); }
+.org-nav-grouphd.is-parent-active { color: #fff; }
 .org-nav-chev { margin-inline-start: auto; transition: transform 0.2s var(--ease, ease); opacity: 0.6; flex-shrink: 0; }
 .org-nav-group.is-open .org-nav-chev { transform: rotate(180deg); }
 .org-nav-children { display: flex; flex-direction: column; gap: 1px; margin: 0.1rem 0 0.3rem; padding-inline-start: 0.6rem; }
 .org-nav-child {
   display: flex; align-items: center; gap: 0.55rem; padding: 0.42rem 0.7rem; border-radius: 9px;
-  font-size: 0.83rem; color: var(--text-muted, #6c6780); position: relative;
+  font-size: 0.83rem; color: rgba(255, 255, 255, 0.72); position: relative;
 }
-.org-nav-child:hover { background: var(--gray-100, #f5f3fa); color: var(--text-strong, #2b1a4e); }
-.org-nav-child.is-active { background: var(--purple-100, #efeaf6); color: var(--purple-700, #6b57a0); font-weight: 700; }
+.org-nav-child:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+.org-nav-child.is-active { background: rgba(255, 255, 255, 0.16); color: #fff; font-weight: 700; }
 .org-nav-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: 0.5; flex-shrink: 0; margin-inline-start: 0.35rem; }
 .org-app.is-collapsed .org-nav-children { display: none; }
 
