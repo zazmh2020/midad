@@ -176,6 +176,7 @@ model Teacher {
 /// الطالب — قد ينتمي لحلقة واحدة
 model Student {
   id            String        @id @default(cuid())
+  serial        Int? // رقم تسلسلي تلقائي للطالب داخل الجهة
   name          String
   phone         String?
   guardianName  String?
@@ -204,6 +205,7 @@ model Student {
   assessments  Assessment[]
 
   @@index([organizationId])
+  @@index([organizationId, serial])
   @@index([halaqaId])
   @@index([guardianId])
   @@map("students")

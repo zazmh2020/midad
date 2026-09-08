@@ -8,7 +8,7 @@ import { STUDENT_STATUSES } from '@/lib/permissions';
 import { useLocale } from '@/lib/i18n/LocaleProvider';
 
 type Student = {
-  id: string; name: string; phone: string | null;
+  id: string; serial: number | null; name: string; phone: string | null;
   guardianName: string | null; guardianPhone: string | null;
   status: string; halaqaId: string | null;
 };
@@ -150,11 +150,12 @@ export default function StudentsView({ students, halaqat, basePath }: { students
         <div className="org-table-wrap">
           <table className="org-table">
             <thead>
-              <tr><th>{t('edu.st.thStudent')}</th><th>{t('edu.st.thGuardian')}</th><th>{t('view.status')}</th><th>{t('edu.st.halaqa')}</th><th></th></tr>
+              <tr><th className="org-th-serial">{t('edu.st.thSerial')}</th><th>{t('edu.st.thStudent')}</th><th>{t('edu.st.thGuardian')}</th><th>{t('view.status')}</th><th>{t('edu.st.halaqa')}</th><th></th></tr>
             </thead>
             <tbody>
               {shown.map((s) => (
                 <tr key={s.id}>
+                  <td className="org-td-serial" dir="ltr">{s.serial ?? '—'}</td>
                   <td><Link href={`${basePath}/${s.id}`} className="org-link"><strong>{s.name}</strong></Link>{s.phone && <small dir="ltr">{s.phone}</small>}</td>
                   <td>{s.guardianName ?? '—'}{s.guardianPhone && <small dir="ltr">{s.guardianPhone}</small>}</td>
                   <td>

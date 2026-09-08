@@ -37,8 +37,16 @@ export async function POST(request: Request) {
     if (!h) return NextResponse.json({ error: 'الحلقة غير موجودة.' }, { status: 400 });
   }
 
+  // رقم تسلسلي تلقائي داخل الجهة = أعلى رقم حالي + 1
+  const maxSerial = await prisma.student.aggregate({
+    where: { organizationId: orgId },
+    _max: { serial: true },
+  });
+  const serial = (maxSerial._max.serial ?? 0) + 1;
+
   const s = await prisma.student.create({
     data: {
+      serial,
       name,
       phone: phone || null,
       guardianName: guardianName || null,
@@ -49,7 +57,7 @@ export async function POST(request: Request) {
       halaqaId,
       organizationId: orgId,
     },
-    select: { id: true },
+    select: { id: true, serial: true },
   });
-  return NextResponse.json({ ok: true, id: s.id });
+  return NextResponse.json({ ok: true, id: s.id, serial: s.serial });
 }

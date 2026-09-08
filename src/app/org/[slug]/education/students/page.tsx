@@ -16,9 +16,9 @@ export default async function StudentsPage({ params }: { params: Promise<{ slug:
   const [students, halaqat] = await Promise.all([
     prisma.student.findMany({
       where: { organizationId: org.id },
-      orderBy: { createdAt: 'desc' },
+      orderBy: [{ serial: 'asc' }, { createdAt: 'asc' }],
       select: {
-        id: true, name: true, phone: true, guardianName: true, guardianPhone: true,
+        id: true, serial: true, name: true, phone: true, guardianName: true, guardianPhone: true,
         status: true, halaqaId: true,
       },
     }),
