@@ -9,7 +9,8 @@ import Icon from '@/components/Icon';
 import { useLocale } from '@/lib/i18n/LocaleProvider';
 
 interface Competition {
-  id: string; name: string; level: string | null; status: string; startDate: string | null;
+  id: string; name: string; level: string | null; description: string | null; status: string;
+  startDate: string | null; endDate: string | null; prize: string | null; location: string | null;
 }
 
 const STATUS_KIND: Record<string, 'ok' | 'warn' | 'muted'> = {
@@ -26,7 +27,11 @@ export default function CompetitionsView({ competitions, basePath }: { competiti
   const [creating, setCreating] = useState(competitions.length === 0);
   const [name, setName] = useState('');
   const [level, setLevel] = useState('');
+  const [description, setDescription] = useState('');
   const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [prize, setPrize] = useState('');
+  const [location, setLocation] = useState('');
   const [status, setStatus] = useState('UPCOMING');
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
@@ -40,10 +45,10 @@ export default function CompetitionsView({ competitions, basePath }: { competiti
     setBusy(true);
     const res = await fetch('/api/org/competitions', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, level, startDate: startDate || null, status }),
+      body: JSON.stringify({ name, level, description, startDate: startDate || null, endDate: endDate || null, prize, location, status }),
     });
     setBusy(false);
-    if (res.ok) { setName(''); setLevel(''); setStartDate(''); setStatus('UPCOMING'); setCreating(false); router.refresh(); }
+    if (res.ok) { setName(''); setLevel(''); setDescription(''); setStartDate(''); setEndDate(''); setPrize(''); setLocation(''); setStatus('UPCOMING'); setCreating(false); router.refresh(); }
     else { const d = await res.json().catch(() => ({})); setErr(d.error ?? t('form.createErr')); }
   }
 
@@ -86,13 +91,19 @@ export default function CompetitionsView({ competitions, basePath }: { competiti
                 {err && <div className="org-alert" style={{ marginBottom: '0.8rem' }}>{err}</div>}
                 <div className="org-field"><label>{t('comp.nameLabel')}</label><input value={name} onChange={(e) => setName(e.target.value)} placeholder={t('comp.namePh')} /></div>
                 <div className="org-field"><label>{t('comp.level')}</label><input value={level} onChange={(e) => setLevel(e.target.value)} placeholder={t('comp.levelPh')} /></div>
+                <div className="org-field"><label>{t('comp.description')}</label><textarea rows={2} value={description} onChange={(e) => setDescription(e.target.value)} placeholder={t('comp.descriptionPh')} /></div>
                 <div className="org-field-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem' }}>
                   <div className="org-field"><label>{t('view.startDate')}</label><input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} /></div>
-                  <div className="org-field"><label>{t('view.status')}</label>
-                    <select value={status} onChange={(e) => setStatus(e.target.value)}>
-                      <option value="UPCOMING">{t('status.competition.UPCOMING')}</option><option value="OPEN">{t('status.competition.OPEN')}</option><option value="CLOSED">{t('status.competition.CLOSED')}</option>
-                    </select>
-                  </div>
+                  <div className="org-field"><label>{t('comp.endDate')}</label><input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} /></div>
+                </div>
+                <div className="org-field-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem' }}>
+                  <div className="org-field"><label>{t('comp.prize')}</label><input value={prize} onChange={(e) => setPrize(e.target.value)} placeholder={t('comp.prizePh')} /></div>
+                  <div className="org-field"><label>{t('comp.location')}</label><input value={location} onChange={(e) => setLocation(e.target.value)} placeholder={t('comp.locationPh')} /></div>
+                </div>
+                <div className="org-field"><label>{t('view.status')}</label>
+                  <select value={status} onChange={(e) => setStatus(e.target.value)}>
+                    <option value="UPCOMING">{t('status.competition.UPCOMING')}</option><option value="OPEN">{t('status.competition.OPEN')}</option><option value="CLOSED">{t('status.competition.CLOSED')}</option>
+                  </select>
                 </div>
                 <div className="org-form-actions"><button className="org-btn org-btn-primary" disabled={busy}>{busy ? t('form.saving') : t('comp.create')}</button></div>
               </form>
@@ -104,10 +115,14 @@ export default function CompetitionsView({ competitions, basePath }: { competiti
                   <span className="mod-detail-ic"><Icon name="operations/operations-events" size={22} /></span>
                   <div><h3>{cur.name}</h3><p>{cur.level ?? t('comp.generalComp')}</p></div>
                 </div>
+                {cur.description && <p className="comp-desc">{cur.description}</p>}
                 <div className="mod-kpis">
                   <div className="mod-kpi"><div className="k">{t('view.status')}</div><div className="v" style={{ fontSize: '1rem' }}>{STATUS_KIND[cur.status] ? t(`status.competition.${cur.status}`) : cur.status}</div></div>
                   <div className="mod-kpi"><div className="k">{t('view.startDate')}</div><div className="v" style={{ fontSize: '0.9rem' }}>{cur.startDate ? dateFmt.format(new Date(cur.startDate)) : '—'}</div></div>
+                  <div className="mod-kpi"><div className="k">{t('comp.endDate')}</div><div className="v" style={{ fontSize: '0.9rem' }}>{cur.endDate ? dateFmt.format(new Date(cur.endDate)) : '—'}</div></div>
                   <div className="mod-kpi"><div className="k">{t('comp.level')}</div><div className="v" style={{ fontSize: '0.9rem' }}>{cur.level ?? t('comp.general')}</div></div>
+                  <div className="mod-kpi"><div className="k">{t('comp.prize')}</div><div className="v" style={{ fontSize: '0.9rem' }}>{cur.prize ?? '—'}</div></div>
+                  <div className="mod-kpi"><div className="k">{t('comp.location')}</div><div className="v" style={{ fontSize: '0.9rem' }}>{cur.location ?? '—'}</div></div>
                 </div>
                 <div className="org-form-actions">
                   <Link className="org-btn org-btn-primary" href={`${basePath}/${cur.id}`}>{t('comp.manageParticipants')}</Link>

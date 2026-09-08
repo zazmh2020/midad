@@ -17,9 +17,13 @@ export default async function CompetitionsPage({ params }: { params: Promise<{ s
   const rows = await prisma.competition.findMany({
     where: { organizationId: org.id },
     orderBy: { createdAt: 'desc' },
-    select: { id: true, name: true, level: true, status: true, startDate: true },
+    select: { id: true, name: true, level: true, description: true, status: true, startDate: true, endDate: true, prize: true, location: true },
   });
-  const competitions = rows.map((c) => ({ ...c, startDate: c.startDate ? c.startDate.toISOString() : null }));
+  const competitions = rows.map((c) => ({
+    ...c,
+    startDate: c.startDate ? c.startDate.toISOString() : null,
+    endDate: c.endDate ? c.endDate.toISOString() : null,
+  }));
 
   return (
     <div className="org-page">

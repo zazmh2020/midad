@@ -105,3 +105,18 @@
 @media print {
   .org-sidebar, .org-topbar, .org-crumb, .org-page-head, .hub-list, .cert-actions { display: none !important; }
 }
+
+/* وصف المسابقة في لوحة التفاصيل */
+.comp-desc { color: var(--text-muted); font-size: 0.88rem; line-height: 1.6; margin: 0 0 1rem; }
+
+/* ===== قوائم الخطط: تصنيفات + بناء المراحل ===== */
+.hub-cat { font-size: 0.72rem; font-weight: 800; color: var(--text-muted); text-transform: none; padding: 0.6rem 0.6rem 0.2rem; letter-spacing: 0.02em; }
+.plans-stages-hd { display: flex; align-items: center; justify-content: space-between; margin: 0.6rem 0 0.4rem; }
+.plans-stages-hd label { font-weight: 700; color: var(--purple-900, #2b1a4e); }
+.plans-add-stage { padding: 0.3rem 0.7rem; font-size: 0.8rem; }
+.plans-stage-row { display: grid; grid-template-columns: 1.1fr 1.6fr 0.7fr auto; gap: 0.5rem; margin-bottom: 0.5rem; align-items: center; }
+.plans-stage-row input { width: 100%; }
+.plans-stage-x { width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--line); background: #fff; color: #c0392b; cursor: pointer; font-size: 1.1rem; line-height: 1; }
+.plans-stage-x:hover { background: #fdecec; }
+.mod-empty { color: var(--text-muted); font-size: 0.88rem; padding: 0.5rem 0; }
+@media (max-width: 700px) { .plans-stage-row { grid-template-columns: 1fr 1fr; } }

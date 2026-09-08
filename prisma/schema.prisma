@@ -73,6 +73,7 @@ model Organization {
   guardians           Guardian[]
   financeTransactions FinanceTransaction[]
   messages            Message[]
+  studyPlans          StudyPlan[]
 
   @@map("organizations")
 }
@@ -559,7 +560,11 @@ model Competition {
   id           String    @id @default(cuid())
   name         String
   level        String? // المستوى: جزء عمّ، 5 أجزاء، القرآن كاملًا…
+  description  String? // وصف المسابقة
   startDate    DateTime?
+  endDate      DateTime? // تاريخ انتهاء التسجيل/المسابقة
+  prize        String? // الجوائز
+  location     String? // مكان الإقامة
   status       String    @default("UPCOMING") // UPCOMING / OPEN / CLOSED
   participants Int       @default(0)
   createdAt    DateTime  @default(now())
@@ -889,6 +894,22 @@ model PlatformSetting {
   updatedAt          DateTime @updatedAt
 
   @@map("platform_settings")
+}
+
+/// خطة/مقرّر دراسي مخصّص تنشئه الجهة (بالإضافة إلى القوالب الجاهزة).
+model StudyPlan {
+  id             String   @id @default(cuid())
+  title          String
+  subtitle       String?
+  description    String?
+  tag            String?
+  stages         Json? // مصفوفة مراحل: [{ t, d, meta }]
+  createdAt      DateTime @default(now())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@map("study_plans")
 }
 
 enum OrgType {

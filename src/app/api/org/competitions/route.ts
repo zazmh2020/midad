@@ -18,9 +18,13 @@ export async function POST(request: Request) {
   const level = body?.level ? String(body.level).trim() : null;
   const status = STATUSES.includes(body?.status) ? body.status : 'UPCOMING';
   const startDate = body?.startDate ? new Date(String(body.startDate)) : null;
+  const endDate = body?.endDate ? new Date(String(body.endDate)) : null;
+  const description = body?.description ? String(body.description).trim().slice(0, 600) : null;
+  const prize = body?.prize ? String(body.prize).trim().slice(0, 200) : null;
+  const location = body?.location ? String(body.location).trim().slice(0, 200) : null;
 
   await prisma.competition.create({
-    data: { name, level, status, startDate, organizationId: actor.organizationId! },
+    data: { name, level, description, status, startDate, endDate, prize, location, organizationId: actor.organizationId! },
   });
   return NextResponse.json({ ok: true });
 }
