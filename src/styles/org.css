@@ -1178,12 +1178,6 @@ a.org-module:hover {
 /* عمود "السلوك وأخرى": حقلان جنبًا إلى جنب داخل خلية واحدة */
 .qm-dual { display: flex; align-items: center; justify-content: center; gap: 2px; }
 .qm-dual .qm-num { width: 40px; }
-/* خلية الملاحظات تضم الحضور فوق ملاحظات المعلم */
-.qm-notecell { display: flex; flex-direction: column; gap: 3px; align-items: stretch; }
-.qm-notecell .qm-att {
-  width: 100%; font-size: 0.72rem; color: var(--purple-700, #6b57a0);
-  background: var(--gray-100, #f3f0f8); border-radius: 6px;
-}
 .qm-sheets { display: flex; gap: 0.9rem; align-items: flex-start; }
 .qm-sheet-main { flex: 1 1 auto; min-width: 0; }
 .qm-grades-col { flex: 0 0 auto; max-width: 100%; }

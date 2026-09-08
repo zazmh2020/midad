@@ -139,18 +139,29 @@ export default function MonthlySheetView({
     </select>
   );
 
-  // خلية الملاحظات: قائمة عبارات جاهزة (مع إبقاء أي ملاحظة موجودة كخيار محدَّد)
+  // خلية الملاحظات: قائمة واحدة تضم حالات الحضور ثم عبارات الملاحظات الجاهزة.
+  // كل خلية تحمل اختيارًا واحدًا: إمّا حالة حضور وإمّا ملاحظة (مانعان لتفادي التعارض).
   const notesCell = (r: Row) => {
     const cur = data[r.dateStr]?.notes ?? '';
+    const att = data[r.dateStr]?.attendance ?? 'PRESENT';
     const known = NOTE_PRESETS.some((g) => g.keys.some((k) => t(k) === cur));
+    const value = cur ? `note:${cur}` : att !== 'PRESENT' ? `att:${att}` : '';
     return (
-      <select className="qm-in qm-notes" disabled={!canManage}
-        value={cur} onChange={(e) => set(r.dateStr, 'notes', e.target.value)}>
+      <select className="qm-in qm-notes" disabled={!canManage} value={value}
+        onChange={(e) => {
+          const v = e.target.value;
+          if (v.startsWith('att:')) { set(r.dateStr, 'attendance', v.slice(4)); set(r.dateStr, 'notes', ''); }
+          else if (v.startsWith('note:')) { set(r.dateStr, 'notes', v.slice(5)); set(r.dateStr, 'attendance', 'PRESENT'); }
+          else { set(r.dateStr, 'notes', ''); set(r.dateStr, 'attendance', 'PRESENT'); }
+        }}>
         <option value="">—</option>
-        {cur && !known && <option value={cur}>{cur}</option>}
+        <optgroup label={t('qm.col.attendance')}>
+          {ATTENDANCE_STATUSES.map((s) => <option key={s} value={`att:${s}`}>{t(`status.attendance.${s}`)}</option>)}
+        </optgroup>
+        {cur && !known && <option value={`note:${cur}`}>{cur}</option>}
         {NOTE_PRESETS.map((g) => (
           <optgroup key={g.group} label={t(g.group)}>
-            {g.keys.map((k) => <option key={k} value={t(k)}>{t(k)}</option>)}
+            {g.keys.map((k) => <option key={k} value={`note:${t(k)}`}>{t(k)}</option>)}
           </optgroup>
         ))}
       </select>
@@ -159,15 +170,6 @@ export default function MonthlySheetView({
 
   const total = (dateStr: string) =>
     SCORE_FIELDS.reduce((s, f) => s + (Number(data[dateStr]?.[f]) || 0), 0);
-
-  // خلية الحضور (قائمة) — تُستخدم في مربع الدرجات
-  const attCell = (r: Row) => (
-    <select className="qm-in qm-att" disabled={!canManage}
-      value={data[r.dateStr]?.attendance ?? 'PRESENT'}
-      onChange={(e) => set(r.dateStr, 'attendance', e.target.value)}>
-      {ATTENDANCE_STATUSES.map((s) => <option key={s} value={s}>{t(`status.attendance.${s}`)}</option>)}
-    </select>
-  );
 
   // ===== دوال العرض النصّي لمعاينة/تصدير PDF =====
   const attLabel = (dateStr: string) => t(`status.attendance.${data[dateStr]?.attendance ?? 'PRESENT'}`);
@@ -342,12 +344,7 @@ export default function MonthlySheetView({
                   </div>
                 </td>
                 <td className="qm-total">{total(r.dateStr) || ''}</td>
-                <td>
-                  <div className="qm-notecell">
-                    {attCell(r)}
-                    {notesCell(r)}
-                  </div>
-                </td>
+                <td>{notesCell(r)}</td>
               </tr>
             ))}
           </tbody>
