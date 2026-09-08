@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { PLAN_BY_ID, CURRENCY } from '@/lib/plans';
 import PlanSelector from './PlanSelector';
-import BrandingForm from '@/components/BrandingForm';
+import OrgIdentityForm from '@/components/OrgIdentityForm';
 import { getT, getLocale } from '@/lib/i18n/server';
 import '@/styles/org.css';
 
@@ -73,8 +73,23 @@ export default async function OrgDetailPage({
       <div className="section-block">
         <h2>{t('aorg.detail.branding')}</h2>
         <p className="link-quiet" style={{ marginBottom: '0.8rem' }}>{t('aorg.detail.brandingSub')}</p>
-        <div style={{ maxWidth: 560 }}>
-          <BrandingForm brandColor={org.brandColor} logoUrl={org.logoUrl} apiBase={`/api/admin/organizations/${org.slug}/branding`} />
+        <div style={{ maxWidth: 620 }}>
+          <OrgIdentityForm
+            apiBase={`/api/admin/organizations/${org.slug}/branding`}
+            subdomain={`${org.slug}.midad.localhost:3000`}
+            name={org.name}
+            brandColor={org.brandColor}
+            brandAccent={org.brandAccent}
+            logoUrl={org.logoUrl}
+            faviconUrl={org.faviconUrl}
+            coverUrl={org.coverUrl}
+            tagline={org.tagline}
+            websiteUrl={org.websiteUrl}
+            twitterUrl={org.twitterUrl}
+            instagramUrl={org.instagramUrl}
+            whatsapp={org.whatsapp}
+            customDomain={org.customDomain}
+          />
         </div>
       </div>
 
@@ -90,6 +105,11 @@ export default async function OrgDetailPage({
           >
             {org.slug}.midad.localhost:3000 ↗
           </a>
+          {org.customDomain && (
+            <a href={`https://${org.customDomain}`} target="_blank" rel="noreferrer" className="detail-card-link" dir="ltr" style={{ marginTop: '0.35rem' }}>
+              {org.customDomain} ↗
+            </a>
+          )}
         </div>
         <div className="detail-card">
           <div className="detail-card-label">{t('aorg.detail.usersCount')}</div>

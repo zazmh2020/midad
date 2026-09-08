@@ -21,7 +21,16 @@ model Organization {
   stripeSubscriptionId String? // معرّف الاشتراك النشط
   subscriptionStatus   String? // active / trialing / past_due / canceled …
   brandColor           String? // لون الهوية الأساسي للجهة (hex)
+  brandAccent          String? // لون ثانوي/مميّز (hex)
   logoUrl              String? // شعار الجهة (رابط)
+  faviconUrl           String? // أيقونة التبويب (رابط)
+  coverUrl             String? // صورة غلاف للموقع العام (رابط)
+  tagline              String? // شعار نصّي قصير
+  customDomain         String? // دومين مخصّص يُنشئه مالك المنصّة (يُتحقّق من تفرّده في الـ API)
+  websiteUrl           String? // الموقع الإلكتروني
+  twitterUrl           String? // رابط منصّة X/تويتر
+  instagramUrl         String? // رابط إنستغرام
+  whatsapp             String? // رقم واتساب للتواصل
   disabledModules      String[]  @default([]) // وحدات معطّلة لهذه المؤسسة (المفعّلة = الباقي)
   sitePublished        Boolean   @default(false) // نشر الموقع العام للمؤسسة
   contactEmail         String? // بيانات تواصل عامة

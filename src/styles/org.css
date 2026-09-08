@@ -1734,6 +1734,34 @@ a.org-module:hover {
 .brand-color-row input[type=color] { width: 46px; height: 40px; padding: 2px; border: 1px solid var(--line); border-radius: 8px; background: #fff; cursor: pointer; }
 .brand-color-row input[type=text] { flex: 1; }
 
+/* ---------- Organization identity form (admin) ---------- */
+.oid-h {
+  font-family: var(--font-display); font-size: 0.98rem; font-weight: 800;
+  color: var(--purple-900, #2b1a4e); margin: 1.3rem 0 0.7rem;
+  padding-bottom: 0.35rem; border-bottom: 1px solid var(--line);
+}
+.oid-form .oid-h:first-of-type { margin-top: 0.4rem; }
+.oid-preview { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; margin-bottom: 1rem; }
+.oid-cover { width: 100%; height: 96px; object-fit: cover; display: block; }
+.oid-preview-bar {
+  display: flex; align-items: center; gap: 0.7rem; padding: 0.75rem 0.95rem;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--bc) 78%, #000), var(--bc));
+  color: #fff;
+}
+.oid-preview-logo { width: 36px; height: 36px; border-radius: 9px; object-fit: cover; background: #fff; }
+.oid-preview-mark { width: 36px; height: 36px; border-radius: 9px; background: #fff; color: var(--bc); display: grid; place-items: center; font-family: var(--font-display); font-weight: 800; }
+.oid-preview-titles { display: flex; flex-direction: column; line-height: 1.25; }
+.oid-preview-name { font-family: var(--font-display); font-weight: 800; }
+.oid-preview-tag { font-size: 0.76rem; opacity: 0.85; }
+.oid-preview-body { display: flex; align-items: center; gap: 0.7rem; padding: 0.9rem 0.95rem; background: #fff; }
+.oid-preview-btn { background: var(--ac); color: #fff; font-size: 0.8rem; font-weight: 700; padding: 0.45rem 1rem; border-radius: 8px; }
+.oid-preview-chip { background: color-mix(in srgb, var(--ac) 14%, transparent); color: var(--ac); font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.75rem; border-radius: 100px; }
+.oid-subdomain {
+  font-family: var(--font-body); font-size: 0.85rem; color: var(--gray-700);
+  background: var(--gray-100, #f3f0f8); border: 1px solid var(--line);
+  border-radius: 9px; padding: 0.55rem 0.7rem;
+}
+
 .org-topbar-theme, .admin-topbar-theme { margin-inline-start: auto; }
 
 
