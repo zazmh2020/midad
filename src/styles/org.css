@@ -1157,32 +1157,36 @@ a.org-module:hover {
 .qm-surah { width: 100%; font-family: inherit; text-align: center; text-align-last: center; }
 .qm-seg { width: 100%; font-family: inherit; text-align: center; text-align-last: center; }
 .qm-notes { width: 100%; font-family: inherit; text-align: center; text-align-last: center; }
-/* الجدول الأساسي بتخطيط ثابت ليتّسع كامل الجدول ضمن الصفحة بلا تمرير أفقي */
-.qm-sheet-main .qm-table { table-layout: fixed; }
+/* الجدولان بتخطيط ثابت وعرض كامل ليملأ كل منهما عرض الصفحة بلا فراغ أو تمرير أفقي */
+.qm-main, .qm-grades { table-layout: fixed; width: 100%; }
 .qm-c-date { width: 34px; }
 .qm-c-day { width: 46px; }
-.qm-c-att { width: 58px; }
-.qm-c-lesson { width: 82px; }
-.qm-c-seg { width: 128px; }
-.qm-c-sm { width: 42px; }
-.qm-c-listener { width: 74px; }
-.qm-c-status { width: 22px; }
+.qm-c-att { width: 78px; }
+.qm-c-lesson { width: 92px; }
+.qm-c-seg { width: 150px; }
+.qm-c-sm { width: 48px; }
+.qm-c-listener { width: 90px; }
+.qm-c-status { width: 24px; }
+/* أعمدة درجات مربع الدرجات (بعد التاريخ واليوم): الدرس/الكبرى/الصغرى/المجموع */
+.qm-grades th:nth-child(3), .qm-grades th:nth-child(4),
+.qm-grades th:nth-child(5), .qm-grades th:nth-child(7) { width: 66px; }
+.qm-grades th:nth-child(6) { width: 96px; } /* السلوك وأخرى */
+/* عمود ملاحظات المعلم (الأخير) يأخذ ما تبقّى من العرض */
 /* السماح بلَفّ عناوين الأعمدة الطويلة حتى لا تفرض عرضًا زائدًا */
-.qm-sheet-main .qm-table thead th { white-space: normal; line-height: 1.15; }
-/* الدرجات في جدول منفصل بجانب الجدول الأساسي */
-.qm-grades .qm-num { width: 46px; }
+.qm-table thead th { white-space: normal; line-height: 1.15; height: 46px; vertical-align: middle; }
+.qm-hd-wrap { white-space: normal; line-height: 1.2; }
 /* عمود "السلوك وأخرى": حقلان جنبًا إلى جنب داخل خلية واحدة */
 .qm-dual { display: flex; align-items: center; justify-content: center; gap: 2px; }
 .qm-dual .qm-num { width: 40px; }
-.qm-sheets { display: flex; gap: 0.9rem; align-items: flex-start; }
-.qm-sheet-main { flex: 1 1 auto; min-width: 0; }
-.qm-grades-col { flex: 0 0 auto; max-width: 100%; }
-/* محاذاة الجدولين: رأس بارتفاع ثابت في كليهما فتتطابق الصفوف */
-.qm-table thead th { height: 46px; vertical-align: middle; }
-.qm-hd-wrap { white-space: normal; line-height: 1.2; }
-@media (max-width: 1100px) {
-  .qm-sheets { flex-direction: column; }
-  .qm-grades-col { width: 100%; }
+/* مربع الدرجات المستقل أسفل جدول المتابعة */
+.qm-grades-box {
+  margin-top: 1.1rem; border: 1px solid var(--line); border-radius: 14px;
+  padding: 0.5rem 0.7rem 0.7rem; background: var(--surface, #fff);
+  box-shadow: 0 12px 34px -26px rgba(43, 26, 78, 0.4);
+}
+.qm-box-title {
+  margin: 0.2rem 0 0.55rem; font-family: var(--font-display);
+  font-size: 0.95rem; font-weight: 800; color: var(--purple-900, #2b1a4e);
 }
 .qm-in:disabled { color: var(--text-muted); }
 
@@ -1193,6 +1197,49 @@ a.org-module:hover {
 .qm-dot-err { background: #c0392b; }
 @keyframes qmpulse { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
 .qm-hint { margin-top: 0.6rem; font-size: 0.78rem; color: var(--text-muted); }
+
+/* ===== معاينة قبل تصدير PDF ===== */
+.qm-preview {
+  position: fixed; inset: 0; z-index: 80; display: flex; flex-direction: column;
+  background: rgba(30, 22, 54, 0.55); backdrop-filter: blur(2px);
+}
+.qm-preview-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 0.8rem;
+  padding: 0.6rem 1rem; background: var(--surface, #fff); border-bottom: 1px solid var(--line);
+}
+.qm-preview-name { font-family: var(--font-display); font-weight: 800; color: var(--purple-900, #2b1a4e); }
+.qm-preview-actions { display: flex; gap: 0.5rem; }
+.qm-preview-scroll { flex: 1; overflow: auto; padding: 1.4rem; display: flex; justify-content: center; }
+.qm-doc {
+  background: #fff; color: #1f1636; width: 100%; max-width: 1040px; align-self: flex-start;
+  padding: 22px 26px; border-radius: 8px; box-shadow: 0 20px 60px -30px rgba(0, 0, 0, 0.5);
+}
+.qm-doc-head { text-align: center; border-bottom: 2px solid #6b57a0; padding-bottom: 10px; margin-bottom: 12px; }
+.qm-doc-org { font-family: var(--font-display); font-weight: 800; color: #6b57a0; font-size: 1.05rem; }
+.qm-doc-title { font-family: var(--font-display); font-size: 1.35rem; margin: 4px 0 2px; color: #2b1a4e; }
+.qm-doc-sub { color: #5a5470; font-size: 0.9rem; }
+.qm-doc-summary { display: flex; gap: 1.4rem; justify-content: center; flex-wrap: wrap; margin-bottom: 14px; font-size: 0.86rem; color: #2b1a4e; }
+.qm-doc-summary span { background: #f3f0f8; border-radius: 100px; padding: 0.28rem 0.9rem; }
+.qm-doc-table { width: 100%; border-collapse: collapse; font-size: 0.72rem; }
+.qm-doc-table th, .qm-doc-table td { border: 1px solid #d8d3e4; padding: 4px 5px; text-align: center; }
+.qm-doc-table thead th { background: #f3f0f8; color: #2b1a4e; font-family: var(--font-display); font-weight: 700; }
+.qm-doc-table .qm-total { font-weight: 800; color: #6b57a0; }
+.qm-doc-notes { text-align: start; max-width: 180px; }
+.qm-doc-table .qm-absent td { background: #fdecec; }
+.qm-doc-empty { text-align: center; color: #7c7788; padding: 2rem 0; }
+.qm-doc-foot { margin-top: 12px; text-align: end; color: #7c7788; font-size: 0.76rem; }
+
+@media print {
+  body { visibility: hidden; background: #fff; }
+  .qm-preview { position: absolute; inset: 0; background: #fff; backdrop-filter: none; visibility: visible; }
+  .qm-preview-bar { display: none; }
+  .qm-preview-scroll { overflow: visible; padding: 0; display: block; }
+  .qm-doc { visibility: visible; box-shadow: none; max-width: none; width: auto; border-radius: 0; padding: 0; }
+  .qm-doc * { visibility: visible; }
+  .qm-doc-table { font-size: 8.5pt; }
+  .qm-doc-table th, .qm-doc-table td { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  @page { size: A4 landscape; margin: 12mm; }
+}
 
 /* إخفاء أسهم مدخلات الأرقام لإبقاء الشبكة نظيفة */
 .qm-num::-webkit-outer-spin-button, .qm-num::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }

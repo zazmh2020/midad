@@ -36,9 +36,11 @@ const NOTE_PRESETS: { group: string; keys: string[] }[] = [
 
 export default function MonthlySheetView({
   students, selectedId, studentName, halaqaName, ym, rows, canManage,
+  orgName, monthLabel, year,
 }: {
   students: Student[]; selectedId: string; studentName: string; halaqaName: string | null;
   ym: string; rows: Row[]; canManage: boolean;
+  orgName: string; monthLabel: string; year: string;
 }) {
   const { t, locale } = useLocale();
   const router = useRouter();
@@ -69,6 +71,7 @@ export default function MonthlySheetView({
   useEffect(() => { dataRef.current = data; }, [data]);
   const [sending, setSending] = useState<'month' | 'day' | null>(null);
   const [sendMsg, setSendMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const [preview, setPreview] = useState(false);
 
   async function sendReport(scope: 'month' | 'day') {
     if (sending) return;
@@ -157,6 +160,42 @@ export default function MonthlySheetView({
   const total = (dateStr: string) =>
     SCORE_FIELDS.reduce((s, f) => s + (Number(data[dateStr]?.[f]) || 0), 0);
 
+  // خلية الحضور (قائمة) — تُستخدم في مربع الدرجات
+  const attCell = (r: Row) => (
+    <select className="qm-in qm-att" disabled={!canManage}
+      value={data[r.dateStr]?.attendance ?? 'PRESENT'}
+      onChange={(e) => set(r.dateStr, 'attendance', e.target.value)}>
+      {ATTENDANCE_STATUSES.map((s) => <option key={s} value={s}>{t(`status.attendance.${s}`)}</option>)}
+    </select>
+  );
+
+  // ===== دوال العرض النصّي لمعاينة/تصدير PDF =====
+  const attLabel = (dateStr: string) => t(`status.attendance.${data[dateStr]?.attendance ?? 'PRESENT'}`);
+  const surahLabel = (dateStr: string) => {
+    const v = Number(data[dateStr]?.newFrom);
+    return v && SURAHS[v - 1] ? `${v}. ${SURAHS[v - 1]}` : '';
+  };
+  const segLabelFor = (segs: typeof MAJOR_SEGMENTS, dateStr: string, fromField: string, toField: string) => {
+    const f = data[dateStr]?.[fromField], tt = data[dateStr]?.[toField];
+    if (!f || !tt) return '';
+    return segs.find((s) => String(s.from) === f && String(s.to) === tt)?.label ?? `${f}-${tt}`;
+  };
+  const conductOtherLabel = (dateStr: string) => {
+    const c = data[dateStr]?.conductScore, o = data[dateStr]?.otherScore;
+    return [c, o].filter(Boolean).join(' / ');
+  };
+  const num = (dateStr: string, field: string) => data[dateStr]?.[field] || '';
+  // الأيام التي فيها نشاط فعلي (لعرضها في التقرير)
+  const docRows = rows.filter((r) => {
+    const d = data[r.dateStr];
+    if (!d) return false;
+    return !!(d.newFrom || d.reviewFrom || d.last5From || d.pages || d.errors || d.alerts ||
+      d.listener || d.notes || SCORE_FIELDS.some((f) => d[f]) || d.attendance !== 'PRESENT');
+  });
+  const printedAt = new Intl.DateTimeFormat(locale === 'en' ? 'en' : 'ar-u-nu-latn', {
+    year: 'numeric', month: 'long', day: 'numeric',
+  }).format(new Date());
+
   // عنوان من كلمتين يُعرض على سطرين (فوق بعض) لتضييق العمود
   const stackedLabel = (key: string) => {
     const label = t(key);
@@ -206,28 +245,33 @@ export default function MonthlySheetView({
 
       <div className="qm-meta">
         <div><strong>{studentName}</strong>{halaqaName && <span> — {halaqaName}</span>}</div>
-        {canManage && selectedId && (
+        {selectedId && (
           <div className="qm-send">
-            <button className="org-btn org-btn-outline" disabled={!!sending} onClick={() => sendReport('day')}>
-              {sending === 'day' ? t('qm.sending') : t('qm.sendDaily')}
+            <button className="org-btn org-btn-outline" onClick={() => setPreview(true)}>
+              {t('qm.exportPdf')}
             </button>
-            <button className="org-btn org-btn-primary" disabled={!!sending} onClick={() => sendReport('month')}>
-              {sending === 'month' ? t('qm.sending') : t('qm.sendMonthly')}
-            </button>
+            {canManage && (
+              <>
+                <button className="org-btn org-btn-outline" disabled={!!sending} onClick={() => sendReport('day')}>
+                  {sending === 'day' ? t('qm.sending') : t('qm.sendDaily')}
+                </button>
+                <button className="org-btn org-btn-primary" disabled={!!sending} onClick={() => sendReport('month')}>
+                  {sending === 'month' ? t('qm.sending') : t('qm.sendMonthly')}
+                </button>
+              </>
+            )}
           </div>
         )}
       </div>
       {sendMsg && <div className={`qm-sendmsg ${sendMsg.ok ? 'is-ok' : 'is-err'}`}>{sendMsg.text}</div>}
 
-      {/* ===== الجدولان جنبًا إلى جنب: المتابعة + الدرجات المستقلة ===== */}
-      <div className="qm-sheets">
-      <div className="qm-wrap qm-sheet-main" lang="en">
-        <table className="qm-table">
+      {/* ===== جدول المتابعة اليومي (كامل العرض) ===== */}
+      <div className="qm-wrap qm-main-full" lang="en">
+        <table className="qm-table qm-main">
           <thead>
             <tr>
               <th className="qm-c-date">{t('qm.col.date')}</th>
               <th className="qm-c-day">{t('qm.col.day')}</th>
-              <th className="qm-c-att">{t('qm.col.attendance')}</th>
               <th className="qm-g-new qm-c-lesson">{t('qm.col.lesson')}</th>
               <th className="qm-g-review qm-c-seg">{t('qm.col.major')}</th>
               <th className="qm-g-last5 qm-c-seg">{t('qm.col.minor')}</th>
@@ -248,13 +292,6 @@ export default function MonthlySheetView({
                 <tr key={r.dateStr} className={`${absent ? 'qm-absent' : ''} ${weekend ? 'qm-weekend' : ''}`}>
                   <td className="qm-date">{r.day}</td>
                   <td className="qm-wd">{wd}</td>
-                  <td>
-                    <select className="qm-in qm-att" disabled={!canManage}
-                      value={data[r.dateStr]?.attendance ?? 'PRESENT'}
-                      onChange={(e) => set(r.dateStr, 'attendance', e.target.value)}>
-                      {ATTENDANCE_STATUSES.map((s) => <option key={s} value={s}>{t(`status.attendance.${s}`)}</option>)}
-                    </select>
-                  </td>
                   <td>{surahCell(r)}</td>
                   <td>{segCell(r, MAJOR_SEGMENTS, 'reviewFrom', 'reviewTo')}</td>
                   <td>{segCell(r, MINOR_SEGMENTS, 'last5From', 'last5To')}</td>
@@ -277,43 +314,132 @@ export default function MonthlySheetView({
         </table>
       </div>
 
-      {/* ===== جدول الدرجات: مستقل، بجانب الملاحظات، محاذٍ للجدول الأساسي ===== */}
-      <div className="qm-grades-col">
-      <div className="qm-wrap" lang="en">
-        <table className="qm-table qm-grades">
-          <thead>
-            <tr>
-              <th>{t('qm.col.lessonScore')}</th>
-              <th className="qm-hd-wrap">{stackedLabel('qm.col.reviewScore')}</th>
-              <th className="qm-hd-wrap">{stackedLabel('qm.col.minorScore')}</th>
-              <th className="qm-hd-wrap">{stackedLabel('qm.col.conductOther')}</th>
-              <th>{t('qm.col.total')}</th>
-              <th className="qm-c-notes">{t('qm.col.notes')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((r) => (
-              <tr key={r.dateStr} className={`${data[r.dateStr]?.attendance === 'ABSENT' ? 'qm-absent' : ''} ${r.weekday === 5 || r.weekday === 6 ? 'qm-weekend' : ''}`}>
-                <td>{numCell(r, 'lessonScore')}</td>
-                <td>{numCell(r, 'reviewScore')}</td>
-                <td>{numCell(r, 'minorScore')}</td>
-                <td>
-                  <div className="qm-dual">
-                    {numCell(r, 'conductScore')}
-                    {numCell(r, 'otherScore')}
-                  </div>
-                </td>
-                <td className="qm-total">{total(r.dateStr) || ''}</td>
-                <td>{notesCell(r)}</td>
+      {/* ===== مربع الدرجات والحضور وملاحظات المعلم ===== */}
+      <section className="qm-grades-box">
+        <h3 className="qm-box-title">{t('qm.grades')}</h3>
+        <div className="qm-wrap" lang="en">
+          <table className="qm-table qm-grades">
+            <thead>
+              <tr>
+                <th className="qm-c-date">{t('qm.col.date')}</th>
+                <th className="qm-c-day">{t('qm.col.day')}</th>
+                <th>{t('qm.col.lessonScore')}</th>
+                <th className="qm-hd-wrap">{stackedLabel('qm.col.reviewScore')}</th>
+                <th className="qm-hd-wrap">{stackedLabel('qm.col.minorScore')}</th>
+                <th className="qm-hd-wrap">{stackedLabel('qm.col.conductOther')}</th>
+                <th>{t('qm.col.total')}</th>
+                <th className="qm-c-att">{t('qm.col.attendance')}</th>
+                <th className="qm-c-notes">{t('qm.col.notes')}</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      </div>
-      </div>
+            </thead>
+            <tbody>
+              {rows.map((r) => {
+                const wd = wdFmt.format(new Date(`${r.dateStr}T00:00:00Z`));
+                const absent = data[r.dateStr]?.attendance === 'ABSENT';
+                const weekend = r.weekday === 5 || r.weekday === 6;
+                return (
+                  <tr key={r.dateStr} className={`${absent ? 'qm-absent' : ''} ${weekend ? 'qm-weekend' : ''}`}>
+                    <td className="qm-date">{r.day}</td>
+                    <td className="qm-wd">{wd}</td>
+                    <td>{numCell(r, 'lessonScore')}</td>
+                    <td>{numCell(r, 'reviewScore')}</td>
+                    <td>{numCell(r, 'minorScore')}</td>
+                    <td>
+                      <div className="qm-dual">
+                        {numCell(r, 'conductScore')}
+                        {numCell(r, 'otherScore')}
+                      </div>
+                    </td>
+                    <td className="qm-total">{total(r.dateStr) || ''}</td>
+                    <td>{attCell(r)}</td>
+                    <td>{notesCell(r)}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </section>
 
       {canManage && <p className="qm-hint">{t('qm.autosave')}</p>}
+
+      {/* ===== معاينة قبل تصدير PDF ===== */}
+      {preview && (
+        <div className="qm-preview" role="dialog" aria-modal="true">
+          <div className="qm-preview-bar">
+            <span className="qm-preview-name">{t('qm.title')} — {studentName}</span>
+            <div className="qm-preview-actions">
+              <button className="org-btn org-btn-primary" onClick={() => window.print()}>{t('qm.exportPdf')}</button>
+              <button className="org-btn org-btn-outline" onClick={() => setPreview(false)}>{t('qm.close')}</button>
+            </div>
+          </div>
+          <div className="qm-preview-scroll">
+            <article className="qm-doc" lang="en">
+              <header className="qm-doc-head">
+                <div className="qm-doc-org">{orgName}</div>
+                <h1 className="qm-doc-title">{t('qm.title')}</h1>
+                <div className="qm-doc-sub">
+                  {studentName}{halaqaName ? ` — ${halaqaName}` : ''} · {monthLabel} {year}
+                </div>
+              </header>
+              <div className="qm-doc-summary">
+                <span>{t('qm.sumPages', { n: totalPages })}</span>
+                <span>{t('qm.sumScore', { n: totalScore })}</span>
+                <span>{t('qm.sumAttendance', { n: attendancePct })}</span>
+              </div>
+              {docRows.length === 0 ? (
+                <p className="qm-doc-empty">{t('qm.noData')}</p>
+              ) : (
+                <table className="qm-doc-table">
+                  <thead>
+                    <tr>
+                      <th>{t('qm.col.date')}</th>
+                      <th>{t('qm.col.day')}</th>
+                      <th>{t('qm.col.attendance')}</th>
+                      <th>{t('qm.col.lesson')}</th>
+                      <th>{t('qm.col.major')}</th>
+                      <th>{t('qm.col.minor')}</th>
+                      <th>{t('qm.col.pages')}</th>
+                      <th>{t('qm.col.errors')}</th>
+                      <th>{t('qm.col.alerts')}</th>
+                      <th>{t('qm.col.listener')}</th>
+                      <th>{t('qm.col.lessonScore')}</th>
+                      <th>{t('qm.col.reviewScore')}</th>
+                      <th>{t('qm.col.minorScore')}</th>
+                      <th>{t('qm.col.conductOther')}</th>
+                      <th>{t('qm.col.total')}</th>
+                      <th>{t('qm.col.notes')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {docRows.map((r) => (
+                      <tr key={r.dateStr} className={data[r.dateStr]?.attendance === 'ABSENT' ? 'qm-absent' : ''}>
+                        <td>{r.day}</td>
+                        <td>{wdFmt.format(new Date(`${r.dateStr}T00:00:00Z`))}</td>
+                        <td>{attLabel(r.dateStr)}</td>
+                        <td>{surahLabel(r.dateStr)}</td>
+                        <td>{segLabelFor(MAJOR_SEGMENTS, r.dateStr, 'reviewFrom', 'reviewTo')}</td>
+                        <td>{segLabelFor(MINOR_SEGMENTS, r.dateStr, 'last5From', 'last5To')}</td>
+                        <td>{num(r.dateStr, 'pages')}</td>
+                        <td>{num(r.dateStr, 'errors')}</td>
+                        <td>{num(r.dateStr, 'alerts')}</td>
+                        <td>{num(r.dateStr, 'listener')}</td>
+                        <td>{num(r.dateStr, 'lessonScore')}</td>
+                        <td>{num(r.dateStr, 'reviewScore')}</td>
+                        <td>{num(r.dateStr, 'minorScore')}</td>
+                        <td>{conductOtherLabel(r.dateStr)}</td>
+                        <td className="qm-total">{total(r.dateStr) || ''}</td>
+                        <td className="qm-doc-notes">{num(r.dateStr, 'notes')}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+              <div className="qm-doc-foot">{t('qm.generatedAt', { date: printedAt })}</div>
+            </article>
+          </div>
+        </div>
+      )}
     </>
   );
 }

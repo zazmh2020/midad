@@ -230,6 +230,10 @@ const ar: Dict = {
   'qm.note.p1': 'تكرار الغياب دون عذر', 'qm.note.p2': 'عدم إحضار الواجب', 'qm.note.p3': 'إخلال بنظام الحلقة',
   'qm.note.g1': 'نرجو متابعة الحفظ في المنزل', 'qm.note.g2': 'نرجو الحرص على الحضور المبكر', 'qm.note.g3': 'شكرًا لتعاونكم ومتابعتكم',
   'qm.col.notes': 'ملاحظات المعلم',
+  'qm.exportPdf': 'تصدير PDF',
+  'qm.close': 'إغلاق',
+  'qm.noData': 'لا توجد بيانات مُدخَلة لهذا الشهر.',
+  'qm.generatedAt': 'صدر بتاريخ {date}',
   // ---- Page headings ----
   'mod.title': 'وحدات المؤسسة',
   'mod.sub': 'فعّل أو أوقف وحدات المنصة حسب حاجة مؤسستك — الوحدات الموقوفة تُخفى من التنقّل.',
@@ -1533,6 +1537,10 @@ const en: Dict = {
   'qm.note.p1': 'Repeated unexcused absence', 'qm.note.p2': 'Did not bring the assignment', 'qm.note.p3': 'Disrupted the circle',
   'qm.note.g1': 'Please follow up memorization at home', 'qm.note.g2': 'Please ensure early attendance', 'qm.note.g3': 'Thank you for your cooperation',
   'qm.col.notes': 'Teacher notes',
+  'qm.exportPdf': 'Export PDF',
+  'qm.close': 'Close',
+  'qm.noData': 'No data entered for this month.',
+  'qm.generatedAt': 'Generated on {date}',
   // ---- Page headings ----
   'mod.title': 'Organization modules',
   'mod.sub': 'Enable or disable platform modules to fit your organization — disabled modules are hidden from navigation.',

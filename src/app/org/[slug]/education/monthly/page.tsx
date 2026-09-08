@@ -98,6 +98,9 @@ export default async function MonthlySheetPage({
           ym={ym}
           rows={rows}
           canManage={canManage}
+          orgName={org.name}
+          monthLabel={monthName}
+          year={String(year)}
         />
       )}
     </div>
