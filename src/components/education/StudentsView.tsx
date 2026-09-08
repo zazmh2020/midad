@@ -8,20 +8,25 @@ import { STUDENT_STATUSES } from '@/lib/permissions';
 import { useLocale } from '@/lib/i18n/LocaleProvider';
 
 type Student = {
-  id: string; serial: number | null; name: string; phone: string | null;
+  id: string; serial: number | null; section: string | null; name: string; phone: string | null;
   guardianName: string | null; guardianPhone: string | null;
   status: string; halaqaId: string | null;
 };
 type Ref = { id: string; name: string };
 
+const SECTIONS = ['BOYS', 'GIRLS'] as const;
+
 export default function StudentsView({ students, halaqat, basePath }: { students: Student[]; halaqat: Ref[]; basePath: string }) {
   const { t } = useLocale();
   const statusLabel = (v: string) => t(`status.student.${v}`);
+  const sectionLabel = (v: string | null) => (v ? t(`section.${v}`) : '—');
   const router = useRouter();
   const [creating, setCreating] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [error, setError] = useState('');
   const [filter, setFilter] = useState('ALL'); // ALL | NONE | <halaqaId>
+  const [sectionFilter, setSectionFilter] = useState('ALL'); // ALL | BOYS | GIRLS
+  const [query, setQuery] = useState(''); // بحث بالاسم أو الرقم التسلسلي
 
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -30,13 +35,23 @@ export default function StudentsView({ students, halaqat, basePath }: { students
   const [guardianEmail, setGuardianEmail] = useState('');
   const [status, setStatus] = useState('ACTIVE');
   const [halaqaId, setHalaqaId] = useState('');
+  const [section, setSection] = useState('');
 
   const halaqaName = (id: string | null) => (id ? halaqat.find((h) => h.id === id)?.name ?? '—' : '—');
   const shown = useMemo(() => {
-    if (filter === 'ALL') return students;
-    if (filter === 'NONE') return students.filter((s) => !s.halaqaId);
-    return students.filter((s) => s.halaqaId === filter);
-  }, [students, filter]);
+    const q = query.trim();
+    return students.filter((s) => {
+      if (filter === 'NONE' && s.halaqaId) return false;
+      if (filter !== 'ALL' && filter !== 'NONE' && s.halaqaId !== filter) return false;
+      if (sectionFilter !== 'ALL' && s.section !== sectionFilter) return false;
+      if (q) {
+        const byName = s.name.toLowerCase().includes(q.toLowerCase());
+        const bySerial = s.serial != null && String(s.serial) === q;
+        if (!byName && !bySerial) return false;
+      }
+      return true;
+    });
+  }, [students, filter, sectionFilter, query]);
 
   async function create(e: FormEvent) {
     e.preventDefault();
@@ -44,12 +59,12 @@ export default function StudentsView({ students, halaqat, basePath }: { students
     try {
       const res = await fetch('/api/org/education/students', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, phone, guardianName, guardianPhone, guardianEmail, status, halaqaId: halaqaId || null }),
+        body: JSON.stringify({ name, phone, guardianName, guardianPhone, guardianEmail, status, halaqaId: halaqaId || null, section: section || null }),
       });
       const d = await res.json().catch(() => ({}));
       if (!res.ok) setError(d.error ?? t('form.createErr'));
       else {
-        setName(''); setPhone(''); setGuardianName(''); setGuardianPhone(''); setGuardianEmail(''); setStatus('ACTIVE'); setHalaqaId('');
+        setName(''); setPhone(''); setGuardianName(''); setGuardianPhone(''); setGuardianEmail(''); setStatus('ACTIVE'); setHalaqaId(''); setSection('');
         setCreating(false); router.refresh();
       }
     } catch { setError(t('form.netErr')); } finally { setBusyId(null); }
@@ -79,6 +94,17 @@ export default function StudentsView({ students, halaqat, basePath }: { students
   return (
     <>
       <div className="org-toolbar">
+        <input
+          className="org-inline-search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder={t('edu.st.searchPlaceholder')}
+          aria-label={t('edu.st.searchPlaceholder')}
+        />
+        <select className="org-inline-select" value={sectionFilter} onChange={(e) => setSectionFilter(e.target.value)} aria-label={t('edu.st.section')}>
+          <option value="ALL">{t('edu.st.allSections')}</option>
+          {SECTIONS.map((s) => <option key={s} value={s}>{t(`section.${s}`)}</option>)}
+        </select>
         {halaqat.length > 0 && (
           <select className="org-inline-select" value={filter} onChange={(e) => setFilter(e.target.value)} aria-label={t('edu.st.filterByHalaqa')}>
             <option value="ALL">{t('edu.st.allHalaqat')}</option>
@@ -129,6 +155,13 @@ export default function StudentsView({ students, halaqat, basePath }: { students
               </select>
             </div>
             <div className="org-field">
+              <label htmlFor="s-section">{t('edu.st.section')}</label>
+              <select id="s-section" value={section} onChange={(e) => setSection(e.target.value)}>
+                <option value="">{t('edu.st.noSection')}</option>
+                {SECTIONS.map((s) => <option key={s} value={s}>{t(`section.${s}`)}</option>)}
+              </select>
+            </div>
+            <div className="org-field">
               <label htmlFor="s-halaqa">{t('edu.st.halaqa')}</label>
               <select id="s-halaqa" value={halaqaId} onChange={(e) => setHalaqaId(e.target.value)}>
                 <option value="">{t('edu.st.noHalaqaOpt')}</option>
@@ -150,14 +183,24 @@ export default function StudentsView({ students, halaqat, basePath }: { students
         <div className="org-table-wrap">
           <table className="org-table">
             <thead>
-              <tr><th className="org-th-serial">{t('edu.st.thSerial')}</th><th>{t('edu.st.thStudent')}</th><th>{t('edu.st.thGuardian')}</th><th>{t('view.status')}</th><th>{t('edu.st.halaqa')}</th><th></th></tr>
+              <tr><th>{t('edu.st.thStudent')}</th><th>{t('edu.st.thGuardian')}</th><th>{t('edu.st.section')}</th><th>{t('view.status')}</th><th>{t('edu.st.halaqa')}</th><th></th></tr>
             </thead>
             <tbody>
               {shown.map((s) => (
                 <tr key={s.id}>
-                  <td className="org-td-serial" dir="ltr">{s.serial ?? '—'}</td>
-                  <td><Link href={`${basePath}/${s.id}`} className="org-link"><strong>{s.name}</strong></Link>{s.phone && <small dir="ltr">{s.phone}</small>}</td>
+                  <td>
+                    <Link href={`${basePath}/${s.id}`} className="org-link"><strong>{s.name}</strong></Link>
+                    {s.serial != null && <small dir="ltr">#{s.serial}</small>}
+                    {s.phone && <small dir="ltr">{s.phone}</small>}
+                  </td>
                   <td>{s.guardianName ?? '—'}{s.guardianPhone && <small dir="ltr">{s.guardianPhone}</small>}</td>
+                  <td>
+                    <select className="org-inline-select" value={s.section ?? ''} disabled={busyId === s.id}
+                      onChange={(e) => patch(s.id, { section: e.target.value || null })} aria-label={t('edu.st.section')}>
+                      <option value="">{t('edu.st.noSection')}</option>
+                      {SECTIONS.map((v) => <option key={v} value={v}>{sectionLabel(v)}</option>)}
+                    </select>
+                  </td>
                   <td>
                     <select className="org-inline-select" value={s.status} disabled={busyId === s.id}
                       onChange={(e) => patch(s.id, { status: e.target.value })}>

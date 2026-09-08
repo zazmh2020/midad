@@ -25,6 +25,8 @@ export async function POST(request: Request) {
   const guardianEmail = String(body.guardianEmail ?? '').trim();
   const status = String(body.status ?? 'ACTIVE');
   const halaqaId = body.halaqaId ? String(body.halaqaId) : null;
+  const sectionRaw = String(body.section ?? '').trim();
+  const section = sectionRaw === 'BOYS' || sectionRaw === 'GIRLS' ? sectionRaw : null;
 
   if (name.length < 2) return NextResponse.json({ error: 'اسم الطالب قصير جداً.' }, { status: 400 });
   if (!isStudentStatus(status)) return NextResponse.json({ error: 'الحالة غير صالحة.' }, { status: 400 });
@@ -47,6 +49,7 @@ export async function POST(request: Request) {
   const s = await prisma.student.create({
     data: {
       serial,
+      section: section as 'BOYS' | 'GIRLS' | null,
       name,
       phone: phone || null,
       guardianName: guardianName || null,

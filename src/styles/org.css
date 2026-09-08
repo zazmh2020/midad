@@ -564,6 +564,17 @@ a.org-module:hover {
   color: var(--purple-900);
   background: #fff;
 }
+.org-inline-search {
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #d5d0dc;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--purple-900);
+  background: #fff;
+  min-width: 210px;
+}
+.org-inline-search:focus { outline: none; border-color: var(--purple-300, #8873af); box-shadow: 0 0 0 3px rgba(107, 87, 160, 0.12); }
 
 .org-row-actions {
   text-align: start;

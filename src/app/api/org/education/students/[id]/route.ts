@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import type { StudentStatus } from '@/generated/prisma/client';
+import type { StudentStatus, StudentSection } from '@/generated/prisma/client';
 import { prisma } from '@/lib/prisma';
 import { getOrgActor } from '@/lib/org';
 import { canManageEducation, isStudentStatus } from '@/lib/permissions';
@@ -26,8 +26,12 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
   const data: {
     name?: string; phone?: string | null; guardianName?: string | null; guardianPhone?: string | null; guardianEmail?: string | null;
-    birthDate?: Date | null; status?: StudentStatus; halaqaId?: string | null;
+    birthDate?: Date | null; status?: StudentStatus; halaqaId?: string | null; section?: StudentSection | null;
   } = {};
+  if (body.section !== undefined) {
+    const s = String(body.section);
+    data.section = s === 'BOYS' || s === 'GIRLS' ? (s as StudentSection) : null;
+  }
   if (body.name !== undefined) {
     const name = String(body.name).trim();
     if (name.length < 2) return NextResponse.json({ error: 'اسم الطالب قصير جداً.' }, { status: 400 });

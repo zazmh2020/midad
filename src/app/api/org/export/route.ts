@@ -23,10 +23,11 @@ export async function GET(request: Request) {
     if (!canViewEducation(actor)) return new Response('غير مصرّح.', { status: 403 });
     const students = await prisma.student.findMany({
       where: { organizationId: orgId }, orderBy: [{ serial: 'asc' }, { name: 'asc' }],
-      select: { serial: true, name: true, phone: true, guardianName: true, guardianPhone: true, guardianEmail: true, status: true, halaqa: { select: { name: true } } },
+      select: { serial: true, section: true, name: true, phone: true, guardianName: true, guardianPhone: true, guardianEmail: true, status: true, halaqa: { select: { name: true } } },
     });
-    const rows = [row(['#', 'الاسم', 'الهاتف', 'ولي الأمر', 'هاتف ولي الأمر', 'بريد ولي الأمر', 'الحالة', 'الحلقة'])];
-    for (const s of students) rows.push(row([s.serial, s.name, s.phone, s.guardianName, s.guardianPhone, s.guardianEmail, s.status, s.halaqa?.name]));
+    const sectionAr: Record<string, string> = { BOYS: 'بنين', GIRLS: 'بنات' };
+    const rows = [row(['#', 'القسم', 'الاسم', 'الهاتف', 'ولي الأمر', 'هاتف ولي الأمر', 'بريد ولي الأمر', 'الحالة', 'الحلقة'])];
+    for (const s of students) rows.push(row([s.serial, s.section ? sectionAr[s.section] : '', s.name, s.phone, s.guardianName, s.guardianPhone, s.guardianEmail, s.status, s.halaqa?.name]));
     return csvResponse('students', rows);
   }
 

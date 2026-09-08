@@ -184,8 +184,9 @@ model Teacher {
 
 /// الطالب — قد ينتمي لحلقة واحدة
 model Student {
-  id            String        @id @default(cuid())
+  id            String          @id @default(cuid())
   serial        Int? // رقم تسلسلي تلقائي للطالب داخل الجهة
+  section       StudentSection? // القسم: بنين/بنات
   name          String
   phone         String?
   guardianName  String?
@@ -347,6 +348,11 @@ enum StudentStatus {
   PAUSED // متوقّف مؤقتًا
   GRADUATED // متخرّج
   WITHDRAWN // منسحب
+}
+
+enum StudentSection {
+  BOYS // بنين
+  GIRLS // بنات
 }
 
 /// الحلقة / الفصل
