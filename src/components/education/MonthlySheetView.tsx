@@ -221,7 +221,6 @@ export default function MonthlySheetView({
               <th className="qm-c-sm">{t('qm.col.errors')}</th>
               <th className="qm-c-sm">{t('qm.col.alerts')}</th>
               <th className="qm-c-listener">{t('qm.col.listener')}</th>
-              <th className="qm-c-notes">{t('qm.col.notes')}</th>
               <th aria-label="status" />
             </tr>
           </thead>
@@ -252,7 +251,6 @@ export default function MonthlySheetView({
                     <input className="qm-in qm-txt" disabled={!canManage}
                       value={data[r.dateStr]?.listener ?? ''} onChange={(e) => set(r.dateStr, 'listener', e.target.value)} />
                   </td>
-                  <td>{notesCell(r)}</td>
                   <td className="qm-status">
                     {st === 'saving' && <span className="qm-dot qm-dot-saving" title={t('qm.saving')} />}
                     {st === 'ok' && <span className="qm-dot qm-dot-ok" title={t('form.saved')} />}
@@ -265,32 +263,31 @@ export default function MonthlySheetView({
         </table>
       </div>
 
-      {/* ===== جدول الدرجات: مستقل، بجانب الملاحظات ===== */}
+      {/* ===== جدول الدرجات: مستقل، بجانب الملاحظات، محاذٍ للجدول الأساسي ===== */}
       <div className="qm-grades-col">
-      <h3 className="qm-grades-title">{t('qm.grades')}</h3>
       <div className="qm-wrap" lang="en">
         <table className="qm-table qm-grades">
           <thead>
             <tr>
-              <th className="qm-c-date">{t('qm.col.date')}</th>
               <th>{t('qm.col.lessonScore')}</th>
-              <th>{t('qm.col.reviewScore')}</th>
-              <th>{t('qm.col.minorScore')}</th>
+              <th className="qm-hd-wrap">{t('qm.col.reviewScore')}</th>
+              <th className="qm-hd-wrap">{t('qm.col.minorScore')}</th>
               <th>{t('qm.col.conduct')}</th>
               <th>{t('qm.col.other')}</th>
               <th>{t('qm.col.total')}</th>
+              <th className="qm-c-notes">{t('qm.col.notes')}</th>
             </tr>
           </thead>
           <tbody>
             {rows.map((r) => (
               <tr key={r.dateStr} className={`${data[r.dateStr]?.attendance === 'ABSENT' ? 'qm-absent' : ''} ${r.weekday === 5 || r.weekday === 6 ? 'qm-weekend' : ''}`}>
-                <td className="qm-date">{r.day}</td>
                 <td>{numCell(r, 'lessonScore')}</td>
                 <td>{numCell(r, 'reviewScore')}</td>
                 <td>{numCell(r, 'minorScore')}</td>
                 <td>{numCell(r, 'conductScore')}</td>
                 <td>{numCell(r, 'otherScore')}</td>
                 <td className="qm-total">{total(r.dateStr) || ''}</td>
+                <td>{notesCell(r)}</td>
               </tr>
             ))}
           </tbody>
