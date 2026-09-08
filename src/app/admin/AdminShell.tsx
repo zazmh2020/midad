@@ -1,13 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useState, type ReactNode } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState, type ReactNode } from 'react';
 import type { SessionData } from '@/lib/session';
 import { LogoMark } from '@/components/Logo';
 import TopbarTools, { type SearchItem } from '@/components/TopbarTools';
 import WelcomeBack from '@/components/WelcomeBack';
 import PageTransition from '@/components/PageTransition';
+import OrgAssistantFab from '@/components/OrgAssistantFab';
 import { useT } from '@/lib/i18n/LocaleProvider';
 import type { OrgInbox } from '@/lib/inbox';
 import '@/styles/welcome.css';
@@ -17,7 +18,15 @@ interface Props {
   session: SessionData;
   avatarUrl?: string | null;
   inbox: OrgInbox;
+  assistantReady?: boolean;
 }
+
+const ASSISTANT_SUGGESTIONS = [
+  'كم عدد المؤسسات المسجّلة؟',
+  'ما المؤسسات النشطة حاليًا؟',
+  'كم إجمالي المستخدمين على المنصّة؟',
+  'أيّ المؤسسات أُنشئت مؤخرًا؟',
+];
 
 // ربط مفاتيح التنقّل بنظام أيقونات مِداد (public/icons)
 const ICONS = {
@@ -57,12 +66,25 @@ function Avatar({ url }: { url?: string | null }) {
   );
 }
 
-export default function AdminShell({ children, session, avatarUrl, inbox }: Props) {
+export default function AdminShell({ children, session, avatarUrl, inbox, assistantReady = false }: Props) {
   const pathname = usePathname();
+  const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [confirmLogout, setConfirmLogout] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
+    try { setCollapsed(localStorage.getItem('midad_sidebar_collapsed') === '1'); } catch { /* */ }
+  }, []);
+  function toggleCollapsed() {
+    setCollapsed((v) => {
+      const next = !v;
+      try { localStorage.setItem('midad_sidebar_collapsed', next ? '1' : '0'); } catch { /* */ }
+      return next;
+    });
+  }
 
   const t = useT();
   const searchItems: SearchItem[] = navItems.map((n) => ({ label: t(n.labelKey), href: n.href }));
@@ -75,10 +97,23 @@ export default function AdminShell({ children, session, avatarUrl, inbox }: Prop
   }
 
   return (
-    <div className="admin-app">
+    <div className={`admin-app ${collapsed ? 'is-collapsed' : ''}`}>
       <WelcomeBack name={session.name} greeting={t('welcome.greeting')} />
       {/* Sidebar */}
       <aside className={`admin-sidebar ${sidebarOpen ? 'is-open' : ''}`}>
+        <button
+          className="org-fold-toggle"
+          onClick={toggleCollapsed}
+          aria-label={t('shell.foldSidebar')}
+          aria-pressed={collapsed}
+          title={t('shell.foldSidebar')}
+        >
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            {collapsed
+              ? <path d="M4 5h12M4 10h12M4 15h12" />
+              : <><rect x="2.5" y="3.5" width="15" height="13" rx="2" /><path d="M12.5 3.5v13" /></>}
+          </svg>
+        </button>
         <div className="admin-side-profile">
           <div className="admin-user admin-user-stacked">
             <span className="admin-user-avatar admin-user-avatar-lg">
@@ -138,6 +173,11 @@ export default function AdminShell({ children, session, avatarUrl, inbox }: Prop
               <path d="M1 1h18M1 7h18M1 13h18" />
             </svg>
           </button>
+          {pathname !== '/admin' && (
+            <button className="org-back" onClick={() => router.back()} aria-label={t('shell.back')} title={t('shell.back')}>
+              <svg className="org-back-ic" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 4l-6 6 6 6" /></svg>
+            </button>
+          )}
           <Link href="/admin" className="admin-topbar-brand">
             <span className="admin-brand-icon"><LogoMark size={20} /></span>
             <span className="admin-topbar-name">{t('brand')} <b>{t('anav.brandRole')}</b></span>
@@ -181,6 +221,14 @@ export default function AdminShell({ children, session, avatarUrl, inbox }: Prop
 
         <main className="admin-content"><PageTransition>{children}</PageTransition></main>
       </div>
+
+      <OrgAssistantFab
+        ready={assistantReady}
+        endpoint="/api/admin/assistant"
+        suggestions={ASSISTANT_SUGGESTIONS}
+        placeholder="اكتب سؤالك عن المنصّة…"
+        hint="يجيب المساعد من بيانات منصّتك (المؤسسات والمستخدمون)."
+      />
     </div>
   );
 }

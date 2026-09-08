@@ -5,7 +5,15 @@ import AssistantChat from '@/components/AssistantChat';
 import { useT } from '@/lib/i18n/LocaleProvider';
 
 /** زرّ عائم يفتح مساعد مِداد الذكي على أي صفحة داخل المنصّة. */
-export default function OrgAssistantFab({ ready }: { ready: boolean }) {
+export default function OrgAssistantFab({
+  ready, endpoint, suggestions, placeholder, hint,
+}: {
+  ready: boolean;
+  endpoint?: string;
+  suggestions?: string[];
+  placeholder?: string;
+  hint?: string;
+}) {
   const t = useT();
   const [open, setOpen] = useState(false);
 
@@ -23,7 +31,7 @@ export default function OrgAssistantFab({ ready }: { ready: boolean }) {
             </button>
           </div>
           <div className="oaf-body">
-            <AssistantChat ready={ready} />
+            <AssistantChat ready={ready} endpoint={endpoint} suggestions={suggestions} placeholder={placeholder} hint={hint} />
           </div>
         </div>
       )}

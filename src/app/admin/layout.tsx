@@ -4,7 +4,9 @@ import { getSession } from '@/lib/session';
 import { prisma } from '@/lib/prisma';
 import AdminShell from './AdminShell';
 import { getAdminInbox } from '@/lib/inbox';
+import { isAssistantConfigured } from '@/lib/anthropic';
 import '@/styles/admin.css';
+import '@/styles/org.css';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,5 +23,14 @@ export default async function AdminLayout({ children }: { children: ReactNode })
   });
   const inbox = await getAdminInbox();
 
-  return <AdminShell session={session} avatarUrl={me?.avatarUrl ?? null} inbox={inbox}>{children}</AdminShell>;
+  return (
+    <AdminShell
+      session={session}
+      avatarUrl={me?.avatarUrl ?? null}
+      inbox={inbox}
+      assistantReady={isAssistantConfigured()}
+    >
+      {children}
+    </AdminShell>
+  );
 }

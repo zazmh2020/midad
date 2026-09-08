@@ -4,14 +4,26 @@ import { useRef, useState, type FormEvent } from 'react';
 
 type Msg = { role: 'user' | 'assistant'; text: string };
 
-const SUGGESTIONS = [
+const ORG_SUGGESTIONS = [
   'كم عدد المشاريع الجارية؟',
   'لخّص لي حالة الحملات.',
   'ما إجمالي التبرعات المستلَمة؟',
   'ما الوحدات التنظيمية الموجودة؟',
 ];
 
-export default function AssistantChat({ ready }: { ready: boolean }) {
+export default function AssistantChat({
+  ready,
+  endpoint = '/api/org/assistant',
+  suggestions = ORG_SUGGESTIONS,
+  placeholder = 'اكتب سؤالك عن مؤسستك…',
+  hint = 'يجيب المساعد من بيانات مؤسستك فقط، وضمن حدود صلاحياتك.',
+}: {
+  ready: boolean;
+  endpoint?: string;
+  suggestions?: string[];
+  placeholder?: string;
+  hint?: string;
+}) {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState('');
   const [busy, setBusy] = useState(false);
@@ -26,7 +38,7 @@ export default function AssistantChat({ ready }: { ready: boolean }) {
     setInput('');
     setBusy(true);
     try {
-      const res = await fetch('/api/org/assistant', {
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question: q }),
@@ -65,7 +77,7 @@ export default function AssistantChat({ ready }: { ready: boolean }) {
           <div className="org-chat-empty">
             <p>ابدأ بسؤال، أو جرّب:</p>
             <div className="org-suggestions">
-              {SUGGESTIONS.map((s) => (
+              {suggestions.map((s) => (
                 <button key={s} className="org-suggestion" onClick={() => ask(s)} disabled={busy}>{s}</button>
               ))}
             </div>
@@ -84,7 +96,7 @@ export default function AssistantChat({ ready }: { ready: boolean }) {
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="اكتب سؤالك عن مؤسستك…"
+          placeholder={placeholder}
           disabled={busy}
         />
         <button type="submit" className="org-btn org-btn-primary" disabled={busy || !input.trim()}>
@@ -92,7 +104,7 @@ export default function AssistantChat({ ready }: { ready: boolean }) {
         </button>
       </form>
       <p className="org-hint" style={{ marginTop: '0.5rem' }}>
-        يجيب المساعد من بيانات مؤسستك فقط، وضمن حدود صلاحياتك.
+        {hint}
       </p>
     </div>
   );
