@@ -13,6 +13,7 @@ import MidadAIChat from '@/components/landing/MidadAIChat';
 import MidadAssistant from '@/components/landing/MidadAssistant';
 import PricingPlans from '@/components/PricingPlans';
 import { getT } from '@/lib/i18n/server';
+import { getPlatformSettings } from '@/lib/platform-settings';
 import '@/styles/midad.css';
 import '@/styles/pricing.css';
 
@@ -49,9 +50,13 @@ const INTEGRATIONS = ['int.email', 'int.payment', 'int.whatsapp', 'int.google', 
 
 export default async function HomePage() {
   const { t } = await getT();
+  const settings = await getPlatformSettings();
   return (
     <div className="mdl">
       <WelcomeIntro />
+      {settings.announcementActive && settings.announcement && (
+        <div className="mdl-announce" role="status">{settings.announcement}</div>
+      )}
       <MidadHeader />
 
       <main>
@@ -59,9 +64,9 @@ export default async function HomePage() {
         <section id="home" className="mdl-hero">
           <div className="mdl-wrap mdl-hero-grid">
             <div>
-              <Reveal><h1>{t('hero.title1')}<br /><span className="hl">{t('hero.title2')}</span></h1></Reveal>
+              <Reveal><h1>{settings.heroTitle1 || t('hero.title1')}<br /><span className="hl">{settings.heroTitle2 || t('hero.title2')}</span></h1></Reveal>
               <Reveal delay={0.1}>
-                <p className="mdl-hero-sub">{t('hero.sub')}</p>
+                <p className="mdl-hero-sub">{settings.heroSubtitle || t('hero.sub')}</p>
               </Reveal>
               <Reveal delay={0.2}>
                 <div className="mdl-hero-actions">

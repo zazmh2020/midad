@@ -751,3 +751,10 @@ html { scroll-behavior: smooth; }
 }
 .mdl-sys-cat { display: block; font-size: 0.72rem; color: var(--muted); margin-top: 0.15rem; }
 
+
+/* شريط الإعلان العام (يُدار من لوحة مالك المنصّة) */
+.mdl-announce {
+  background: linear-gradient(135deg, var(--purple-900, #2b1a4e), var(--purple-500, #6b57a0));
+  color: #fff; text-align: center; font-weight: 700; font-size: 0.9rem;
+  padding: 0.6rem 1.2rem; line-height: 1.4;
+}

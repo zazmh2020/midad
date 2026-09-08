@@ -865,6 +865,24 @@ model KnowledgeArticle {
   @@map("knowledge_articles")
 }
 
+/// إعدادات المحتوى العام للمنصّة — صفّ واحد (id = "main") يديره مالك المنصّة.
+model PlatformSetting {
+  id                 String   @id @default("main")
+  heroTitle1         String? // عنوان البطل — السطر الأول
+  heroTitle2         String? // عنوان البطل — السطر المميّز
+  heroSubtitle       String? // وصف البطل
+  announcement       String? // شريط إعلان عام
+  announcementActive Boolean  @default(false)
+  contactEmail       String?
+  contactPhone       String?
+  whatsapp           String?
+  twitterUrl         String?
+  instagramUrl       String?
+  updatedAt          DateTime @updatedAt
+
+  @@map("platform_settings")
+}
+
 enum OrgType {
   ASSOCIATION // جمعية أو مؤسسة
   MOSQUE // مسجد أو مركز قرآني
