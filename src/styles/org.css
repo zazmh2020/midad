@@ -1276,7 +1276,10 @@ a.org-module:hover {
   border: 1px solid #d8d3e4; padding: 3px 4px; text-align: center;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.qm-doc-table thead th { background: #f3f0f8; color: #2b1a4e; font-family: var(--font-display); font-weight: 700; white-space: normal; }
+.qm-doc-table thead th {
+  background: #f3f0f8; color: #2b1a4e; font-family: var(--font-display); font-weight: 700;
+  white-space: normal; overflow: visible; text-overflow: clip; line-height: 1.15;
+}
 .qm-doc-table .qm-total { font-weight: 800; color: #6b57a0; }
 .qm-doc-notes { text-align: start; }
 .qm-doc-table .qm-absent td { background: #fdecec; }
@@ -1285,12 +1288,12 @@ a.org-module:hover {
 .qm-doc-combined th:nth-child(2) { width: 5%; }
 .qm-doc-combined th:nth-child(3) { width: 9%; }
 .qm-doc-combined th:nth-child(4), .qm-doc-combined th:nth-child(5) { width: 12%; }
-.qm-doc-combined th:nth-child(6), .qm-doc-combined th:nth-child(7), .qm-doc-combined th:nth-child(8) { width: 4%; }
+.qm-doc-combined th:nth-child(6), .qm-doc-combined th:nth-child(7), .qm-doc-combined th:nth-child(8) { width: 5.5%; }
 .qm-doc-combined th:nth-child(9) { width: 8%; }
-.qm-doc-combined th:nth-child(10), .qm-doc-combined th:nth-child(11), .qm-doc-combined th:nth-child(12) { width: 4%; }
-.qm-doc-combined th:nth-child(13) { width: 6%; }
-.qm-doc-combined th:nth-child(14) { width: 4%; }
-.qm-doc-combined th:nth-child(15) { width: 12%; }
+.qm-doc-combined th:nth-child(10), .qm-doc-combined th:nth-child(11), .qm-doc-combined th:nth-child(12) { width: 5%; }
+.qm-doc-combined th:nth-child(13) { width: 7%; }
+.qm-doc-combined th:nth-child(14) { width: 4.5%; }
+.qm-doc-combined th:nth-child(15) { width: 11%; }
 .qm-doc-empty { text-align: center; color: #7c7788; padding: 2rem 0; }
 .qm-doc-foot { margin-top: 12px; text-align: end; color: #7c7788; font-size: 0.76rem; }
 
@@ -1305,6 +1308,7 @@ a.org-module:hover {
   .qm-preview-scroll { overflow: visible !important; padding: 0 !important; display: block !important; }
   .qm-doc { box-shadow: none !important; max-width: none !important; width: 100% !important; border-radius: 0; padding: 0 !important; }
   .qm-doc-table { font-size: 8.5pt; }
+  .qm-doc-combined thead th { font-size: 6.8pt; padding: 2px 1px; letter-spacing: -0.2px; }
   .qm-doc-table th, .qm-doc-table td { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   /* ورقة أفقية (عرضية) ليتّسع الجدول المدمج */
   @page { size: A4 landscape; margin: 8mm; }
