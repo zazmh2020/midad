@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getOrgActor } from '@/lib/org';
 import { canManageSettings } from '@/lib/permissions';
+import { imageValue } from '@/lib/branding';
 
 /** تخصيص الهوية البصرية للجهة — مدير الجهة فقط. */
 export async function PATCH(request: Request) {
@@ -22,10 +23,8 @@ export async function PATCH(request: Request) {
     else return NextResponse.json({ error: 'لون غير صالح (استخدم صيغة #RRGGBB).' }, { status: 400 });
   }
   if (body.logoUrl !== undefined) {
-    const u = String(body.logoUrl ?? '').trim();
-    if (u === '') data.logoUrl = null;
-    else if (/^https?:\/\/.+/i.test(u) && u.length <= 2048) data.logoUrl = u;
-    else return NextResponse.json({ error: 'رابط شعار غير صالح (يبدأ بـ http).' }, { status: 400 });
+    try { data.logoUrl = imageValue(body.logoUrl, 'الشعار'); }
+    catch (e) { return NextResponse.json({ error: e instanceof Error ? e.message : 'شعار غير صالح.' }, { status: 400 }); }
   }
 
   await prisma.organization.update({ where: { id: actor.organizationId! }, data });

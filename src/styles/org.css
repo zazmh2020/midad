@@ -1751,6 +1751,15 @@ a.org-module:hover {
 .brand-color-row { display: flex; gap: 0.6rem; align-items: center; }
 .brand-color-row input[type=color] { width: 46px; height: 40px; padding: 2px; border: 1px solid var(--line); border-radius: 8px; background: #fff; cursor: pointer; }
 .brand-color-row input[type=text] { flex: 1; }
+/* رفع شعار المركز */
+.brand-logo-upload { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.5rem; }
+.brand-logo-thumb {
+  width: 56px; height: 56px; border-radius: 12px; flex-shrink: 0; overflow: hidden;
+  border: 1px solid var(--line); background: var(--gray-100, #f3f0f8); display: grid; place-items: center;
+}
+.brand-logo-thumb img { width: 100%; height: 100%; object-fit: contain; }
+.brand-logo-ph { font-family: var(--font-display); font-weight: 800; color: var(--purple-500, #6b57a0); font-size: 1.4rem; }
+.brand-logo-controls { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 
 /* ---------- Organization identity form (admin) ---------- */
 .oid-h {

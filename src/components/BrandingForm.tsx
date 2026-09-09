@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, type FormEvent } from 'react';
+import { useRef, useState, type ChangeEvent, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { useT } from '@/lib/i18n/LocaleProvider';
+import { readLogoFile } from '@/lib/image-file';
 
 /**
  * تخصيص الهوية البصرية للجهة: لون أساسي + شعار.
@@ -24,6 +25,16 @@ export default function BrandingForm({
   const [logoUrl, setLogoUrl] = useState(initialLogo ?? '');
   const [status, setStatus] = useState<{ kind: 'ok' | 'error'; msg: string } | null>(null);
   const [busy, setBusy] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  async function onPickLogo(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    if (file.size > 6 * 1024 * 1024) { setStatus({ kind: 'error', msg: t('brand.logoTooBig') }); return; }
+    try { setLogoUrl(await readLogoFile(file)); }
+    catch { setStatus({ kind: 'error', msg: t('brand.logoReadErr') }); }
+  }
 
   async function save(e: FormEvent) {
     e.preventDefault();
@@ -83,8 +94,21 @@ export default function BrandingForm({
 
       <div className="org-field">
         <label htmlFor="lg">{t('brand.logo')}</label>
-        <input id="lg" dir="ltr" value={logoUrl} onChange={(e) => setLogoUrl(e.target.value)} placeholder="https://example.com/logo.png" />
-        <span className="org-hint">{t('brand.logoHint2')}</span>
+        <div className="brand-logo-upload">
+          <span className="brand-logo-thumb">
+            {logoUrl.trim() ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={logoUrl} alt="" />
+            ) : <span className="brand-logo-ph">م</span>}
+          </span>
+          <div className="brand-logo-controls">
+            <button type="button" className="org-btn org-btn-outline" onClick={() => fileRef.current?.click()}>{t('brand.uploadLogo')}</button>
+            {logoUrl.trim() && <button type="button" className="org-btn org-btn-ghost" onClick={() => setLogoUrl('')}>{t('view.delete')}</button>}
+            <input ref={fileRef} type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" hidden onChange={onPickLogo} />
+          </div>
+        </div>
+        <input id="lg" dir="ltr" value={logoUrl.startsWith('data:') ? '' : logoUrl} onChange={(e) => setLogoUrl(e.target.value)} placeholder="https://example.com/logo.png" />
+        <span className="org-hint">{t('brand.logoUploadHint')}</span>
       </div>
 
       <div className="org-form-actions">

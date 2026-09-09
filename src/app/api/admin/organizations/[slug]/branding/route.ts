@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/session';
+import { imageValue } from '@/lib/branding';
 
 type OrgData = Record<string, string | null>;
 
@@ -45,9 +46,9 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ sl
     // الهوية البصرية
     if (body.brandColor !== undefined) data.brandColor = hex(body.brandColor);
     if (body.brandAccent !== undefined) data.brandAccent = hex(body.brandAccent);
-    if (body.logoUrl !== undefined) data.logoUrl = url(body.logoUrl, 'الشعار');
-    if (body.faviconUrl !== undefined) data.faviconUrl = url(body.faviconUrl, 'الأيقونة');
-    if (body.coverUrl !== undefined) data.coverUrl = url(body.coverUrl, 'الغلاف');
+    if (body.logoUrl !== undefined) data.logoUrl = imageValue(body.logoUrl, 'الشعار');
+    if (body.faviconUrl !== undefined) data.faviconUrl = imageValue(body.faviconUrl, 'الأيقونة');
+    if (body.coverUrl !== undefined) data.coverUrl = imageValue(body.coverUrl, 'الغلاف');
     // الهوية الرقمية
     if (body.tagline !== undefined) data.tagline = text(body.tagline, 160);
     if (body.websiteUrl !== undefined) data.websiteUrl = url(body.websiteUrl, 'الموقع');
