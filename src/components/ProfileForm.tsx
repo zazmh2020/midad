@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, type FormEvent } from 'react';
+import { useRef, useState, type ChangeEvent, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLocale } from '@/lib/i18n/LocaleProvider';
 import { COUNTRIES } from '@/lib/countries';
+import { readLogoFile } from '@/lib/image-file';
 
 /** يفصل رقمًا مخزّنًا "+966 5xxxx" إلى مفتاح دولة ورقم محلّي. */
 function splitPhone(raw: string): { dial: string; number: string } {
@@ -25,6 +26,16 @@ export default function ProfileForm({
 
   const [name, setName] = useState(initialName);
   const [avatarUrl, setAvatarUrl] = useState(initialAvatar ?? '');
+  const avatarRef = useRef<HTMLInputElement>(null);
+
+  async function onPickAvatar(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    if (file.size > 6 * 1024 * 1024) { setNameStatus({ kind: 'error', msg: t('brand.logoTooBig') }); return; }
+    try { setAvatarUrl(await readLogoFile(file, 256)); }
+    catch { setNameStatus({ kind: 'error', msg: t('brand.logoReadErr') }); }
+  }
   const [jobTitle, setJobTitle] = useState(initialJob ?? '');
   const initPhone = splitPhone(initialPhone ?? '');
   const [dial, setDial] = useState(initPhone.dial);
@@ -90,7 +101,12 @@ export default function ProfileForm({
           </span>
           <div className="org-field" style={{ flex: 1, margin: 0 }}>
             <label htmlFor="pf-avatar">{t('pf.avatarUrl')}</label>
-            <input id="pf-avatar" dir="ltr" placeholder="https://example.com/photo.jpg" value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} />
+            <div className="pf-avatar-controls">
+              <button type="button" className="org-btn org-btn-outline" onClick={() => avatarRef.current?.click()}>{t('brand.uploadLogo')}</button>
+              {avatarUrl.trim() && <button type="button" className="org-btn org-btn-ghost" onClick={() => setAvatarUrl('')}>{t('view.delete')}</button>}
+              <input ref={avatarRef} type="file" accept="image/png,image/jpeg,image/webp" hidden onChange={onPickAvatar} />
+            </div>
+            <input id="pf-avatar" dir="ltr" placeholder="https://example.com/photo.jpg" value={avatarUrl.startsWith('data:') ? '' : avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} />
             <span className="org-hint">{t('pf.avatarHint')}</span>
           </div>
         </div>

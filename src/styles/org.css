@@ -1784,6 +1784,7 @@ a.org-module:hover {
   font-family: var(--font-display); font-weight: 700; font-size: 1.6rem;
 }
 .pf-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.pf-avatar-controls { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.4rem; }
 
 /* ---------- شعار الجهة المخصّص ---------- */
 .org-brand-logo-img {
@@ -1815,9 +1816,18 @@ a.org-module:hover {
   width: 56px; height: 56px; border-radius: 12px; flex-shrink: 0; overflow: hidden;
   border: 1px solid var(--line); background: var(--gray-100, #f3f0f8); display: grid; place-items: center;
 }
+/* معاينة أكبر بمقاس مناسب، مع خلفية شطرنجية لإظهار الشفافية */
+.brand-logo-thumb-lg {
+  width: 110px; height: 110px; padding: 8px; background-color: #fff;
+  background-image:
+    linear-gradient(45deg, #eceaf2 25%, transparent 25%), linear-gradient(-45deg, #eceaf2 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #eceaf2 75%), linear-gradient(-45deg, transparent 75%, #eceaf2 75%);
+  background-size: 14px 14px; background-position: 0 0, 0 7px, 7px -7px, -7px 0;
+}
 .brand-logo-thumb img { width: 100%; height: 100%; object-fit: contain; }
 .brand-logo-ph { font-family: var(--font-display); font-weight: 800; color: var(--purple-500, #6b57a0); font-size: 1.4rem; }
-.brand-logo-controls { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+.brand-logo-controls { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+.brand-logo-dims { font-size: 0.75rem; color: var(--text-muted); }
 
 /* ---------- Organization identity form (admin) ---------- */
 .oid-h {

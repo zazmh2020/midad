@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/session';
+import { imageValue } from '@/lib/branding';
 
 /** تعديل الملف الشخصي لأي مستخدم مسجّل (بالجلسة) — الاسم والصورة. */
 export async function PATCH(request: Request) {
@@ -17,14 +18,8 @@ export async function PATCH(request: Request) {
 
   let avatarUrl: string | null | undefined;
   if (body.avatarUrl !== undefined) {
-    const raw = String(body.avatarUrl ?? '').trim();
-    if (raw === '') {
-      avatarUrl = null;
-    } else if (/^https?:\/\/.+/i.test(raw) && raw.length <= 2048) {
-      avatarUrl = raw;
-    } else {
-      return NextResponse.json({ error: 'رابط الصورة غير صالح (يجب أن يبدأ بـ http).' }, { status: 400 });
-    }
+    try { avatarUrl = imageValue(body.avatarUrl, 'الصورة الشخصية'); }
+    catch (e) { return NextResponse.json({ error: e instanceof Error ? e.message : 'صورة غير صالحة.' }, { status: 400 }); }
   }
 
   const jobTitle = body.jobTitle !== undefined ? String(body.jobTitle ?? '').trim().slice(0, 120) || null : undefined;

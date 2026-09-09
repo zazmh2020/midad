@@ -25,6 +25,7 @@ export default function BrandingForm({
   const [logoUrl, setLogoUrl] = useState(initialLogo ?? '');
   const [status, setStatus] = useState<{ kind: 'ok' | 'error'; msg: string } | null>(null);
   const [busy, setBusy] = useState(false);
+  const [logoDims, setLogoDims] = useState<{ w: number; h: number } | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   async function onPickLogo(e: ChangeEvent<HTMLInputElement>) {
@@ -95,15 +96,16 @@ export default function BrandingForm({
       <div className="org-field">
         <label htmlFor="lg">{t('brand.logo')}</label>
         <div className="brand-logo-upload">
-          <span className="brand-logo-thumb">
+          <span className="brand-logo-thumb brand-logo-thumb-lg">
             {logoUrl.trim() ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={logoUrl} alt="" />
+              <img src={logoUrl} alt="" onLoad={(e) => setLogoDims({ w: e.currentTarget.naturalWidth, h: e.currentTarget.naturalHeight })} />
             ) : <span className="brand-logo-ph">م</span>}
           </span>
           <div className="brand-logo-controls">
             <button type="button" className="org-btn org-btn-outline" onClick={() => fileRef.current?.click()}>{t('brand.uploadLogo')}</button>
-            {logoUrl.trim() && <button type="button" className="org-btn org-btn-ghost" onClick={() => setLogoUrl('')}>{t('view.delete')}</button>}
+            {logoUrl.trim() && <button type="button" className="org-btn org-btn-ghost" onClick={() => { setLogoUrl(''); setLogoDims(null); }}>{t('view.delete')}</button>}
+            {logoUrl.trim() && logoDims && <span className="brand-logo-dims" dir="ltr">{logoDims.w}×{logoDims.h}px</span>}
             <input ref={fileRef} type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" hidden onChange={onPickLogo} />
           </div>
         </div>
