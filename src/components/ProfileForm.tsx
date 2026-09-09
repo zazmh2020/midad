@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useLocale } from '@/lib/i18n/LocaleProvider';
 import { COUNTRIES } from '@/lib/countries';
 import { readLogoFile } from '@/lib/image-file';
+import ImageCropper from '@/components/ImageCropper';
 
 /** يفصل رقمًا مخزّنًا "+966 5xxxx" إلى مفتاح دولة ورقم محلّي. */
 function splitPhone(raw: string): { dial: string; number: string } {
@@ -27,13 +28,33 @@ export default function ProfileForm({
   const [name, setName] = useState(initialName);
   const [avatarUrl, setAvatarUrl] = useState(initialAvatar ?? '');
   const avatarRef = useRef<HTMLInputElement>(null);
+  const [cropSrc, setCropSrc] = useState<string | null>(null);
+  const [aiOpen, setAiOpen] = useState(false);
+  const [aiPrompt, setAiPrompt] = useState('');
+  const [aiBusy, setAiBusy] = useState(false);
+  const [aiErr, setAiErr] = useState('');
+
+  async function generateAi() {
+    setAiErr(''); setAiBusy(true);
+    try {
+      const res = await fetch('/api/ai/image', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: aiPrompt.trim(), kind: 'avatar' }),
+      });
+      const d = await res.json().catch(() => ({}));
+      if (!res.ok) { setAiErr(d.error ?? t('form.netErr')); return; }
+      setAiOpen(false);
+      setCropSrc(d.image); // الصورة المولّدة تُفتح في أداة الضبط
+    } catch { setAiErr(t('form.netErr')); }
+    finally { setAiBusy(false); }
+  }
 
   async function onPickAvatar(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     e.target.value = '';
     if (!file) return;
     if (file.size > 6 * 1024 * 1024) { setNameStatus({ kind: 'error', msg: t('brand.logoTooBig') }); return; }
-    try { setAvatarUrl(await readLogoFile(file, 256)); }
+    try { setCropSrc(await readLogoFile(file, 1024)); }
     catch { setNameStatus({ kind: 'error', msg: t('brand.logoReadErr') }); }
   }
   const [jobTitle, setJobTitle] = useState(initialJob ?? '');
@@ -100,16 +121,43 @@ export default function ProfileForm({
             )}
           </span>
           <div className="org-field" style={{ flex: 1, margin: 0 }}>
-            <label htmlFor="pf-avatar">{t('pf.avatarUrl')}</label>
+            <label>{t('pf.avatar')}</label>
             <div className="pf-avatar-controls">
               <button type="button" className="org-btn org-btn-outline" onClick={() => avatarRef.current?.click()}>{t('brand.uploadLogo')}</button>
+              <button type="button" className="org-btn org-btn-outline" onClick={() => { setAiErr(''); setAiOpen(true); }}>✦ {t('pf.aiGenerate')}</button>
               {avatarUrl.trim() && <button type="button" className="org-btn org-btn-ghost" onClick={() => setAvatarUrl('')}>{t('view.delete')}</button>}
               <input ref={avatarRef} type="file" accept="image/png,image/jpeg,image/webp" hidden onChange={onPickAvatar} />
             </div>
-            <input id="pf-avatar" dir="ltr" placeholder="https://example.com/photo.jpg" value={avatarUrl.startsWith('data:') ? '' : avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} />
-            <span className="org-hint">{t('pf.avatarHint')}</span>
+            <span className="org-hint">{t('pf.avatarHint2')}</span>
           </div>
         </div>
+
+        {cropSrc && (
+          <ImageCropper
+            src={cropSrc}
+            outputSize={256}
+            round
+            onCancel={() => setCropSrc(null)}
+            onConfirm={(dataUrl) => { setAvatarUrl(dataUrl); setCropSrc(null); }}
+          />
+        )}
+
+        {aiOpen && (
+          <div className="crp-overlay" role="dialog" aria-modal="true" onMouseDown={(e) => { if (e.target === e.currentTarget) setAiOpen(false); }}>
+            <div className="crp-box">
+              <div className="crp-title">✦ {t('pf.aiGenerate')}</div>
+              {aiErr && <div className="org-alert">{aiErr}</div>}
+              <textarea className="pf-ai-prompt" rows={3} value={aiPrompt} onChange={(e) => setAiPrompt(e.target.value)} placeholder={t('pf.aiPromptPlaceholder')} />
+              <p className="crp-hint">{t('pf.aiHint')}</p>
+              <div className="crp-actions">
+                <button type="button" className="org-btn org-btn-primary" disabled={aiBusy || aiPrompt.trim().length < 3} onClick={generateAi}>
+                  {aiBusy ? t('pf.aiGenerating') : t('pf.aiGenerate')}
+                </button>
+                <button type="button" className="org-btn org-btn-outline" onClick={() => setAiOpen(false)}>{t('shell.cancel')}</button>
+              </div>
+            </div>
+          </div>
+        )}
         <div className="org-field-row">
           <div className="org-field">
             <label htmlFor="pf-name">{t('pf.name')}</label>
@@ -129,9 +177,9 @@ export default function ProfileForm({
           <div className="org-field">
             <label htmlFor="pf-phone">{t('pf.phone')}</label>
             <div className="pf-phone-row" dir="ltr">
-              <select className="pf-dial" value={dial} onChange={(e) => setDial(e.target.value)} aria-label={t('pf.phoneHint')}>
+              <select className="pf-dial" value={dial} onChange={(e) => setDial(e.target.value)} aria-label={t('pf.phoneHint')} title={countryName(COUNTRIES.find((c) => c.dial === dial) ?? COUNTRIES[0])}>
                 {COUNTRIES.map((c) => (
-                  <option key={c.code} value={c.dial}>{c.flag} {c.dial} — {countryName(c)}</option>
+                  <option key={c.code} value={c.dial} title={countryName(c)}>{c.flag} {c.dial}</option>
                 ))}
               </select>
               <input id="pf-phone" type="tel" lang="en" inputMode="tel" value={phoneNum} onChange={(e) => setPhoneNum(e.target.value)} placeholder="5X XXX XXXX" />

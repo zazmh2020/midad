@@ -4,6 +4,7 @@ import { useRef, useState, type ChangeEvent, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { useT } from '@/lib/i18n/LocaleProvider';
 import { readLogoFile } from '@/lib/image-file';
+import ImageCropper from '@/components/ImageCropper';
 
 /**
  * تخصيص الهوية البصرية للجهة: لون أساسي + شعار.
@@ -26,6 +27,7 @@ export default function BrandingForm({
   const [status, setStatus] = useState<{ kind: 'ok' | 'error'; msg: string } | null>(null);
   const [busy, setBusy] = useState(false);
   const [logoDims, setLogoDims] = useState<{ w: number; h: number } | null>(null);
+  const [cropSrc, setCropSrc] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   async function onPickLogo(e: ChangeEvent<HTMLInputElement>) {
@@ -33,8 +35,11 @@ export default function BrandingForm({
     e.target.value = '';
     if (!file) return;
     if (file.size > 6 * 1024 * 1024) { setStatus({ kind: 'error', msg: t('brand.logoTooBig') }); return; }
-    try { setLogoUrl(await readLogoFile(file)); }
-    catch { setStatus({ kind: 'error', msg: t('brand.logoReadErr') }); }
+    try {
+      // SVG متجّه — يُحفظ كما هو بلا اقتصاص؛ الصور النقطية تُفتح في أداة الضبط
+      if (file.type === 'image/svg+xml') { setLogoUrl(await readLogoFile(file)); return; }
+      setCropSrc(await readLogoFile(file, 1024));
+    } catch { setStatus({ kind: 'error', msg: t('brand.logoReadErr') }); }
   }
 
   async function save(e: FormEvent) {
@@ -60,6 +65,14 @@ export default function BrandingForm({
   return (
     <form className="org-form brand-form" onSubmit={save}>
       {status && <div className={`org-alert ${status.kind === 'ok' ? 'is-ok' : ''}`}>{status.msg}</div>}
+      {cropSrc && (
+        <ImageCropper
+          src={cropSrc}
+          outputSize={512}
+          onCancel={() => setCropSrc(null)}
+          onConfirm={(dataUrl) => { setLogoUrl(dataUrl); setLogoDims(null); setCropSrc(null); }}
+        />
+      )}
 
       {/* معاينة */}
       <div className="brand-preview" style={{ ['--bc' as string]: shown }}>
