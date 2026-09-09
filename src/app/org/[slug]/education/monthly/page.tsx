@@ -101,6 +101,7 @@ export default async function MonthlySheetPage({
           orgName={org.name}
           monthLabel={monthName}
           year={String(year)}
+          summaryLabels={org.quranSummaryLabels ?? null}
         />
       )}
     </div>

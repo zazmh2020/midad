@@ -6,6 +6,9 @@ import { useRouter, usePathname } from 'next/navigation';
 import { ATTENDANCE_STATUSES } from '@/lib/permissions';
 import { SURAHS, MAJOR_SEGMENTS, MINOR_SEGMENTS } from '@/lib/quran';
 import { useLocale } from '@/lib/i18n/LocaleProvider';
+import {
+  SUMMARY_LABELS, computeMonthSummary, mergeLabels, scoreLabel, type BiLabel,
+} from '@/lib/quran-summary';
 
 type Row = {
   day: number; dateStr: string; weekday: number;
@@ -37,11 +40,12 @@ const NOTE_PRESETS: { group: string; keys: string[] }[] = [
 
 export default function MonthlySheetView({
   students, selectedId, studentName, halaqaName, ym, rows, canManage,
-  orgName, monthLabel, year,
+  orgName, monthLabel, year, summaryLabels,
 }: {
   students: Student[]; selectedId: string; studentName: string; halaqaName: string | null;
   ym: string; rows: Row[]; canManage: boolean;
   orgName: string; monthLabel: string; year: string;
+  summaryLabels: unknown;
 }) {
   const { t, locale } = useLocale();
   const router = useRouter();
@@ -219,6 +223,45 @@ export default function MonthlySheetView({
   const totalScore = rows.reduce((s, r) => s + total(r.dateStr), 0);
   const attendancePct = activeDays ? Math.round((presentDays / activeDays) * 100) : 0;
 
+  // ===== جدول نهاية الشهر: الحساب + المسميات + رقم الصفحة =====
+  const monthSummary = computeMonthSummary(rows.map((r) => r.dateStr), data);
+  const generalScore = scoreLabel(monthSummary.percentage);
+  const labels = mergeLabels(summaryLabels);
+  const L = (key: string): string => (locale === 'en' ? labels[key]?.en : labels[key]?.ar) || SUMMARY_LABELS[key]?.ar || key;
+
+  const pageKey = `midad_qm_page_${selectedId}_${ym}`;
+  const [pageNum, setPageNum] = useState('');
+  useEffect(() => {
+    try { setPageNum(localStorage.getItem(pageKey) || ''); } catch { /* */ }
+  }, [pageKey]);
+  function setPage(v: string) {
+    setPageNum(v);
+    try { if (v) localStorage.setItem(pageKey, v); else localStorage.removeItem(pageKey); } catch { /* */ }
+  }
+
+  // تحرير المسميات (لمدير التعليم)
+  const [editLabels, setEditLabels] = useState(false);
+  const [draft, setDraft] = useState<Record<string, BiLabel>>(labels);
+  const [savingLabels, setSavingLabels] = useState(false);
+  async function saveLabels() {
+    setSavingLabels(true);
+    try {
+      const res = await fetch('/api/org/education/quran-labels', {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ labels: draft }),
+      });
+      if (res.ok) { setEditLabels(false); router.refresh(); }
+    } finally { setSavingLabels(false); }
+  }
+
+  const SUMMARY_ROWS: { key: string; value: number }[] = [
+    { key: 'notReciteNew', value: monthSummary.notReciteNew },
+    { key: 'notReciteLast5', value: monthSummary.notReciteLast5 },
+    { key: 'notReciteReview', value: monthSummary.notReciteReview },
+    { key: 'absenceExcused', value: monthSummary.absenceExcused },
+    { key: 'absenceUnexcused', value: monthSummary.absenceUnexcused },
+  ];
+
   const numCell = (r: Row, field: (typeof NUM_FIELDS)[number], cls = 'qm-num') => (
     <input type="number" className={`qm-in ${cls}`} disabled={!canManage}
       value={data[r.dateStr]?.[field] ?? ''} onChange={(e) => set(r.dateStr, field, e.target.value)} />
@@ -354,6 +397,70 @@ export default function MonthlySheetView({
       </div>
       </div>
 
+      {/* ===== جدول نهاية الشهر ===== */}
+      {selectedId && (
+        <section className="qm-monthend">
+          <div className="qm-monthend-head">
+            <h3>{L('title')}</h3>
+            {canManage && (
+              <button className="org-btn org-btn-outline qm-me-editbtn"
+                onClick={() => { setDraft(mergeLabels(summaryLabels)); setEditLabels((v) => !v); }}>
+                {editLabels ? t('shell.cancel') : t('qm.editLabels')}
+              </button>
+            )}
+          </div>
+          <div className="qm-wrap" lang="en">
+            <table className="qm-me-table">
+              <tbody>
+                {SUMMARY_ROWS.map((r) => (
+                  <tr key={r.key}>
+                    <td className="qm-me-label">
+                      {editLabels ? (
+                        <div className="qm-me-edit">
+                          <input value={draft[r.key]?.ar ?? ''} onChange={(e) => setDraft((d) => ({ ...d, [r.key]: { ...d[r.key], ar: e.target.value } }))} placeholder="بالعربية" />
+                          <input dir="ltr" value={draft[r.key]?.en ?? ''} onChange={(e) => setDraft((d) => ({ ...d, [r.key]: { ...d[r.key], en: e.target.value } }))} placeholder="English" />
+                        </div>
+                      ) : (
+                        <><span className="qm-me-ar">{labels[r.key].ar}</span><span className="qm-me-en">{labels[r.key].en}</span></>
+                      )}
+                    </td>
+                    <td className="qm-me-val">{r.value}</td>
+                  </tr>
+                ))}
+                <tr>
+                  <td className="qm-me-label"><span className="qm-me-ar">{labels.pageNumber.ar}</span><span className="qm-me-en">{labels.pageNumber.en}</span></td>
+                  <td className="qm-me-val">
+                    <select className="qm-in qm-me-page" lang="en" value={pageNum} disabled={!canManage} onChange={(e) => setPage(e.target.value)}>
+                      <option value="">—</option>
+                      {Array.from({ length: 604 }, (_, i) => i + 1).map((p) => <option key={p} value={p}>{p}</option>)}
+                    </select>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div className="qm-me-footer">
+              <div className="qm-me-stat">
+                <span className="qm-me-ar">{labels.generalScore.ar}</span>
+                <span className="qm-me-en">{labels.generalScore.en}</span>
+                <strong>{locale === 'en' ? generalScore.en : generalScore.ar}</strong>
+              </div>
+              <div className="qm-me-stat">
+                <span className="qm-me-ar">{labels.percentage.ar}</span>
+                <span className="qm-me-en">{labels.percentage.en}</span>
+                <strong className="qm-me-pctval">{monthSummary.percentage}%</strong>
+              </div>
+            </div>
+          </div>
+          {editLabels && (
+            <div className="qm-me-editactions">
+              <button className="org-btn org-btn-primary" disabled={savingLabels} onClick={saveLabels}>
+                {savingLabels ? t('form.saving') : t('brand.save')}
+              </button>
+            </div>
+          )}
+        </section>
+      )}
+
       {canManage && <p className="qm-hint">{t('qm.autosave')}</p>}
 
       {/* ===== معاينة قبل تصدير PDF (Portal إلى body لعزل الطباعة) ===== */}
@@ -449,6 +556,32 @@ export default function MonthlySheetView({
                   </table>
                 </>
               )}
+
+              {/* جدول نهاية الشهر في التصدير */}
+              <h3 className="qm-doc-h3">{L('title')}</h3>
+              <table className="qm-doc-table qm-doc-me">
+                <tbody>
+                  {SUMMARY_ROWS.map((r) => (
+                    <tr key={r.key}>
+                      <td className="qm-doc-me-label">{labels[r.key].ar} / {labels[r.key].en}</td>
+                      <td>{r.value}</td>
+                    </tr>
+                  ))}
+                  <tr>
+                    <td className="qm-doc-me-label">{labels.pageNumber.ar} / {labels.pageNumber.en}</td>
+                    <td>{pageNum || '—'}</td>
+                  </tr>
+                  <tr className="qm-doc-me-foot">
+                    <td className="qm-doc-me-label">{labels.generalScore.ar} / {labels.generalScore.en}</td>
+                    <td>{locale === 'en' ? generalScore.en : generalScore.ar}</td>
+                  </tr>
+                  <tr className="qm-doc-me-foot">
+                    <td className="qm-doc-me-label">{labels.percentage.ar} / {labels.percentage.en}</td>
+                    <td>{monthSummary.percentage}%</td>
+                  </tr>
+                </tbody>
+              </table>
+
               <div className="qm-doc-foot">{t('qm.generatedAt', { date: printedAt })}</div>
             </article>
           </div>

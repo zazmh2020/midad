@@ -37,6 +37,7 @@ model Organization {
   contactPhone         String?
   address              String?
   aboutText            String? // نبذة تُعرض في الموقع العام
+  quranSummaryLabels   Json? // مسميات جدول نهاية الشهر المخصّصة لهذا المركز
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
 

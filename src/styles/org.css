@@ -1213,6 +1213,37 @@ a.org-module:hover {
 @keyframes qmpulse { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
 .qm-hint { margin-top: 0.6rem; font-size: 0.78rem; color: var(--text-muted); }
 
+/* ===== جدول نهاية الشهر ===== */
+.qm-monthend { margin-top: 1.3rem; }
+.qm-monthend-head { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; margin-bottom: 0.6rem; }
+.qm-monthend-head h3 { margin: 0; font-family: var(--font-display); font-size: 1rem; font-weight: 800; color: #1d7a55; }
+.qm-me-editbtn { padding: 0.32rem 0.7rem; font-size: 0.8rem; }
+.qm-me-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.qm-me-table td { border: 1px solid #cfe6da; padding: 0.5rem 0.8rem; vertical-align: middle; }
+.qm-me-table tr:nth-child(even) td { background: #f4faf7; }
+.qm-me-label { text-align: start; }
+.qm-me-ar { display: block; font-weight: 700; color: var(--text-strong, #24203a); }
+.qm-me-en { display: block; font-size: 0.74rem; color: var(--text-muted, #6c6780); }
+.qm-me-val { width: 120px; text-align: center; font-family: var(--font-display); font-weight: 800; color: #1d7a55; }
+.qm-me-page { width: 90px; text-align: center; }
+.qm-me-edit { display: flex; flex-direction: column; gap: 0.3rem; }
+.qm-me-edit input { border: 1px solid var(--line); border-radius: 7px; padding: 0.32rem 0.5rem; font: inherit; font-size: 0.82rem; }
+.qm-me-footer { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-top: 0.6rem; }
+.qm-me-stat {
+  border: 2px solid #2f9e7e; border-radius: 12px; padding: 0.6rem 0.8rem; text-align: center;
+  background: #eef8f3; display: flex; flex-direction: column; gap: 0.1rem;
+}
+.qm-me-stat strong { font-family: var(--font-display); font-size: 1.25rem; color: #1d7a55; margin-top: 0.15rem; }
+.qm-me-pctval { font-size: 1.5rem !important; }
+.qm-me-editactions { margin-top: 0.7rem; }
+:root[data-theme="dark"] .qm-me-table tr:nth-child(even) td { background: #21302a; }
+:root[data-theme="dark"] .qm-me-stat { background: #1c2b25; }
+/* نسخة التصدير */
+.qm-doc-h3 { margin: 12px 0 5px; font-family: var(--font-display); font-size: 0.95rem; color: #1d7a55; }
+.qm-doc-me td { text-align: center; }
+.qm-doc-me-label { text-align: start !important; width: 62%; white-space: normal !important; }
+.qm-doc-me .qm-doc-me-foot td { background: #eef8f3; font-weight: 800; color: #1d7a55; }
+
 /* ===== معاينة قبل تصدير PDF ===== */
 .qm-preview {
   position: fixed; inset: 0; z-index: 80; display: flex; flex-direction: column;
