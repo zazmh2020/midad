@@ -118,8 +118,8 @@
 }
 
 /* ملف مستخدم مكدّس أعلى الشريط (أفاتار كبير موسّط) */
-.org-user-stacked { flex-direction: column; align-items: center; text-align: center; gap: 0.35rem; padding: 0.6rem 0.5rem; }
-.org-user-avatar-lg { width: 60px; height: 60px; font-size: 1.5rem; }
+.org-user-stacked { flex-direction: column; align-items: center; text-align: center; gap: 0.12rem; padding: 0.7rem 0.5rem; }
+.org-user-avatar-lg { width: 82px; height: 82px; font-size: 2rem; margin-bottom: 0.55rem; }
 .org-user-stacked .org-user-name { max-width: 100%; }
 .org-user-stacked .org-user-chev { margin: 0; opacity: 0.6; }
 
