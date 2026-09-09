@@ -114,9 +114,21 @@
 .plans-stages-hd { display: flex; align-items: center; justify-content: space-between; margin: 0.6rem 0 0.4rem; }
 .plans-stages-hd label { font-weight: 700; color: var(--purple-900, #2b1a4e); }
 .plans-add-stage { padding: 0.3rem 0.7rem; font-size: 0.8rem; }
-.plans-stage-row { display: grid; grid-template-columns: 1.1fr 1.6fr 0.7fr auto; gap: 0.5rem; margin-bottom: 0.5rem; align-items: center; }
-.plans-stage-row input { width: 100%; }
-.plans-stage-x { width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--line); background: #fff; color: #c0392b; cursor: pointer; font-size: 1.1rem; line-height: 1; }
+.plans-stage-row { display: grid; grid-template-columns: 1.1fr 1.6fr 0.7fr 34px; gap: 0.5rem; margin-bottom: 0.55rem; align-items: center; }
+.plans-stage-row input {
+  width: 100%; box-sizing: border-box; height: 40px;
+  border: 1px solid var(--line-strong, #d5d0dc); border-radius: 8px; padding: 0 0.7rem;
+  font: inherit; font-size: 0.86rem; color: var(--purple-900, #2b1a4e); background: #fff;
+}
+.plans-stage-row input:focus { outline: none; border-color: var(--purple-300, #8873af); box-shadow: 0 0 0 3px rgba(107, 87, 160, 0.12); }
+.plans-stage-x {
+  width: 34px; height: 40px; border-radius: 8px; border: 1px solid var(--line);
+  background: #fff; color: #c0392b; cursor: pointer; font-size: 1.2rem; line-height: 1;
+  display: grid; place-items: center;
+}
 .plans-stage-x:hover { background: #fdecec; }
 .mod-empty { color: var(--text-muted); font-size: 0.88rem; padding: 0.5rem 0; }
-@media (max-width: 700px) { .plans-stage-row { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 700px) {
+  .plans-stage-row { grid-template-columns: 1fr 1fr; }
+  .plans-stage-x { grid-column: 2; justify-self: end; width: 34px; }
+}

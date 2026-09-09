@@ -267,7 +267,6 @@
   top: 1rem;
   z-index: 20;
 }
-
 .org-menu-toggle {
   display: none;
   color: var(--gray-700);
@@ -279,6 +278,8 @@
   width: 34px; height: 34px; border-radius: 50%;
   border: 1px solid var(--line, #e6e3ee); background: transparent; color: var(--gray-700, #4b4660);
   cursor: pointer; transition: color 0.16s, border-color 0.16s, background 0.16s;
+  /* مسافة جيدة بين السهم والشعار */
+  margin-inline-end: 0.4rem;
 }
 .org-back:hover { color: var(--purple-700, #6b57a0); border-color: var(--purple-300, #8873af); background: var(--purple-100, #efeaf6); }
 /* السهم يشير لليمين في الواجهة العربية (رجوع)، ولليسار في الإنجليزية */

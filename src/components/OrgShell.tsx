@@ -301,7 +301,9 @@ function NavGroup({
 }) {
   const anyActive = entry.children.some((c) => isActive(c.href, c.match));
   const [open, setOpen] = useState(anyActive);
-  const expanded = open || anyActive;
+  // يُفتح تلقائيًا عند الانتقال لعنصر نشط، مع إتاحة الطيّ/الفرد يدويًا بعدها
+  useEffect(() => { if (anyActive) setOpen(true); }, [anyActive]);
+  const expanded = open;
 
   return (
     <div className={`org-nav-group ${expanded ? 'is-open' : ''}`}>
