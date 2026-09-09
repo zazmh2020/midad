@@ -28,8 +28,10 @@ function brandVars(hex?: string | null): CSSProperties | undefined {
     const [r, g, b] = hexToRgb(hex);
     const dark = (f: number) => toHex(r * f, g * f, b * f);
     const light = (f: number) => toHex(r + (255 - r) * f, g + (255 - g) * f, b + (255 - b) * f);
+    const base = hex.startsWith('#') ? hex : `#${hex}`;
     return {
-      '--purple-500': hex.startsWith('#') ? hex : `#${hex}`,
+      '--brand': base,
+      '--purple-500': base,
       '--purple-700': dark(0.72),
       '--purple-900': dark(0.5),
       '--purple-300': light(0.32),
