@@ -490,71 +490,49 @@ export default function MonthlySheetView({
               {docRows.length === 0 ? (
                 <p className="qm-doc-empty">{t('qm.noData')}</p>
               ) : (
-                <>
-                  {/* الجدول الأول: المتابعة اليومية */}
-                  <table className="qm-doc-table qm-doc-follow">
-                    <thead>
-                      <tr>
-                        <th>{t('qm.col.date')}</th>
-                        <th>{t('qm.col.day')}</th>
-                        <th>{t('qm.col.attendance')}</th>
-                        <th>{t('qm.col.lesson')}</th>
-                        <th>{t('qm.col.major')}</th>
-                        <th>{t('qm.col.minor')}</th>
-                        <th>{t('qm.col.pages')}</th>
-                        <th>{t('qm.col.errors')}</th>
-                        <th>{t('qm.col.alerts')}</th>
-                        <th>{t('qm.col.listener')}</th>
+                /* جدول واحد مدمج: كل الأعمدة بجانب بعضها (بلا عمود الحضور) */
+                <table className="qm-doc-table qm-doc-combined">
+                  <thead>
+                    <tr>
+                      <th>{t('qm.col.date')}</th>
+                      <th>{t('qm.col.day')}</th>
+                      <th>{t('qm.col.lesson')}</th>
+                      <th>{t('qm.col.major')}</th>
+                      <th>{t('qm.col.minor')}</th>
+                      <th>{t('qm.col.pages')}</th>
+                      <th>{t('qm.col.errors')}</th>
+                      <th>{t('qm.col.alerts')}</th>
+                      <th>{t('qm.col.listener')}</th>
+                      <th>{t('qm.col.lessonScore')}</th>
+                      <th>{t('qm.col.reviewScore')}</th>
+                      <th>{t('qm.col.minorScore')}</th>
+                      <th>{t('qm.col.conductOther')}</th>
+                      <th>{t('qm.col.total')}</th>
+                      <th>{t('qm.col.notes')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {docRows.map((r) => (
+                      <tr key={r.dateStr} className={data[r.dateStr]?.attendance === 'ABSENT' ? 'qm-absent' : ''}>
+                        <td>{r.day}</td>
+                        <td>{wdFmt.format(new Date(`${r.dateStr}T00:00:00Z`))}</td>
+                        <td>{surahLabel(r.dateStr)}</td>
+                        <td>{segLabelFor(MAJOR_SEGMENTS, r.dateStr, 'reviewFrom', 'reviewTo')}</td>
+                        <td>{segLabelFor(MINOR_SEGMENTS, r.dateStr, 'last5From', 'last5To')}</td>
+                        <td>{num(r.dateStr, 'pages')}</td>
+                        <td>{num(r.dateStr, 'errors')}</td>
+                        <td>{num(r.dateStr, 'alerts')}</td>
+                        <td>{num(r.dateStr, 'listener')}</td>
+                        <td>{num(r.dateStr, 'lessonScore')}</td>
+                        <td>{num(r.dateStr, 'reviewScore')}</td>
+                        <td>{num(r.dateStr, 'minorScore')}</td>
+                        <td>{conductOtherLabel(r.dateStr)}</td>
+                        <td className="qm-total">{total(r.dateStr) || ''}</td>
+                        <td className="qm-doc-notes">{num(r.dateStr, 'notes')}</td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      {docRows.map((r) => (
-                        <tr key={r.dateStr} className={data[r.dateStr]?.attendance === 'ABSENT' ? 'qm-absent' : ''}>
-                          <td>{r.day}</td>
-                          <td>{wdFmt.format(new Date(`${r.dateStr}T00:00:00Z`))}</td>
-                          <td>{attLabel(r.dateStr)}</td>
-                          <td>{surahLabel(r.dateStr)}</td>
-                          <td>{segLabelFor(MAJOR_SEGMENTS, r.dateStr, 'reviewFrom', 'reviewTo')}</td>
-                          <td>{segLabelFor(MINOR_SEGMENTS, r.dateStr, 'last5From', 'last5To')}</td>
-                          <td>{num(r.dateStr, 'pages')}</td>
-                          <td>{num(r.dateStr, 'errors')}</td>
-                          <td>{num(r.dateStr, 'alerts')}</td>
-                          <td>{num(r.dateStr, 'listener')}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-
-                  {/* الجدول الثاني: الدرجات — بمسافة صغيرة جدًا */}
-                  <table className="qm-doc-table qm-doc-grades">
-                    <thead>
-                      <tr>
-                        <th>{t('qm.col.date')}</th>
-                        <th>{t('qm.col.day')}</th>
-                        <th>{t('qm.col.lessonScore')}</th>
-                        <th>{t('qm.col.reviewScore')}</th>
-                        <th>{t('qm.col.minorScore')}</th>
-                        <th>{t('qm.col.conductOther')}</th>
-                        <th>{t('qm.col.total')}</th>
-                        <th>{t('qm.col.notes')}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {docRows.map((r) => (
-                        <tr key={r.dateStr} className={data[r.dateStr]?.attendance === 'ABSENT' ? 'qm-absent' : ''}>
-                          <td>{r.day}</td>
-                          <td>{wdFmt.format(new Date(`${r.dateStr}T00:00:00Z`))}</td>
-                          <td>{num(r.dateStr, 'lessonScore')}</td>
-                          <td>{num(r.dateStr, 'reviewScore')}</td>
-                          <td>{num(r.dateStr, 'minorScore')}</td>
-                          <td>{conductOtherLabel(r.dateStr)}</td>
-                          <td className="qm-total">{total(r.dateStr) || ''}</td>
-                          <td className="qm-doc-notes">{num(r.dateStr, 'notes')}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </>
+                    ))}
+                  </tbody>
+                </table>
               )}
 
               {/* جدول نهاية الشهر في التصدير */}

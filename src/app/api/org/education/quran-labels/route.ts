@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { Prisma } from '@/generated/prisma/client';
 import { prisma } from '@/lib/prisma';
 import { getOrgActor } from '@/lib/org';
 import { canManageEducation } from '@/lib/permissions';
@@ -29,7 +30,7 @@ export async function PATCH(request: Request) {
 
   await prisma.organization.update({
     where: { id: actor.organization.id },
-    data: { quranSummaryLabels: Object.keys(clean).length ? clean : null },
+    data: { quranSummaryLabels: Object.keys(clean).length ? clean : Prisma.DbNull },
   });
   return NextResponse.json({ ok: true });
 }
