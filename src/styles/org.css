@@ -1235,25 +1235,47 @@ a.org-module:hover {
 .qm-doc-sub { color: #5a5470; font-size: 0.9rem; }
 .qm-doc-summary { display: flex; gap: 1.4rem; justify-content: center; flex-wrap: wrap; margin-bottom: 14px; font-size: 0.86rem; color: #2b1a4e; }
 .qm-doc-summary span { background: #f3f0f8; border-radius: 100px; padding: 0.28rem 0.9rem; }
-.qm-doc-table { width: 100%; border-collapse: collapse; font-size: 0.72rem; }
-.qm-doc-table th, .qm-doc-table td { border: 1px solid #d8d3e4; padding: 4px 5px; text-align: center; }
-.qm-doc-table thead th { background: #f3f0f8; color: #2b1a4e; font-family: var(--font-display); font-weight: 700; }
+.qm-doc-table { width: 100%; border-collapse: collapse; font-size: 0.72rem; table-layout: fixed; }
+/* صفوف متساوية الارتفاع: سطر واحد لكل خلية */
+.qm-doc-table th, .qm-doc-table td {
+  border: 1px solid #d8d3e4; padding: 3px 4px; text-align: center;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.qm-doc-table thead th { background: #f3f0f8; color: #2b1a4e; font-family: var(--font-display); font-weight: 700; white-space: normal; }
 .qm-doc-table .qm-total { font-weight: 800; color: #6b57a0; }
-.qm-doc-notes { text-align: start; max-width: 180px; }
+.qm-doc-notes { text-align: start; }
 .qm-doc-table .qm-absent td { background: #fdecec; }
+/* توزيع الأعمدة (تخطيط ثابت): مقاطع المراجعة والملاحظات أعرض، الأرقام أضيق */
+.qm-doc-follow th:nth-child(1) { width: 6%; }
+.qm-doc-follow th:nth-child(2) { width: 7%; }
+.qm-doc-follow th:nth-child(3) { width: 9%; }
+.qm-doc-follow th:nth-child(4) { width: 11%; }
+.qm-doc-follow th:nth-child(5), .qm-doc-follow th:nth-child(6) { width: 15.5%; }
+.qm-doc-follow th:nth-child(7), .qm-doc-follow th:nth-child(8), .qm-doc-follow th:nth-child(9) { width: 6%; }
+.qm-doc-follow th:nth-child(10) { width: 18%; }
+.qm-doc-grades th:nth-child(1) { width: 7%; }
+.qm-doc-grades th:nth-child(2) { width: 8%; }
+.qm-doc-grades th:nth-child(3), .qm-doc-grades th:nth-child(4), .qm-doc-grades th:nth-child(5), .qm-doc-grades th:nth-child(7) { width: 9%; }
+.qm-doc-grades th:nth-child(6) { width: 12%; }
+.qm-doc-grades th:nth-child(8) { width: 37%; }
+/* الجدول الثاني (الدرجات): مسافة صغيرة جدًا تفصله عن الأول */
+.qm-doc-grades { margin-top: 6px; }
 .qm-doc-empty { text-align: center; color: #7c7788; padding: 2rem 0; }
 .qm-doc-foot { margin-top: 12px; text-align: end; color: #7c7788; font-size: 0.76rem; }
 
 @media print {
-  body { visibility: hidden; background: #fff; }
-  .qm-preview { position: absolute; inset: 0; background: #fff; backdrop-filter: none; visibility: visible; }
-  .qm-preview-bar { display: none; }
-  .qm-preview-scroll { overflow: visible; padding: 0; display: block; }
-  .qm-doc { visibility: visible; box-shadow: none; max-width: none; width: auto; border-radius: 0; padding: 0; }
-  .qm-doc * { visibility: visible; }
-  .qm-doc-table { font-size: 8.5pt; }
+  /* عزل الطباعة: المعاينة أصبحت ابنًا مباشرًا لـ body (Portal)، فنُخفي كل ما عداها */
+  body > *:not(.qm-preview) { display: none !important; }
+  .qm-preview {
+    position: static !important; inset: auto; background: #fff !important;
+    backdrop-filter: none; display: block !important;
+  }
+  .qm-preview-bar { display: none !important; }
+  .qm-preview-scroll { overflow: visible !important; padding: 0 !important; display: block !important; }
+  .qm-doc { box-shadow: none !important; max-width: none !important; width: 100% !important; border-radius: 0; padding: 0 !important; }
+  .qm-doc-table { font-size: 8pt; }
   .qm-doc-table th, .qm-doc-table td { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  @page { size: A4 landscape; margin: 12mm; }
+  @page { size: A4 portrait; margin: 8mm; }
 }
 
 /* إخفاء أسهم مدخلات الأرقام لإبقاء الشبكة نظيفة */
