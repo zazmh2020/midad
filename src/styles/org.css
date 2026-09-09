@@ -1160,10 +1160,13 @@ a.org-module:hover {
 .qm-absent .qm-date, .qm-absent .qm-wd { color: #c0392b; }
 /* أيام الجمعة والسبت بلون فضّي فاتح */
 .qm-weekend td { background: #eef0f4; }
-.qm-weekend td:first-child, .qm-weekend td:nth-child(2) { background: #e5e8ee; }
+/* كل خلايا صف نهاية الأسبوع بنفس اللون — بما فيها العمودان المثبّتان (نتجاوز خلفيتهما البيضاء) */
+.qm-table tbody tr.qm-weekend td:first-child,
+.qm-table tbody tr.qm-weekend td:nth-child(2) { background: #eef0f4; }
 .qm-weekend .qm-date, .qm-weekend .qm-wd { color: #5a6072; }
-:root[data-theme="dark"] .qm-weekend td { background: #262233; }
-:root[data-theme="dark"] .qm-weekend td:first-child, :root[data-theme="dark"] .qm-weekend td:nth-child(2) { background: #2b2740; }
+:root[data-theme="dark"] .qm-weekend td,
+:root[data-theme="dark"] .qm-table tbody tr.qm-weekend td:first-child,
+:root[data-theme="dark"] .qm-table tbody tr.qm-weekend td:nth-child(2) { background: #262233; }
 
 .qm-in {
   font-family: inherit; border: 1px solid transparent; background: transparent;
@@ -1240,9 +1243,9 @@ a.org-module:hover {
 :root[data-theme="dark"] .qm-me-stat { background: #1c2b25; }
 /* نسخة التصدير */
 .qm-doc-h3 { margin: 12px 0 5px; font-family: var(--font-display); font-size: 0.95rem; color: #1d7a55; }
-.qm-doc-me { width: auto; max-width: 520px; }
+.qm-doc-me { width: 100%; }
 .qm-doc-me td { text-align: center; }
-.qm-doc-me-label { text-align: start !important; width: 62%; white-space: normal !important; }
+.qm-doc-me-label { text-align: start !important; width: 72%; white-space: normal !important; }
 .qm-doc-me .qm-doc-me-foot td { background: #eef8f3; font-weight: 800; color: #1d7a55; }
 
 /* ===== معاينة قبل تصدير PDF ===== */
