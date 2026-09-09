@@ -171,6 +171,17 @@
 /* ---------- Shell عائم (لوحات) + أدوات الشريط ---------- */
 :root[data-theme="dark"] .org-app,
 :root[data-theme="dark"] .admin-app { background: #14101f !important; }
+
+/* توليد ظِلال الهوية المخصّصة بشكل مناسب للوضع الداكن:
+   brandVars يضبط --purple-500 (لون الهوية) inline، لكنه يضبط ظِلالًا داكنة تكسر التباين
+   على الخلفية الداكنة. نعيد اشتقاق الظِلال هنا بـ !important (يتفوّق على الـ inline):
+   عناوين فاتحة من لون الهوية، مع بقاء اللون الأساسي للمسات. */
+:root[data-theme="dark"] .org-app {
+  --purple-900: color-mix(in srgb, var(--purple-500) 24%, #fff) !important;
+  --purple-700: color-mix(in srgb, var(--purple-500) 52%, #fff) !important;
+  --purple-300: color-mix(in srgb, var(--purple-500) 55%, #000) !important;
+  --purple-100: color-mix(in srgb, var(--purple-500) 30%, #000) !important;
+}
 :root[data-theme="dark"] .org-content,
 :root[data-theme="dark"] .admin-content,
 :root[data-theme="dark"] .tbt-btn,
