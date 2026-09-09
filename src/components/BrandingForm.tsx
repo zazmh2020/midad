@@ -3,7 +3,7 @@
 import { useRef, useState, type ChangeEvent, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { useT } from '@/lib/i18n/LocaleProvider';
-import { readLogoFile } from '@/lib/image-file';
+import { readLogoFile, removeBackground } from '@/lib/image-file';
 import ImageCropper from '@/components/ImageCropper';
 
 /**
@@ -117,6 +117,11 @@ export default function BrandingForm({
           </span>
           <div className="brand-logo-controls">
             <button type="button" className="org-btn org-btn-outline" onClick={() => fileRef.current?.click()}>{t('brand.uploadLogo')}</button>
+            {logoUrl.trim() && logoUrl.startsWith('data:') && (
+              <button type="button" className="org-btn org-btn-ghost" onClick={async () => { try { setLogoUrl(await removeBackground(logoUrl)); setLogoDims(null); } catch { /* */ } }}>
+                {t('brand.removeBg')}
+              </button>
+            )}
             {logoUrl.trim() && <button type="button" className="org-btn org-btn-ghost" onClick={() => { setLogoUrl(''); setLogoDims(null); }}>{t('view.delete')}</button>}
             {logoUrl.trim() && logoDims && <span className="brand-logo-dims" dir="ltr">{logoDims.w}×{logoDims.h}px</span>}
             <input ref={fileRef} type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" hidden onChange={onPickLogo} />

@@ -1788,8 +1788,8 @@ a.org-module:hover {
 
 /* ---------- شعار الجهة المخصّص ---------- */
 .org-brand-logo-img {
-  width: 40px; height: 40px; border-radius: 9px; object-fit: cover;
-  display: block; margin-bottom: 0.4rem; background: #fff;
+  width: 40px; height: 40px; border-radius: 9px; object-fit: contain;
+  display: block; background: transparent; padding: 1px;
 }
 
 /* ---------- Branding form ---------- */
@@ -1800,7 +1800,7 @@ a.org-module:hover {
   color: #fff;
 }
 .brand-preview-mark { width: 30px; height: 30px; border-radius: 8px; background: #fff; color: var(--bc); display: grid; place-items: center; font-family: var(--font-display); font-weight: 800; }
-.brand-preview-logo { width: 30px; height: 30px; border-radius: 8px; object-fit: cover; background: #fff; }
+.brand-preview-logo { width: 30px; height: 30px; border-radius: 8px; object-fit: contain; background: transparent; }
 .brand-preview-name { font-family: var(--font-display); font-weight: 700; }
 .brand-preview-body { display: flex; align-items: center; gap: 0.7rem; padding: 0.9rem; background: #fff; }
 .brand-preview-btn { background: var(--bc); color: #fff; font-size: 0.8rem; font-weight: 700; padding: 0.45rem 1rem; border-radius: 8px; }
