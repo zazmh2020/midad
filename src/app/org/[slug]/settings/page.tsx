@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { requireOrgAccess } from '@/lib/org';
-import { canManageSettings } from '@/lib/permissions';
+import { canManageSettings, canCustomize } from '@/lib/permissions';
 import { PLAN_BY_ID } from '@/lib/plans';
 import ProfileForm from '@/components/ProfileForm';
 import OrgSettingsForm from '@/components/OrgSettingsForm';
@@ -28,6 +28,7 @@ export default async function OrgSettingsPage({
   const { user, org } = await requireOrgAccess(slug);
   const { t, locale } = await getT();
   const isAdmin = canManageSettings(user);
+  const canCust = canCustomize(user);
   const plan = PLAN_BY_ID[org.plan];
   const planName = plan ? (locale === 'en' ? plan.en : plan.name) : org.plan;
 
@@ -88,7 +89,11 @@ export default async function OrgSettingsPage({
             <p className="org-panel-sub">{t('oset.managedByOwner')}</p>
           </div>
           <OrgSettingsForm name={org.name} />
+        </>
+      )}
 
+      {canCust && (
+        <>
           <h2 className="org-settings-h2">{t('oset.branding')}</h2>
           <p className="org-panel-sub" style={{ marginBottom: '0.8rem' }}>{t('oset.brandingSub')}</p>
           <BrandingForm brandColor={org.brandColor} logoUrl={org.logoUrl} />

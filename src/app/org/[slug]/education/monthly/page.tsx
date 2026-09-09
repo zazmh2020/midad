@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { requireOrgAccess } from '@/lib/org';
 import { prisma } from '@/lib/prisma';
-import { canViewEducation, canManageEducation } from '@/lib/permissions';
+import { canViewEducation, canManageEducation, canCustomize } from '@/lib/permissions';
 import { getT, getLocale } from '@/lib/i18n/server';
 import MonthlySheetView from '@/components/education/MonthlySheetView';
 
@@ -102,6 +102,7 @@ export default async function MonthlySheetPage({
           monthLabel={monthName}
           year={String(year)}
           summaryLabels={org.quranSummaryLabels ?? null}
+          canCustomize={canCustomize(user)}
         />
       )}
     </div>

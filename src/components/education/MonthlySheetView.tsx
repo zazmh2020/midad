@@ -40,12 +40,12 @@ const NOTE_PRESETS: { group: string; keys: string[] }[] = [
 
 export default function MonthlySheetView({
   students, selectedId, studentName, halaqaName, ym, rows, canManage,
-  orgName, monthLabel, year, summaryLabels,
+  orgName, monthLabel, year, summaryLabels, canCustomize = false,
 }: {
   students: Student[]; selectedId: string; studentName: string; halaqaName: string | null;
   ym: string; rows: Row[]; canManage: boolean;
   orgName: string; monthLabel: string; year: string;
-  summaryLabels: unknown;
+  summaryLabels: unknown; canCustomize?: boolean;
 }) {
   const { t, locale } = useLocale();
   const router = useRouter();
@@ -402,7 +402,7 @@ export default function MonthlySheetView({
         <section className="qm-monthend">
           <div className="qm-monthend-head">
             <h3>{L('title')}</h3>
-            {canManage && (
+            {canCustomize && (
               <button className="org-btn org-btn-outline qm-me-editbtn"
                 onClick={() => { setDraft(mergeLabels(summaryLabels)); setEditLabels((v) => !v); }}>
                 {editLabels ? t('shell.cancel') : t('qm.editLabels')}

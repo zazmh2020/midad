@@ -256,6 +256,7 @@ const ar: Dict = {
   'roles.legend': 'إدارة = عرض وتعديل · عرض = اطّلاع فقط · — = بلا صلاحية.',
   'roles.mod.structure': 'الهيكل التنظيمي',
   'roles.mod.users': 'إدارة المستخدمين',
+  'roles.mod.customize': 'التخصيص (الهوية والمسميات)',
   // ---- Page headings ----
   'task.new': '+ مهمة جديدة',
   'task.title': 'عنوان المهمة',
@@ -1626,6 +1627,7 @@ const en: Dict = {
   'roles.legend': 'Manage = view & edit · View = read only · — = no access.',
   'roles.mod.structure': 'Organization structure',
   'roles.mod.users': 'User management',
+  'roles.mod.customize': 'Customization (identity & labels)',
   // ---- Page headings ----
   'task.new': '+ New task',
   'task.title': 'Task title',

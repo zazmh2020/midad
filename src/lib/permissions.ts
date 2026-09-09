@@ -81,6 +81,7 @@ export const CAP_GROUPS: { labelKey: string; caps: { key: string; kind: 'view' |
   { labelKey: 'roles.mod.structure', caps: [{ key: 'structure.view', kind: 'view' }, { key: 'structure.manage', kind: 'manage' }] },
   { labelKey: 'onav.reports', caps: [{ key: 'reports.view', kind: 'view' }] },
   { labelKey: 'roles.mod.users', caps: [{ key: 'users.view', kind: 'view' }, { key: 'users.manage', kind: 'manage' }] },
+  { labelKey: 'roles.mod.customize', caps: [{ key: 'customize.manage', kind: 'manage' }] },
   { labelKey: 'onav.assistant', caps: [{ key: 'assistant.use', kind: 'view' }] },
 ];
 
@@ -136,6 +137,11 @@ export function canViewUsers(a: string | Actor): boolean {
 /** من يعدّل إعدادات المؤسسة */
 export function canManageSettings(a: string | Actor): boolean {
   return can(a, 'settings.manage');
+}
+
+/** من يخصّص الهوية والمسميات وأي محتوى قابل للتخصيص — مدير الجهة افتراضيًا، ويمنحها لمن يشاء */
+export function canCustomize(a: string | Actor): boolean {
+  return can(a, 'customize.manage');
 }
 
 /* ---------- المشاريع ---------- */

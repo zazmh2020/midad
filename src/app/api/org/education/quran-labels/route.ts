@@ -2,13 +2,13 @@ import { NextResponse } from 'next/server';
 import { Prisma } from '@/generated/prisma/client';
 import { prisma } from '@/lib/prisma';
 import { getOrgActor } from '@/lib/org';
-import { canManageEducation } from '@/lib/permissions';
+import { canCustomize } from '@/lib/permissions';
 import { SUMMARY_LABELS } from '@/lib/quran-summary';
 
-/** حفظ مسميات جدول نهاية الشهر المخصّصة للمركز — لمدير التعليم. */
+/** حفظ مسميات جدول نهاية الشهر المخصّصة للمركز — من يملك صلاحية التخصيص. */
 export async function PATCH(request: Request) {
   const actor = await getOrgActor();
-  if (!actor || !canManageEducation(actor)) {
+  if (!actor || !canCustomize(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
 

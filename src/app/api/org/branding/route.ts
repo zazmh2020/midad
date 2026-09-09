@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getOrgActor } from '@/lib/org';
-import { canManageSettings } from '@/lib/permissions';
+import { canCustomize } from '@/lib/permissions';
 import { imageValue } from '@/lib/branding';
 
-/** تخصيص الهوية البصرية للجهة — مدير الجهة فقط. */
+/** تخصيص الهوية البصرية للجهة — من يملك صلاحية التخصيص. */
 export async function PATCH(request: Request) {
   const actor = await getOrgActor();
-  if (!actor || !canManageSettings(actor)) {
+  if (!actor || !canCustomize(actor)) {
     return NextResponse.json({ error: 'غير مصرّح.' }, { status: 403 });
   }
 
